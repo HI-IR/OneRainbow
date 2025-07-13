@@ -23,3 +23,4 @@ dependencyResolutionManagement {
 rootProject.name = "OneRainbow"
 include(":app")
 include(":lib_base")
+include(":lib_net")

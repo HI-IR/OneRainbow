@@ -1,7 +1,12 @@
 package com.onerainbow.lib.base
 
+import android.content.Context
 import android.graphics.Color
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import android.os.Build
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
 import androidx.viewbinding.ViewBinding
@@ -35,6 +40,9 @@ abstract class BaseActivity<VB : ViewBinding>: AppCompatActivity() {
         initViewModel()
         initEvent()
 
+        if (!isInternetAvailable(this)){
+            Toast.makeText(this,"请检查网络", Toast.LENGTH_SHORT).show()
+        }
     }
 
     /**
@@ -60,5 +68,14 @@ abstract class BaseActivity<VB : ViewBinding>: AppCompatActivity() {
      */
     abstract fun initEvent()
 
+
+
+    //检查手机网络连接情况
+    fun isInternetAvailable(context: Context): Boolean {
+        val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val network = cm.activeNetwork ?: return false
+        val capabilities = cm.getNetworkCapabilities(network) ?: return false
+        return capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+    }
 
 }
