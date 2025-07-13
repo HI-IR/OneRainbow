@@ -1,17 +1,23 @@
 plugins {
-    alias(libs.plugins.android.library)
+    //alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.android.application)
+    id("com.google.devtools.ksp")
+
 }
 
 android {
-    namespace = "com.onerainbow.lib.net"
+    namespace = "com.example.module.account"
     compileSdk = 35
+
 
     defaultConfig {
         minSdk = 24
-
+        applicationId = "com.example.module_account"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        consumerProguardFiles("consumer-rules.pro")
+        //consumerProguardFiles("consumer-rules.pro")
+        versionCode = 1
+        versionName = "1.0"
     }
 
     buildTypes {
@@ -30,16 +36,23 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+    sourceSets {
+        sourceSets.getByName("main"){
+            manifest.srcFile("src/main/debug/AndroidManifest.xml")
+        }
+    }
+    buildFeatures{
+        viewBinding = true
+    }
 }
 
 dependencies {
-    implementation ("com.squareup.retrofit2:adapter-rxjava3:2.9.0")
-    implementation ("io.reactivex.rxjava3:rxjava:3.0.13")
-    implementation ("io.reactivex.rxjava3:rxandroid:3.0.0")
-    implementation("com.squareup.retrofit2:retrofit:2.9.0")
-    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
-
-
+    implementation(project(":lib_net"))
+    implementation(project(":lib_base"))
+    implementation(libs.androidx.activity)
+    implementation(libs.androidx.constraintlayout)
+    ksp("cn.therouter:apt:1.2.4")
+    implementation ("cn.therouter:router:1.2.4")
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
