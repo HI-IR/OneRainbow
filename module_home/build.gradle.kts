@@ -1,17 +1,20 @@
 plugins {
-    alias(libs.plugins.android.library)
+    //alias(libs.plugins.android.library)
+    alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    id("com.google.devtools.ksp")
 }
+val isBuildModule = true
 
 android {
     namespace = "com.onerainbow.module.home"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
+        applicationId  = "com.example.module_login"
         minSdk = 24
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        consumerProguardFiles("consumer-rules.pro")
+        //consumerProguardFiles("consumer-rules.pro")
     }
 
     buildTypes {
@@ -30,10 +33,24 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+    buildFeatures{
+        viewBinding = true
+    }
+    sourceSets["main"].manifest.srcFile(
+        if (isBuildModule)
+            "src/main/debug/AndroidManifest.xml"
+        else
+            "src/main/AndroidManifest.xml"
+    )
 }
 
 dependencies {
-
+    implementation(project(":lib_base"))
+    implementation(project(":lib_net"))
+    implementation(libs.androidx.activity)
+    implementation(libs.androidx.constraintlayout)
+    ksp("cn.therouter:apt:1.2.4")
+    implementation ("cn.therouter:router:1.2.4")
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
