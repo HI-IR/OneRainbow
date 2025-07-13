@@ -1,0 +1,9 @@
+[
+  {
+    "path": "/user/login",
+    "className": "com.onerainbow.module.account.LoginActivity",
+    "action": "",
+    "description": "",
+    "params": {}
+  }
+]
