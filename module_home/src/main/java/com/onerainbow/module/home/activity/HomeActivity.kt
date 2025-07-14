@@ -1,0 +1,120 @@
+package com.onerainbow.module.home.activity
+
+import android.os.Bundle
+import android.widget.Toast
+import androidx.core.view.GravityCompat
+import androidx.viewpager2.widget.ViewPager2
+import com.onerainbow.lib.base.BaseActivity
+import com.onerainbow.module.home.R
+import com.onerainbow.module.home.adapter.HomeVpAdapter
+import com.onerainbow.module.home.databinding.ActivityHomeBinding
+import com.onerainbow.module.home.databinding.LayoutDrawerBinding
+import com.onerainbow.module.recommend.RecommendFragment
+import com.onerainbow.module.top.TopFragment
+import com.onerainbow.module.user.UserFragment
+import com.onerainbow.module_mv.MvFragment
+
+class HomeActivity : BaseActivity<ActivityHomeBinding>() {
+    override fun getViewBinding(): ActivityHomeBinding = ActivityHomeBinding.inflate(layoutInflater)
+    private  val drawerBinding: LayoutDrawerBinding by lazy {
+        binding.includeDrawer
+    }
+    private val fragments by lazy {
+        listOf(
+            RecommendFragment(),
+            TopFragment(),
+            MvFragment(),
+            UserFragment()
+        )
+    }
+
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        //去除底部导航栏的覆盖色
+        binding.navHome.itemIconTintList = null
+
+        //初始化BottomNavigationView
+        initBottomNav()
+
+        //初始化VP2
+        initVp2()
+    }
+
+    private fun initVp2() {
+        binding.apply {
+            vp2Home.let {
+                //配置适配器
+                it.adapter = HomeVpAdapter(this@HomeActivity,fragments)
+
+                it.isUserInputEnabled = false //拦截用户手势
+
+                //设置滑动的事件与BottomNav的联动
+                it.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback(){
+                    override fun onPageSelected(position: Int) {
+                        super.onPageSelected(position)
+                        when(position){
+                            0 -> navHome.selectedItemId = R.id.menu_recommend
+                            1 -> navHome.selectedItemId = R.id.menu_top
+                            2 -> navHome.selectedItemId = R.id.menu_mv
+                            3 -> navHome.selectedItemId = R.id.menu_user
+                        }
+                    }
+                })
+            }
+        }
+    }
+
+    private fun initBottomNav() {
+
+        //BottomNav联动Vp
+        binding.navHome.apply {
+            setOnItemSelectedListener { item->
+                when(item.itemId){
+                    R.id.menu_recommend -> binding.vp2Home.currentItem = 0
+                    R.id.menu_top -> binding.vp2Home.currentItem = 1
+                    R.id.menu_mv -> binding.vp2Home.currentItem = 2
+                    R.id.menu_user -> binding.vp2Home.currentItem = 3
+                }
+                true
+            }
+        }
+    }
+
+
+    override fun initViewModel() {
+
+    }
+    //TODO 流出点击事件的接口，等待完善
+    override fun initEvent() {
+        binding.apply {
+            btnOpenDrawer.setOnClickListener {
+                drawerlayoutHome.openDrawer(GravityCompat.START)
+            }
+            searchBarMain.setOnClickListener {
+                Toast.makeText(this@HomeActivity,"点击了搜索栏",Toast.LENGTH_SHORT).show()
+            }
+        }
+
+
+        //侧边栏的事件绑定
+        drawerBinding.apply {
+            itemCollect.setOnClickListener {
+                Toast.makeText(this@HomeActivity,"点击了我的收藏",Toast.LENGTH_SHORT).show()
+            }
+            itemRecentplayed.setOnClickListener {
+                Toast.makeText(this@HomeActivity,"点击了最近播放",Toast.LENGTH_SHORT).show()
+            }
+            itemCloud.setOnClickListener {
+                Toast.makeText(this@HomeActivity,"点击了我的云盘",Toast.LENGTH_SHORT).show()
+            }
+            itemSubscription.setOnClickListener {
+                Toast.makeText(this@HomeActivity,"点击了我的关注",Toast.LENGTH_SHORT).show()
+            }
+            btnLogout.setOnClickListener {
+                Toast.makeText(this@HomeActivity,"点击了退出登录",Toast.LENGTH_SHORT).show()
+            }
+        }
+
+    }
+}

@@ -47,6 +47,11 @@ android {
 dependencies {
     implementation(project(":lib_base"))
     implementation(project(":lib_net"))
+    implementation(project(":module_recommend"))
+    implementation(project(":module_top"))
+    implementation(project(":module_mv"))
+    implementation(project(":module_user"))
+
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
     ksp("cn.therouter:apt:1.2.4")

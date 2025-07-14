@@ -8,26 +8,25 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <LinearLayout
         android:id="@+id/user"
-
+        android:layout_marginTop="5dp"
         android:gravity="center"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:orientation="horizontal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
-        <ImageView
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/shapeableImageView"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_gravity="center"
             android:layout_marginStart="15dp"
-            android:id="@+id/img_avatar"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
             android:scaleType="centerCrop"
             android:src="@drawable/avatar"
-            android:clickable="true"
-            android:clipToOutline="true"
-            android:background="@drawable/shape_avatar"
-            android:layout_marginEnd="16dp" />
+            app:shapeAppearanceOverlay="@style/circleImageStyle" />
 
         <TextView
+            android:layout_marginStart="5dp"
             android:id="@+id/tv_username"
             android:textSize="18sp"
             android:layout_width="wrap_content"
@@ -60,7 +59,7 @@
             <ImageView
                 android:scaleType="fitXY"
                 android:layout_width="match_parent"
-                android:layout_height="140dp"
+                android:layout_height="145dp"
                 android:src="@drawable/vip"/>
 
             <!--选项-->
@@ -73,20 +72,24 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
                 <LinearLayout
+                    android:id="@+id/item_collect"
+                    android:padding="5dp"
                     android:layout_width="match_parent"
                     android:gravity="center_vertical"
                     android:layout_height="45dp">
                     <ImageView
                         android:layout_width="20dp"
                         android:layout_height="20dp"
-                        android:src="@drawable/recentplayed"/>
+                        android:src="@drawable/heart"/>
                     <TextView
                         android:layout_marginStart="10dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="最近播放"/>
+                        android:text="我的收藏"/>
                 </LinearLayout>
                 <LinearLayout
+                    android:id="@+id/item_recentplayed"
+                    android:padding="5dp"
                     android:layout_marginTop="15dp"
                     android:layout_width="match_parent"
                     android:gravity="center_vertical"
@@ -103,6 +106,8 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/item_cloud"
+                    android:padding="5dp"
                     android:layout_marginTop="15dp"
                     android:layout_width="match_parent"
                     android:gravity="center_vertical"
@@ -110,14 +115,16 @@
                     <ImageView
                         android:layout_width="20dp"
                         android:layout_height="20dp"
-                        android:src="@drawable/recentplayed"/>
+                        android:src="@drawable/cloud"/>
                     <TextView
                         android:layout_marginStart="10dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="最近播放"/>
+                        android:text="我的云盘"/>
                 </LinearLayout>
                 <LinearLayout
+                    android:id="@+id/item_subscription"
+                    android:padding="5dp"
                     android:layout_marginTop="15dp"
                     android:layout_width="match_parent"
                     android:gravity="center_vertical"
@@ -125,27 +132,12 @@
                     <ImageView
                         android:layout_width="20dp"
                         android:layout_height="20dp"
-                        android:src="@drawable/recentplayed"/>
+                        android:src="@drawable/subscription"/>
                     <TextView
                         android:layout_marginStart="10dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="最近播放"/>
-                </LinearLayout>
-                <LinearLayout
-                    android:layout_marginTop="15dp"
-                    android:layout_width="match_parent"
-                    android:gravity="center_vertical"
-                    android:layout_height="45dp">
-                    <ImageView
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:src="@drawable/recentplayed"/>
-                    <TextView
-                        android:layout_marginStart="10dp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="最近播放"/>
+                        android:text="我的关注"/>
                 </LinearLayout>
             </LinearLayout>
 
@@ -161,6 +153,7 @@
         android:padding="15dp"
         app:layout_constraintEnd_toEndOf="parent">
         <android.widget.Button
+            android:id="@+id/btn_logout"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"

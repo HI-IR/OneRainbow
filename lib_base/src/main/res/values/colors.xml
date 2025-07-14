@@ -5,4 +5,6 @@
     <color name="text_third">#FFFFFF</color>
     <color name="text_four">#ABA4A3</color>
     <color name="background">#FFFFFF</color>
+    <color name="second">#BFBFBF</color>
+    <color name="app_first_color">#64EDAC</color>
 </resources>

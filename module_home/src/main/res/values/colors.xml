@@ -3,4 +3,6 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="drawer">#F3F6FB</color>
+    <color name="search_bar">#E7E8EC</color>
+    <color name="pressed">#CCCCCC</color>
 </resources>
