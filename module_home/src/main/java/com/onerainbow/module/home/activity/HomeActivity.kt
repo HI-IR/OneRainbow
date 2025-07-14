@@ -9,7 +9,7 @@ import com.onerainbow.module.home.R
 import com.onerainbow.module.home.adapter.HomeVpAdapter
 import com.onerainbow.module.home.databinding.ActivityHomeBinding
 import com.onerainbow.module.home.databinding.LayoutDrawerBinding
-import com.onerainbow.module.recommend.RecommendFragment
+import com.onerainbow.module.recommend.ui.RecommendFragment
 import com.onerainbow.module.top.TopFragment
 import com.onerainbow.module.user.UserFragment
 import com.onerainbow.module_mv.MvFragment

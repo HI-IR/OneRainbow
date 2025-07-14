@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "com.onerainbow.lib.net"
+    namespace = "com.onerainbow.module.share"
     compileSdk = 35
 
     defaultConfig {
@@ -30,16 +30,13 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+    buildFeatures{
+        viewBinding = true
+    }
 }
 
 dependencies {
-    implementation ("com.squareup.retrofit2:adapter-rxjava3:2.9.0")
-    api ("io.reactivex.rxjava3:rxjava:3.0.13")
-    api ("io.reactivex.rxjava3:rxandroid:3.0.0")
-    api("com.squareup.retrofit2:retrofit:2.9.0")
-    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
-
-
+    implementation(project(":lib_base"))
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)

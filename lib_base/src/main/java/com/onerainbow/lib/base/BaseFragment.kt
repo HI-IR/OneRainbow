@@ -21,7 +21,7 @@ abstract class BaseFragment<VB: ViewBinding>: Fragment() {
 
     //关于binding的操作
     private var _binding: VB? = null
-    private val binding get() = _binding!!
+    protected val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater,
