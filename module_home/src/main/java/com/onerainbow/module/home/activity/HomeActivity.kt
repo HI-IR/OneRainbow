@@ -114,6 +114,12 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>() {
             btnLogout.setOnClickListener {
                 Toast.makeText(this@HomeActivity,"点击了退出登录",Toast.LENGTH_SHORT).show()
             }
+            tvUsername.setOnClickListener {
+                Toast.makeText(this@HomeActivity,"点击了登录",Toast.LENGTH_SHORT).show()
+            }
+            imgAvatar.setOnClickListener {
+                Toast.makeText(this@HomeActivity,"点击了头像",Toast.LENGTH_SHORT).show()
+            }
         }
 
     }
