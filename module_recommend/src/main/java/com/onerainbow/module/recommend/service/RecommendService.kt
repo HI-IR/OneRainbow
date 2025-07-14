@@ -1,8 +1,11 @@
 package com.onerainbow.module.recommend.service
 
 import com.onerainbow.module.recommend.bean.BannerData
+import com.onerainbow.module.recommend.bean.Curated
+import com.onerainbow.module.recommend.bean.CuratedData
 import io.reactivex.rxjava3.core.Observable
 import retrofit2.http.GET
+import retrofit2.http.POST
 import retrofit2.http.Query
 import java.sql.Types
 
@@ -14,9 +17,21 @@ import java.sql.Types
  */
 interface RecommendService {
 
-    //Banner
+    /**
+     * Banner
+     */
     @GET("/banner")
     fun getBanner(
         @Query("type") types: Int
     ):Observable<BannerData>
+
+
+    /**
+     *甄选歌单
+     */
+    @GET("/personalized")
+    fun getCuratedList(
+        @Query("limit") limit: Int
+    ):Observable<CuratedData>
+
 }

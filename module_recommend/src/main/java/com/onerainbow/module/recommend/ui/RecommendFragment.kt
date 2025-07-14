@@ -4,8 +4,10 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.onerainbow.lib.base.BaseFragment
 import com.onerainbow.module.recommend.adapter.BannerAdapter
+import com.onerainbow.module.recommend.adapter.CuratedPlaylistAdapter
 import com.onerainbow.module.recommend.databinding.FragmentRecommendBinding
 import com.onerainbow.module.recommend.viewmodel.RecommendViewModel
 
@@ -23,6 +25,9 @@ class RecommendFragment : BaseFragment<FragmentRecommendBinding>(){
     private val bannerAdapter by lazy {
         BannerAdapter(requireContext())
     }
+    private val curatedAdapter by lazy {
+        CuratedPlaylistAdapter(requireContext())
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -39,7 +44,11 @@ class RecommendFragment : BaseFragment<FragmentRecommendBinding>(){
     private fun initView() {
         binding.apply {
             vp2Banner.adapter = bannerAdapter
+            rvCuratedPlaylist.adapter = curatedAdapter
+            rvCuratedPlaylist.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         }
+
+
 
         // 设置下拉刷新监听器
         binding.swipeRefresh.setOnRefreshListener {
@@ -49,20 +58,35 @@ class RecommendFragment : BaseFragment<FragmentRecommendBinding>(){
 
     private fun initData() {
         viewModel.getBanner()
+        viewModel.getCurateList()
     }
 
     override fun initViewModel() {
         viewModel.apply {
+
+            //关于轮播图的信息
             banner.observe(this@RecommendFragment){
                 bannerAdapter.submitList(it)
                 binding.swipeRefresh.isRefreshing =false
                 binding.vp2Banner.setCurrentItem(Int.MAX_VALUE/2 -(Int.MAX_VALUE/2 % bannerAdapter.currentList.size),false)
 
             }
+
+            //关于甄选歌单信息
+            curatedList.observe(this@RecommendFragment){
+                curatedAdapter.submitList(it)
+            }
+
+
+
+
             error.observe(this@RecommendFragment){
                 Toast.makeText(requireContext(),it,Toast.LENGTH_SHORT).show()
                 binding.swipeRefresh.isRefreshing =false
             }
+
+
+
         }
     }
 

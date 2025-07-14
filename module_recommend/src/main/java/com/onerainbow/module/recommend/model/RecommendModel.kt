@@ -2,6 +2,7 @@ package com.onerainbow.module.recommend.model
 
 import com.onerainbow.lib.net.RetrofitClient
 import com.onerainbow.module.recommend.bean.BannerData
+import com.onerainbow.module.recommend.bean.CuratedData
 import com.onerainbow.module.recommend.service.RecommendService
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
@@ -18,7 +19,10 @@ object RecommendModel {
         RetrofitClient.create(RecommendService::class.java)
     }
 
-    fun getBanner():Observable<BannerData>{
+    /**
+     * 获取轮播图
+     */
+    fun getBanner(): Observable<BannerData> {
         return api.getBanner(1)
             //被观察者线程，网络请求所在线程
             .subscribeOn(Schedulers.io())
@@ -26,4 +30,16 @@ object RecommendModel {
             .observeOn(AndroidSchedulers.mainThread())
 
     }
+
+    /**
+     * 获取甄选歌单
+     * @param limit 获取的数量，默认11
+     */
+    fun getCurateList(limit: Int): Observable<CuratedData> {
+        return api.getCuratedList(limit)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+
+    }
+
 }
