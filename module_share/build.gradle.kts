@@ -1,12 +1,10 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
-    id("com.google.devtools.ksp")
-
 }
 
 android {
-    namespace = "com.onerainbow.module.recommend"
+    namespace = "com.onerainbow.module.share"
     compileSdk = 35
 
     defaultConfig {
@@ -33,21 +31,12 @@ android {
         jvmTarget = "1.8"
     }
     buildFeatures{
-        viewBinding =true
+        viewBinding = true
     }
 }
 
 dependencies {
-    //Glide
-    implementation ("com.github.bumptech.glide:glide:4.12.0")
-    implementation(project(":module_share"))
-    implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
     implementation(project(":lib_base"))
-    implementation(project(":lib_net"))
-    implementation(libs.androidx.activity)
-    implementation(libs.androidx.constraintlayout)
-    ksp("cn.therouter:apt:1.2.4")
-    implementation ("cn.therouter:router:1.2.4")
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
