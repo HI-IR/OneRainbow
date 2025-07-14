@@ -47,10 +47,15 @@ android {
 }
 
 dependencies {
+    implementation(project(":lib_database"))
+    implementation(project(":lib_route"))
     implementation(project(":lib_net"))
     implementation(project(":lib_base"))
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.ui.desktop)
     ksp("cn.therouter:apt:1.2.4")
     implementation ("cn.therouter:router:1.2.4")
     implementation(libs.androidx.core.ktx)

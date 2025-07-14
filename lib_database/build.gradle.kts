@@ -1,11 +1,12 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
+    id("com.google.devtools.ksp")
 }
 
 android {
-    namespace = "com.onerainbow.lib.net"
-    compileSdk = 35
+    namespace = "com.onerainbow.lib.database"
+    compileSdk = 34
 
     defaultConfig {
         minSdk = 24
@@ -33,13 +34,9 @@ android {
 }
 
 dependencies {
-    implementation ("com.squareup.retrofit2:adapter-rxjava3:2.9.0")
-    api ("io.reactivex.rxjava3:rxjava:3.0.13")
-    api ("io.reactivex.rxjava3:rxandroid:3.0.0")
-    api("com.squareup.retrofit2:retrofit:2.9.0")
-    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
-
-
+    implementation ("androidx.room:room-runtime:2.6.1")
+    ksp("androidx.room:room-compiler:2.6.1")
+    implementation("androidx.room:room-ktx:2.6.1")
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
