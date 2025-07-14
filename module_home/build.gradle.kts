@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     id("com.google.devtools.ksp")
+
 }
 val isBuildModule = true
 
@@ -45,6 +46,7 @@ android {
 }
 
 dependencies {
+    implementation(project(":lib_route"))
     implementation(project(":lib_base"))
     implementation(project(":lib_net"))
     implementation(libs.androidx.activity)
