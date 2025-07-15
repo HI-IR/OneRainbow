@@ -34,16 +34,19 @@ class CuratedPlaylistAdapter(val context: Context) : ListAdapter<Curated, Curate
         private val imgPic = binding.imgPic
         private val tvName = binding.tvName
         private val item = binding.root
+        private val tvCount = binding.tvCount
         init {
             initClick()
         }
         fun bind(data: Curated){
             tvName.text = data.name
-
+            tvCount.text = data.playCount.toText()
             //加载网络图片
             val requestOptions: RequestOptions = RequestOptions().placeholder(R.drawable.loading)
                 .fallback(R.drawable.loading)
             Glide.with(context).load(data.picUrl).apply(requestOptions).into(imgPic)
+
+
         }
 
         private fun initClick() {
@@ -52,6 +55,16 @@ class CuratedPlaylistAdapter(val context: Context) : ListAdapter<Curated, Curate
                 Toast.makeText(context,"点击了歌单${tvName.text}，${getItem(adapterPosition).id}",Toast.LENGTH_SHORT).show()
             }
         }
+
+        //将数据转为从多少万
+        fun Long.toText(): String {
+            return when {
+                this >= 100000000 -> "%.1f亿".format(this / 100000000.0).replace(".0", "")
+                this >= 10000 -> "%.1f万".format(this / 10000.0).replace(".0", "")
+                else -> toString()
+            }
+        }
+
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewModel {

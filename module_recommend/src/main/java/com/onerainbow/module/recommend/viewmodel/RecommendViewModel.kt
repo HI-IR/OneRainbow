@@ -4,8 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.onerainbow.module.recommend.bean.Banner
-import com.onerainbow.module.recommend.bean.BannerData
 import com.onerainbow.module.recommend.bean.Curated
+import com.onerainbow.module.recommend.bean.Playlist
+import com.onerainbow.module.recommend.bean.Playlists
 import com.onerainbow.module.recommend.model.RecommendModel
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 
@@ -16,15 +17,23 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable
  * date : 2025/7/14 15:07
  */
 class RecommendViewModel:ViewModel() {
+    //轮播图数据
     private val _bannerData = MutableLiveData<List<Banner>>()
     val banner:LiveData<List<Banner>> = _bannerData
 
+    //甄选好歌
     private val _curatedList = MutableLiveData<List<Curated>>()
     val curatedList: LiveData<List<Curated>> = _curatedList
 
+    //网友精选
+    private val _communityPicks = MutableLiveData<List<Playlists>>()
+    val communityPicks: LiveData<List<Playlists>> = _communityPicks
 
+    //热歌榜
+    private val _toplist = MutableLiveData<List<Playlist>>()
+    val toplist:LiveData<List<Playlist>> = _toplist
 
-
+    //错误
     private val _error = MutableLiveData<String>()
     val error:LiveData<String> = _error
 
@@ -56,6 +65,25 @@ class RecommendViewModel:ViewModel() {
         })
         disposables.add(disposable)
     }
+
+    fun getTopPlayList(limit: Int = 12){
+        val disposable = RecommendModel.getTopPlayList(limit).subscribe({
+            _communityPicks.postValue(it.playlists)
+        },{
+            _error.postValue(it.message)
+        })
+        disposables.add(disposable)
+    }
+
+    fun fetchTopList(){
+        val disposable = RecommendModel.fetchTopList(listOf(19723756,3779629,2884035)).subscribe({ it ->
+            _toplist.postValue(it.map { it.playlist })
+        },{
+            _error.postValue(it.message)
+        })
+        disposables.add(disposable)
+    }
+
 
 
     override fun onCleared() {

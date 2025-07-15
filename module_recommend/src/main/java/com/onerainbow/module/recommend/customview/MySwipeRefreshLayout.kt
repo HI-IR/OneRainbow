@@ -33,11 +33,8 @@ class MySwipeRefreshLayout @JvmOverloads constructor(
                 val dx = ev.x - startX
                 val dy = ev.y - startY
                 if (abs(dx) > abs(dy) * 1.25 && abs(dx) >= touchSlop){
-                    Log.d("conflict", "水平滑动 dx:$dx dy:$dy")
                     //水平滑动
                     return false
-                }else{
-                    Log.d("conflict", "垂直滑动 dx:$dx dy:$dy")
                 }
             }
 

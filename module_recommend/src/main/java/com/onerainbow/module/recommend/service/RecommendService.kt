@@ -1,9 +1,13 @@
 package com.onerainbow.module.recommend.service
 
 import com.onerainbow.module.recommend.bean.BannerData
+import com.onerainbow.module.recommend.bean.CommunityPicks
 import com.onerainbow.module.recommend.bean.Curated
 import com.onerainbow.module.recommend.bean.CuratedData
+import com.onerainbow.module.recommend.bean.SongLists
+import com.onerainbow.module.recommend.bean.TopList
 import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.core.Single
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Query
@@ -34,4 +38,30 @@ interface RecommendService {
         @Query("limit") limit: Int
     ):Observable<CuratedData>
 
+
+    /**
+     * 热歌精选
+     */
+    @GET("/top/playlist")
+    fun getTopPlayList(
+        @Query("limit") limit: Int
+    ):Observable<CommunityPicks>
+
+    /**
+     * 所有榜榜单
+     * 获取歌单Id
+     */
+    @GET("/toplist")
+    fun getTopList():Observable<TopList>
+
+    /**
+     * 获取歌单信息
+     * 热搜榜:19723756
+     * 新歌榜:3779629
+     * 原创榜:2884035
+     */
+    @GET("/playlist/detail")
+    fun getSongLists(
+        @Query("id") id: Int
+    ): Single<SongLists>
 }
