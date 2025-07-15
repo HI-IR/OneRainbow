@@ -1,7 +1,9 @@
 package com.onerainbow.module.user
 
 import com.onerainbow.lib.base.BaseFragment
+import com.onerainbow.lib.route.RoutePath
 import com.onerainbow.module.user.databinding.FragmentUserBinding
+import com.therouter.TheRouter
 
 /**
  * description ： 用户页的Fragment
@@ -13,7 +15,7 @@ class UserFragment : BaseFragment<FragmentUserBinding>() {
     override fun getViewBinding(): FragmentUserBinding = FragmentUserBinding.inflate(layoutInflater)
 
     override fun initEvent() {
-        //TODO("Not yet implemented")
+        binding.myselfButton.setOnClickListener{TheRouter.build(RoutePath.LOGIN).navigation()}
     }
 
     override fun initViewModel() {

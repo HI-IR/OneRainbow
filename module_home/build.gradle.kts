@@ -1,21 +1,21 @@
 plugins {
-    //alias(libs.plugins.android.library)
-    alias(libs.plugins.android.application)
+    alias(libs.plugins.android.library)
+    //alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     id("com.google.devtools.ksp")
 
 }
-val isBuildModule = true
+val isBuildModule = false
 
 android {
     namespace = "com.onerainbow.module.home"
     compileSdk = 35
 
     defaultConfig {
-        applicationId  = "com.example.module_login"
+        //applicationId  = "com.example.module_login"
         minSdk = 24
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        //consumerProguardFiles("consumer-rules.pro")
+        consumerProguardFiles("consumer-rules.pro")
     }
 
     buildTypes {

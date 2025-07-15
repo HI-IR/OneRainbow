@@ -7,8 +7,7 @@ package com.onerainbow.lib.route
  * date : 2025/7/13 19:20
  */
 object RoutePath {
-    const val HOME = "/home"
-    const val LOGIN="/login"
-    const val LOGIN_PHONE = "/login/phone"
-    const val LOGIN_CAPTCHA = "/login/phone/captcha"
+    const val HOME = "/home/HomeActivity"
+    const val LOGIN = "/account/LoginActivity"
+    const val MAIN = "/main/MainActivity"
 }

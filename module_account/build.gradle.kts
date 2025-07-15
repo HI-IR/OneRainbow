@@ -1,7 +1,7 @@
 plugins {
-    //alias(libs.plugins.android.library)
+    alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.android.application)
+    //alias(libs.plugins.android.application)
     id("com.google.devtools.ksp")
 
 }
@@ -13,11 +13,8 @@ android {
 
     defaultConfig {
         minSdk = 24
-        applicationId = "com.example.module_account"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        //consumerProguardFiles("consumer-rules.pro")
-        versionCode = 1
-        versionName = "1.0"
+        consumerProguardFiles("consumer-rules.pro")
     }
 
     buildTypes {
@@ -36,11 +33,11 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
-    sourceSets {
-        sourceSets.getByName("main"){
-            manifest.srcFile("src/main/debug/AndroidManifest.xml")
-        }
-    }
+//    sourceSets {
+//        sourceSets.getByName("main"){
+//            manifest.srcFile("src/main/debug/AndroidManifest.xml")
+//        }
+//    }
     buildFeatures{
         viewBinding = true
     }

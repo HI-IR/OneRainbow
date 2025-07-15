@@ -5,6 +5,7 @@ import android.widget.Toast
 import androidx.core.view.GravityCompat
 import androidx.viewpager2.widget.ViewPager2
 import com.onerainbow.lib.base.BaseActivity
+import com.onerainbow.lib.route.RoutePath
 import com.onerainbow.module.home.R
 import com.onerainbow.module.home.adapter.HomeVpAdapter
 import com.onerainbow.module.home.databinding.ActivityHomeBinding
@@ -13,7 +14,10 @@ import com.onerainbow.module.recommend.ui.RecommendFragment
 import com.onerainbow.module.top.TopFragment
 import com.onerainbow.module.user.UserFragment
 import com.onerainbow.module_mv.MvFragment
+import com.therouter.TheRouter
+import com.therouter.router.Route
 
+@Route(path = RoutePath.HOME)
 class HomeActivity : BaseActivity<ActivityHomeBinding>() {
     override fun getViewBinding(): ActivityHomeBinding = ActivityHomeBinding.inflate(layoutInflater)
     private  val drawerBinding: LayoutDrawerBinding by lazy {

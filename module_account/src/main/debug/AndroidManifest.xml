@@ -8,10 +8,8 @@
         android:allowBackup="true"
         android:label="login"
         android:supportsRtl="true"
+        android:name="com.onerainbow.lib.base.BaseApplication"
         android:theme="@style/Theme.OneRainbow">
-        <activity
-            android:name="com.onerainbow.module.account.CaptchActivity"
-            android:exported="false" />
         <activity
             android:name="com.onerainbow.module.account.LoginActivity"
             android:exported="true">
