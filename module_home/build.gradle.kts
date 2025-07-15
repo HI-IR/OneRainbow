@@ -5,7 +5,6 @@ plugins {
     id("com.google.devtools.ksp")
 
 }
-val isBuildModule = false
 
 android {
     namespace = "com.onerainbow.module.home"
@@ -37,12 +36,6 @@ android {
     buildFeatures{
         viewBinding = true
     }
-    sourceSets["main"].manifest.srcFile(
-        if (isBuildModule)
-            "src/main/debug/AndroidManifest.xml"
-        else
-            "src/main/AndroidManifest.xml"
-    )
 }
 
 dependencies {

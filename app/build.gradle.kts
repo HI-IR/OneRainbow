@@ -42,6 +42,7 @@ android {
 }
 
 dependencies {
+    debugImplementation ("com.squareup.leakcanary:leakcanary-android:2.8.1")
     implementation(project(":module_account"))
     implementation(project(":module_home"))
     implementation(project(":lib_route"))
