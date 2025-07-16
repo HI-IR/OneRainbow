@@ -82,7 +82,7 @@ class RecommendFragment : BaseFragment<FragmentRecommendBinding>() {
                     parent: RecyclerView,
                     state: RecyclerView.State
                 ) {
-                    outRect.bottom = 55//给下面一点间距
+                    outRect.bottom =40 //给下面一点间距
                 }
             })
         }
@@ -98,7 +98,7 @@ class RecommendFragment : BaseFragment<FragmentRecommendBinding>() {
         viewModel.getBanner()
         viewModel.fetchTopList()
         viewModel.getCurateList()
-        viewModel.getTopPlayList()
+        viewModel.getCommunityPicks()
     }
 
     override fun initViewModel() {
@@ -136,6 +136,7 @@ class RecommendFragment : BaseFragment<FragmentRecommendBinding>() {
                 Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
                 binding.swipeRefresh.isRefreshing = false
             }
+
         }
     }
 

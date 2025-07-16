@@ -32,7 +32,7 @@ class MySwipeRefreshLayout @JvmOverloads constructor(
             MotionEvent.ACTION_MOVE ->{
                 val dx = ev.x - startX
                 val dy = ev.y - startY
-                if (abs(dx) > abs(dy) * 1.25 && abs(dx) >= touchSlop){
+                if (abs(dx) > abs(dy) * 1.5 && abs(dx) >= touchSlop){
                     //水平滑动
                     return false
                 }

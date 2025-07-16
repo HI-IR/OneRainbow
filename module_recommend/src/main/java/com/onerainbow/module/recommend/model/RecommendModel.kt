@@ -62,6 +62,7 @@ object RecommendModel {
     fun fetchTopList(ids: List<Int>): Single<List<SongLists>> {
         return Observable.fromIterable(ids)
             .flatMapSingle {id->
+                //获取3首歌
                 api.getSongLists(id)
             }.toList()
             .subscribeOn(Schedulers.io())

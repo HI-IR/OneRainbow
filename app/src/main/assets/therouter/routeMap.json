@@ -1,12 +1,5 @@
 [
   {
-    "path": "/main/MainActivity",
-    "className": "com.onerainbow.onerainbow.MainActivity",
-    "action": "",
-    "description": "",
-    "params": {}
-  },
-  {
     "path": "/main",
     "className": "com.onerainbow.onerainbow.MainActivity",
     "action": "",
@@ -21,7 +14,7 @@
     "params": {}
   },
   {
-    "path": "/home/HomeActivity",
+    "path": "/home",
     "className": "com.onerainbow.module.home.activity.HomeActivity",
     "action": "",
     "description": "",
@@ -35,7 +28,7 @@
     "params": {}
   },
   {
-    "path": "/account/LoginActivity",
+    "path": "/account/login",
     "className": "com.onerainbow.module.account.LoginActivity",
     "action": "",
     "description": "",
