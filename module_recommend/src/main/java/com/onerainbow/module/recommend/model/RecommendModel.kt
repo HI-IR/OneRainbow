@@ -2,10 +2,13 @@ package com.onerainbow.module.recommend.model
 
 import com.onerainbow.lib.net.RetrofitClient
 import com.onerainbow.module.recommend.bean.BannerData
+import com.onerainbow.module.recommend.bean.CommunityPicks
 import com.onerainbow.module.recommend.bean.CuratedData
+import com.onerainbow.module.recommend.bean.SongLists
 import com.onerainbow.module.recommend.service.RecommendService
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.schedulers.Schedulers
 
 /**
@@ -33,13 +36,36 @@ object RecommendModel {
 
     /**
      * 获取甄选歌单
-     * @param limit 获取的数量，默认11
+     * @param limit 获取的数量
      */
     fun getCurateList(limit: Int): Observable<CuratedData> {
         return api.getCuratedList(limit)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
 
+    }
+
+    /**
+     * 热歌精选
+     * @param limit 获取的数量
+     */
+    fun getTopPlayList(limit: Int): Observable<CommunityPicks>{
+        return api.getTopPlayList(limit)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+    }
+
+    /**
+     * 精简排行榜
+     * 并行3次请求
+     */
+    fun fetchTopList(ids: List<Int>): Single<List<SongLists>> {
+        return Observable.fromIterable(ids)
+            .flatMapSingle {id->
+                api.getSongLists(id)
+            }.toList()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
     }
 
 }

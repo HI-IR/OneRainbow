@@ -7,8 +7,8 @@ package com.onerainbow.module.recommend.bean
  * date : 2025/7/14 19:40
  */
 data class CuratedData(
-    val category: Int,
-    val code: Int,
+    val category: Long,
+    val code: Long,
     val hasTaste: Boolean,
     val result: List<Curated>
 )
@@ -21,8 +21,8 @@ data class Curated(
     val id: Long,//歌单ID
     val name: String,//歌单名
     val picUrl: String,//图片URL
-    val playCount: Int,//播放量
-    val trackCount: Int,//歌单中歌曲的数量
+    val playCount: Long,//播放量
+    val trackCount: Long,//歌单中歌曲的数量
     val trackNumberUpdateTime: Long,//歌单最后更新歌曲数量的时间
-    val type: Int//类型
+    val type: Long//类型
 )

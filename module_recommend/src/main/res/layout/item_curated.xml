@@ -34,4 +34,26 @@
         android:maxLines="2"
         android:ellipsize="end"
         />
+    <ImageView
+        android:id="@+id/img_earphone"
+        app:layout_constraintTop_toTopOf="@id/img_pic"
+        app:layout_constraintStart_toStartOf="@id/img_pic"
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="5dp"
+        android:layout_width="10dp"
+        android:layout_height="10dp"
+        android:src="@drawable/earphone"/>
+    <TextView
+        android:id="@+id/tv_count"
+        app:layout_constraintTop_toTopOf="@id/img_pic"
+        app:layout_constraintStart_toEndOf="@id/img_earphone"
+        android:layout_marginTop="5dp"
+        android:layout_marginStart="3dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="11sp"
+        android:textStyle="bold"
+        android:text="12.3万"
+        android:textColor="@color/text_third"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

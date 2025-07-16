@@ -8,7 +8,7 @@ package com.onerainbow.module.recommend.bean
  */
 data class BannerData(
     val banners: List<Banner>,
-    val code: Int,
+    val code: Long,
     val trp: Trp
 )
 
@@ -26,7 +26,7 @@ data class Banner(
     val scm: String,
     val showAdTag: Boolean,
     val targetId: Long,
-    val targetType: Int,
+    val targetType: Long,
     val titleColor: String,
     val typeTitle: String,
     val url: String?

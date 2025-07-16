@@ -1,7 +1,6 @@
 package com.onerainbow.onerainbow
 
 import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
 import com.onerainbow.lib.base.BaseActivity
 import com.onerainbow.lib.route.RoutePath
 import com.onerainbow.onerainbow.databinding.ActivityMainBinding
