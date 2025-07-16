@@ -1,19 +1,16 @@
 plugins {
     alias(libs.plugins.android.library)
-    //alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     id("com.google.devtools.ksp")
-
 }
-val isBuildModule = false
 
 android {
-    namespace = "com.onerainbow.module.home"
-    compileSdk = 35
+    namespace = "com.example.module.seek"
+    compileSdk = 34
 
     defaultConfig {
-        //applicationId  = "com.example.module_login"
         minSdk = 24
+
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
     }
@@ -27,6 +24,9 @@ android {
             )
         }
     }
+    buildFeatures{
+        viewBinding = true
+    }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
@@ -34,28 +34,15 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
-    buildFeatures{
-        viewBinding = true
-    }
-    sourceSets["main"].manifest.srcFile(
-        if (isBuildModule)
-            "src/main/debug/AndroidManifest.xml"
-        else
-            "src/main/AndroidManifest.xml"
-    )
 }
 
 dependencies {
+    implementation(project(":lib_net"))
     implementation(project(":lib_route"))
     implementation(project(":lib_base"))
-    implementation(project(":lib_net"))
-    implementation(project(":module_recommend"))
-    implementation(project(":module_top"))
-    implementation(project(":module_mv"))
-    implementation(project(":module_user"))
-    implementation(project(":module_seek"))
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
+    implementation ("com.google.android.flexbox:flexbox:3.0.0")
     ksp("cn.therouter:apt:1.2.4")
     implementation ("cn.therouter:router:1.2.4")
     implementation(libs.androidx.core.ktx)

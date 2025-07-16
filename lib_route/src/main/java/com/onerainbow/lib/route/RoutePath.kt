@@ -10,4 +10,5 @@ object RoutePath {
     const val HOME = "/home/HomeActivity"
     const val LOGIN = "/account/LoginActivity"
     const val MAIN = "/main/MainActivity"
+    const val SEEK = "/seek/SeekActivity"
 }

@@ -40,5 +40,12 @@
     "action": "",
     "description": "",
     "params": {}
+  },
+  {
+    "path": "/seek/SeekActivity",
+    "className": "com.example.module.seek.SeekActivity",
+    "action": "",
+    "description": "",
+    "params": {}
   }
 ]

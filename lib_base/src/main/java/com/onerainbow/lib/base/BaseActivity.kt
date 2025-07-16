@@ -77,4 +77,5 @@ abstract class BaseActivity<VB : ViewBinding>: AppCompatActivity() {
         return capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
     }
 
+
 }

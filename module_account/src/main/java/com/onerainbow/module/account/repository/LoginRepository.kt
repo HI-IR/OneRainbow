@@ -39,7 +39,7 @@ class LoginRepository {
     }
 
     fun startPollingQrState(): Observable<StateData> {
-        return Observable.interval(5, 5, TimeUnit.SECONDS) // 立即执行一次，然后每 5秒执行
+        return Observable.interval(5, 2, TimeUnit.SECONDS) // 立即执行一次，然后每 2秒执行
             .flatMap {
                 getState() // 每次调用接口
             }

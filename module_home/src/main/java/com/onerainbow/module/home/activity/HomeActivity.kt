@@ -96,7 +96,7 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>() {
                 drawerlayoutHome.openDrawer(GravityCompat.START)
             }
             searchBarMain.setOnClickListener {
-                Toast.makeText(this@HomeActivity,"点击了搜索栏",Toast.LENGTH_SHORT).show()
+               TheRouter.build(RoutePath.SEEK).navigation()
             }
         }
 
