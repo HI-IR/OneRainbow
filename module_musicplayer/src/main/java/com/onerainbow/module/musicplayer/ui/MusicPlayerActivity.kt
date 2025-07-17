@@ -282,8 +282,10 @@ class MusicPlayerActivity : BaseActivity<ActivityMusicPlayerBinding>() {
             .setDuration(250) // 第一阶段时长
             .withEndAction {
                 // 第一阶段结束后
+                val rotation = if (viewModel.isPlaying.value!!) 23f else 0f
+
                 binding.imgStylus.animate()
-                    .rotation(23f)
+                    .rotation(rotation)
                     .setDuration(250) // 第二阶段时长
                     .start()
             }
@@ -360,8 +362,10 @@ class MusicPlayerActivity : BaseActivity<ActivityMusicPlayerBinding>() {
             .setDuration(250) // 第一阶段时长
             .withEndAction {
                 // 第一阶段结束后
+                val rotation = if (viewModel.isPlaying.value!!) 23f else 0f
+
                 binding.imgStylus.animate()
-                    .rotation(23f)
+                    .rotation(rotation)
                     .setDuration(250) // 第二阶段时长
                     .start()
             }
