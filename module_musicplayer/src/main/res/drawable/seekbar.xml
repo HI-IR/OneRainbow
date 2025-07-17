@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!--背景-->
+    <item android:id="@android:id/background"
+        android:gravity="center_vertical|fill_horizontal">
+        <shape android:shape="rectangle">
+            <size android:height="2dp"/>
+            <solid android:color="@color/seekbar_color"/>
+        </shape>
+    </item>
+
+    <!--主进度条-->
+    <item android:id="@android:id/progress"
+        android:top="7dp"
+        android:bottom="7dp"
+        >
+        <clip>
+            <shape android:shape="rectangle">
+                <solid android:color="@color/item"/>
+            </shape>
+        </clip>
+    </item>
+</layer-list>

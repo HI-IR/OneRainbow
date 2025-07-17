@@ -7,6 +7,7 @@
     <application
         android:name="com.onerainbow.lib.base.BaseApplication"
         android:allowBackup="true"
+        android:label="musicplayer"
         android:networkSecurityConfig="@xml/net_config"
         android:supportsRtl="true"
         android:theme="@style/Theme.OneRainbow">

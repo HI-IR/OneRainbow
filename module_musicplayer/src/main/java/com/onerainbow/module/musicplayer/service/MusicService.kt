@@ -97,7 +97,7 @@ class MusicService : Service(){
         fun play(song: Song ){
             //构建媒体元数据
             val mediaMetadata = MediaMetadata.Builder()
-                .setTitle(song.title)//歌名
+                .setTitle(song.name)//歌名
                 .setArtworkUri(Uri.parse(song.coverUrl))//封面
                 .build()
 
@@ -107,7 +107,7 @@ class MusicService : Service(){
             player.setMediaItem(mediaItem)
             player.prepare()//准备播放器
             player.play()//播放
-            updateNotification("正在播放：${song.title}")
+            updateNotification("正在播放：${song.name}")
         }
 
 

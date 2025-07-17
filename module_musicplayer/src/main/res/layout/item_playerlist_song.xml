@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="15dp">
+    <TextView
+        android:id="@+id/playerlist_item_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:maxEms="10"
+        android:ellipsize="marquee"
+        android:text="我是歌名"
+        android:textSize="17sp"
+        android:layout_gravity="center_vertical"
+        android:textColor="@color/text_first"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:text=" · "/>
+    <TextView
+        android:id="@+id/playerlist_item_creator"
+        android:layout_gravity="center_vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="我是作者"
+        android:maxEms="20"
+        android:ellipsize="middle"
+        android:textColor="@color/text_second"
+        android:textSize="10sp"/>
+
+    <View
+        android:layout_gravity="center_vertical"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_weight="7"/>
+    <ImageView
+        android:id="@+id/playerlist_delete"
+        android:layout_weight="1"
+        android:layout_gravity="center_vertical"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:src="@drawable/delete"/>
+
+</LinearLayout>

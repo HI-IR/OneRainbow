@@ -8,8 +8,21 @@ package com.onerainbow.module.musicplayer.model
  */
 data class Song(
     val id: Long,
-    val title: String,
-    val artists: String,
+    val name: String,
+    val artists: List<Artist>,
     val url : String,
     val coverUrl : String
+)
+
+/**
+ * 外界传入歌曲的数据列
+ */
+data class SongDTO(
+    val id: Long,//id
+    val name: String, //歌名
+    val artists: List<Artist>//作者
+)
+data class Artist(
+    val name: String, //歌曲名
+    val id: Long //作者id
 )
