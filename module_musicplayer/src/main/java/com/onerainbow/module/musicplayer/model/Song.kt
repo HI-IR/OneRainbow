@@ -16,7 +16,6 @@ data class Song(
     val id: Long,
     val name: String,
     val artists: List<Artist>,
-    val url: String,
     val coverUrl: String
 )
 
@@ -27,20 +26,11 @@ data class Artist(
 )
 
 
-fun Song.toMediaItem(): MediaItem {
-    //构建媒体元数据
-    val metadata = MediaMetadata.Builder()
-        .setTitle(this.name)
-        .setArtist(this.artists.joinToString(" / ") { it.name })
-        .setArtworkUri(Uri.parse(this.coverUrl))
-        .build()
-
-    val json = Gson().toJson(this)
-    return MediaItem.Builder()
-        .setUri(this.url)
-        .setMediaId(this.id.toString())
-        .setTag(json)
-        .setMediaMetadata(metadata)
+fun Song.toMediaMetadata(): MediaMetadata {
+    return MediaMetadata.Builder()
+        .setTitle(name)  // 歌曲名
+        .setArtist(this.artists.joinToString(" / ") { it.name })  // 艺术家（如果有该字段）
+        .setArtworkUri(Uri.parse(coverUrl))  // 封面URL（如果有该字段）
         .build()
 }
 

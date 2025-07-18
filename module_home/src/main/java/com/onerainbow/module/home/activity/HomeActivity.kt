@@ -106,9 +106,9 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>() {
                 //TODO 测试
                 MusicManager.addSongs(
                     mutableListOf(
-                        Song(2722532807,"二十岁", listOf(Artist("宝石Gem",12084497)),"http://m701.music.126.net/20250718204334/445974f00a64427c818024a8ccd0d83f/jdymusic/obj/wo3DlMOGwrbDjj7DisKw/60985940154/eeb6/d2d3/9617/3585ce1c8d722fb0d9e100846ed773de.mp3?vuutv=65zU1Yh6f7GhOOQiqB5mWOJsLzHjsrpFDnMrGxR9EbWpPjQE4OoKWj4GUAqjen7UWNME4CUzasei+3aqT5j8TkFQTD6+2ruV9+Ykr7wzQHs=","https://p2.music.126.net/v-h49Jow6qgEPCZkNXlY5A==/109951171462194133.jpg"),
-                        Song(2721721636,"洗牌",listOf(Artist("宝石Gem",12084497),Artist("张天枢",33371675)),"http://m701.music.126.net/20250718204426/e1623feafcecced0641553c04c433593/jdymusic/obj/wo3DlMOGwrbDjj7DisKw/60942708912/e1bf/680b/2096/3d689999a19cc6654c3971d45548bc04.mp3?vuutv=HpMAqE/OeoROEDVryLA3hNwR0CTutz2Iulq3h8VPeQ1zPT++s1+jHqMgvHmSsKVd88JV4fOn5wXq4u7p9dEcK0K4ZxiL0nL+uJ25MwfsknU=","https://p2.music.126.net/uermWb8sH_HYEwVScAAW8Q==/109951171392740991.jpg"),
-                        Song(2724462272,"u sure u do?",listOf(Artist("张天枢",33371675)),"http://m801.music.126.net/20250718204459/39aaab84a74408ac5685164081965501/jdymusic/obj/wo3DlMOGwrbDjj7DisKw/61130105962/33be/daa6/b92f/82c721059b3a19f5a59328dcdf6641d6.mp3?vuutv=M+x+ZgjgW3BVMiwZB5qP640wrE3iaYLhxf9NccW3TVWPUFfJE+cY4SmzMVepg3NtqsmKAoQzD2gzDmo+c6a3+aSehIzWZBlYZJ08kg/UHhk=","https://p2.music.126.net/whaVtSBYZlo-CqPRqU4Sig==/109951171439212278.jpg")
+                        Song(2722532807,"二十岁", listOf(Artist("宝石Gem",12084497)),"https://p2.music.126.net/v-h49Jow6qgEPCZkNXlY5A==/109951171462194133.jpg"),
+                        Song(2721721636,"洗牌",listOf(Artist("宝石Gem",12084497),Artist("张天枢",33371675)),"https://p2.music.126.net/uermWb8sH_HYEwVScAAW8Q==/109951171392740991.jpg"),
+                        Song(2724462272,"u sure u do?",listOf(Artist("张天枢",33371675)),"https://p2.music.126.net/whaVtSBYZlo-CqPRqU4Sig==/109951171439212278.jpg")
                     )
                 )
             }

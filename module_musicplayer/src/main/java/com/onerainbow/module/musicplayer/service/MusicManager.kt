@@ -15,7 +15,7 @@ import org.intellij.lang.annotations.JdkConstants.TitledBorderTitlePosition
  * date : 2025/7/18 12:04
  */
 object MusicManager {
-    private var musicBinder: MusicService.MusicBinder? = null
+    private var musicBinder: NewMusicService.MusicBinder? = null
     private var isServiceConnected = false
     private var listener: PlaybackStateListener? = null
 
@@ -38,7 +38,7 @@ object MusicManager {
     // 服务连接回调
     private val serviceConnection = object : ServiceConnection {
         override fun onServiceConnected(className: ComponentName, service: IBinder) {
-            musicBinder = service as MusicService.MusicBinder
+            musicBinder = service as NewMusicService.MusicBinder
             isServiceConnected = true
         }
 
@@ -52,7 +52,7 @@ object MusicManager {
     // 初始化：绑定服务
     fun bindService(context: Context) {
         if (!isServiceConnected) {
-            val intent = Intent(context, MusicService::class.java)
+            val intent = Intent(context, NewMusicService::class.java)
             context.bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
         }
     }
@@ -153,14 +153,14 @@ object MusicManager {
 
     fun setSingleMode():Boolean{
         return if (isServiceConnected){
-            musicBinder?.setPlayMode(MusicService.PlayMode.SINGLE_LOOP)
+            musicBinder?.setPlayMode(NewMusicService.PlayMode.SINGLE_LOOP)
             true
         }else false
     }
 
     fun setOrderMode():Boolean{
         return if (isServiceConnected){
-            musicBinder?.setPlayMode(MusicService.PlayMode.SEQUENTIAL)
+            musicBinder?.setPlayMode(NewMusicService.PlayMode.SEQUENTIAL)
 
             true
         }else false

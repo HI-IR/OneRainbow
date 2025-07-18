@@ -16,7 +16,7 @@ import com.onerainbow.module.musicplayer.model.Song
  * date : 2025/7/17 15:04
  */
 class PlayerListAdapter(
-    private val onItemClick: (Song) -> Unit // 点击事件回调
+    private val onItemClick: (Int) -> Unit // 点击事件回调
 ) :ListAdapter<Song, PlayerListAdapter.ViewHolder>(object : DiffUtil.ItemCallback<Song>(){
     override fun areItemsTheSame(oldItem: Song, newItem: Song): Boolean {
         return oldItem.id == newItem.id
@@ -44,7 +44,7 @@ class PlayerListAdapter(
         private fun initClick() {
             binding.apply {
                 root.setOnClickListener {
-                    currentData?.let { it1 -> onItemClick(it1) } //回调点击事件
+                    onItemClick(layoutPosition) //回调点击事件
                 }
                 playerlistDelete.setOnClickListener {
                     ToastUtils.makeText("点击了删除${currentData?.id}")

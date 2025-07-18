@@ -18,7 +18,7 @@ import com.onerainbow.module.musicplayer.model.Song
  */
 class PlayerList(
     context: Context,
-    private val onSongSelected: (Song) -> Unit // 歌曲选择回调
+    private val onSongSelected: (Int) -> Unit // 歌曲选择回调
 ) : BottomSheetDialog(context) {
 
     private val binding by lazy {
