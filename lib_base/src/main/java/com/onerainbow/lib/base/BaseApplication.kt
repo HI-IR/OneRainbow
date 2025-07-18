@@ -8,7 +8,7 @@ import android.app.Application
  * email : qq2420226433@outlook.com
  * date : 2025/7/15 01:08
  */
-class BaseApplication: Application(){
+open class BaseApplication: Application(){
     companion object {
         lateinit var context: BaseApplication
             private set
@@ -17,5 +17,6 @@ class BaseApplication: Application(){
     override fun onCreate() {
         super.onCreate()
         context = this
+
     }
 }

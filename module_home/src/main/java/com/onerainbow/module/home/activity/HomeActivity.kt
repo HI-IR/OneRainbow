@@ -10,6 +10,9 @@ import com.onerainbow.module.home.R
 import com.onerainbow.module.home.adapter.HomeVpAdapter
 import com.onerainbow.module.home.databinding.ActivityHomeBinding
 import com.onerainbow.module.home.databinding.LayoutDrawerBinding
+import com.onerainbow.module.musicplayer.model.Artist
+import com.onerainbow.module.musicplayer.model.Song
+import com.onerainbow.module.musicplayer.service.MusicManager
 import com.onerainbow.module.recommend.ui.RecommendFragment
 import com.onerainbow.module.top.TopFragment
 import com.onerainbow.module.user.UserFragment
@@ -97,6 +100,17 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>() {
             }
             searchBarMain.setOnClickListener {
                TheRouter.build(RoutePath.SEEK).navigation()
+            }
+
+            test.setOnClickListener {
+                //TODO 测试
+                MusicManager.addSongs(
+                    mutableListOf(
+                        Song(2722532807,"二十岁", listOf(Artist("宝石Gem",12084497)),"https://p2.music.126.net/v-h49Jow6qgEPCZkNXlY5A==/109951171462194133.jpg"),
+                        Song(2721721636,"洗牌",listOf(Artist("宝石Gem",12084497),Artist("张天枢",33371675)),"https://p2.music.126.net/uermWb8sH_HYEwVScAAW8Q==/109951171392740991.jpg"),
+                        Song(2724462272,"u sure u do?",listOf(Artist("张天枢",33371675)),"https://p2.music.126.net/whaVtSBYZlo-CqPRqU4Sig==/109951171439212278.jpg")
+                    )
+                )
             }
         }
 

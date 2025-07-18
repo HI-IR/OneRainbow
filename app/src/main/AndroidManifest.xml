@@ -3,13 +3,14 @@
     xmlns:tools="http://schemas.android.com/tools">
     <!--网络状态的权限-->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK"/>
     <!--网络连接的权限-->
     <uses-permission android:name="android.permission.INTERNET" />
-
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <application
         android:allowBackup="true"
-        android:name="com.onerainbow.lib.base.BaseApplication"
+        android:name="com.onerainbow.onerainbow.AppApplication"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
@@ -19,6 +20,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.OneRainbow"
         tools:targetApi="31">
+        <service
+            android:name="com.onerainbow.module.musicplayer.service.NewMusicService"
+            android:exported="false"
+            android:foregroundServiceType="mediaPlayback"
+            />
+
         <activity
             android:name=".MainActivity"
             android:exported="true">

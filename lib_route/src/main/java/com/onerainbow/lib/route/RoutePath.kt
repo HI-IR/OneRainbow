@@ -7,9 +7,12 @@ package com.onerainbow.lib.route
  * date : 2025/7/13 19:20
  */
 object RoutePath {
-    const val HOME = "/home/HomeActivity"
-    const val LOGIN = "/account/LoginActivity"
-    const val MAIN = "/main/MainActivity"
-    const val SEEK = "/seek/SeekActivity"
-    const val FINISHSEEK ="/seek/FinishSeekActivity"
+    const val HOME = "/home"
+    const val LOGIN = "/account/login"
+    const val MAIN = "/main"
+    const val MUSIC_PLAYER = "/player/music"
+    const val MV_PLAYER = "/player/mv"
+    const val WEB = "/recommend/web"
+    const val SEEK = "/seek"
+    const val FINISHSEEK ="/seek/finish"
 }

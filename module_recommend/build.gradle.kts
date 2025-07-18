@@ -44,6 +44,7 @@ dependencies {
     implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
     implementation(project(":lib_base"))
     implementation(project(":lib_net"))
+    implementation(project(":lib_route"))
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
     ksp("cn.therouter:apt:1.2.4")

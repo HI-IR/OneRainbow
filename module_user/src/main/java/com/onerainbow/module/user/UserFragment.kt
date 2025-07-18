@@ -16,6 +16,7 @@ class UserFragment : BaseFragment<FragmentUserBinding>() {
 
     override fun initEvent() {
         binding.myselfButton.setOnClickListener{TheRouter.build(RoutePath.LOGIN).navigation()}
+        binding.myselfButton2.setOnClickListener { TheRouter.build(RoutePath.MUSIC_PLAYER).navigation() }
     }
 
     override fun initViewModel() {

@@ -66,7 +66,10 @@ class RecommendViewModel:ViewModel() {
         disposables.add(disposable)
     }
 
-    fun getTopPlayList(limit: Int = 12){
+    /**
+     * 网友
+     */
+    fun getCommunityPicks(limit: Int = 12){
         val disposable = RecommendModel.getTopPlayList(limit).subscribe({
             _communityPicks.postValue(it.playlists)
         },{
