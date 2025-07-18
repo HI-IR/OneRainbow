@@ -27,7 +27,7 @@ class MusicPlayerViewModel(application: Application) : AndroidViewModel(applicat
     private var musicBinder: MusicService.MusicBinder? = null
     private var isBound = false //是否绑定了服务
 
-    //播放状态-标志 TODO 等待接入服务
+    //播放状态-标志
      val _isPlaying = MutableLiveData<Boolean>()
     val isPlaying: LiveData<Boolean> = _isPlaying
 
@@ -47,9 +47,11 @@ class MusicPlayerViewModel(application: Application) : AndroidViewModel(applicat
         )
     val playerLists : LiveData<MutableList<Song>> = _playLists
 
-    //TODO 暂时做测试
+
     val _playIndex : MutableLiveData<Int> = MutableLiveData(0)
     val playIndex : LiveData<Int> = _playIndex
+
+
 
     fun toggleNext() {
         val currentIndex = playIndex.value ?: 0
@@ -123,19 +125,10 @@ class MusicPlayerViewModel(application: Application) : AndroidViewModel(applicat
         }
     }
 
-    //TODO 先暂时这样写着，之后修改
-    fun play(song: Song){
-        _isPlaying.value = true //这里使用同步更新 因为异步更新的化，可能导致动画播放错误(数值还没变但是动画播放的时机已经过了)
-        musicBinder?.play(song)
+
+    fun togglePlayOrPause(){
+        musicBinder?.togglePlayPause()
+        _isPlaying.postValue(musicBinder?.isPlaying())
     }
 
-    fun resume(){
-        musicBinder?.resume()
-        _isPlaying.postValue(true)
-    }
-
-    fun pause(){
-        musicBinder?.pause()//暂停播放
-        _isPlaying.postValue(false)
-    }
 }

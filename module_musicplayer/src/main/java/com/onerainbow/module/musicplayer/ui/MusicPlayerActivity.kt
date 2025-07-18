@@ -1,6 +1,7 @@
 package com.onerainbow.module.musicplayer.ui
 
 import android.animation.ValueAnimator
+import android.content.Context
 import android.content.res.Resources
 import android.os.Bundle
 import android.util.Log
@@ -14,22 +15,30 @@ import com.bumptech.glide.request.RequestOptions
 import com.onerainbow.lib.base.BaseActivity
 import com.onerainbow.lib.base.BaseApplication
 import com.onerainbow.lib.base.utils.ToastUtils
+import com.onerainbow.lib.route.RoutePath
 import com.onerainbow.module.musicplayer.R
 import com.onerainbow.module.musicplayer.databinding.ActivityMusicPlayerBinding
 import com.onerainbow.module.musicplayer.model.Artist
 import com.onerainbow.module.musicplayer.model.Song
 import com.onerainbow.module.musicplayer.viewmodel.MusicPlayerViewModel
+import com.therouter.TheRouter
+import com.therouter.router.Route
 
+@Route(path = RoutePath.MUSIC_PLAYER)
 class MusicPlayerActivity : BaseActivity<ActivityMusicPlayerBinding>() {
     private var lastIndex: Int? = null//用来和_playIndex做对比的
     private var isAnimating : Boolean = false //用来标记是否在动画中
 
+    private var tempAnimator: ValueAnimator? = null
 
 
     override fun getViewBinding(): ActivityMusicPlayerBinding =
         ActivityMusicPlayerBinding.inflate(layoutInflater)
 
-    //CD旋转的属性动画
+
+    /**
+     * CD旋转
+     */
     private val cdAnimator by lazy {
         ValueAnimator.ofFloat(0f, 360f).apply {
             duration = 20000 //20秒一圈
@@ -37,16 +46,17 @@ class MusicPlayerActivity : BaseActivity<ActivityMusicPlayerBinding>() {
             repeatCount = ValueAnimator.INFINITE //无限循环
             addUpdateListener {
                 val currentRotation = it.animatedValue as Float
-                binding.itemCdNextRotation.rotation = currentRotation
-                binding.itemCdCurrentRotation.rotation = currentRotation
-                binding.itemCdPrevRotation.rotation = currentRotation
+                binding.imgCdNext.rotation = currentRotation
+                binding.imgCoverNext.rotation = currentRotation
+
+                binding.imgCdPrev.rotation = currentRotation
+                binding.imgCoverPrev.rotation = currentRotation
+
+                binding.imgCdCurrent.rotation = currentRotation
+                binding.imgCoverCurrent.rotation = currentRotation
             }
         }
     }
-
-
-
-
 
     private val viewModel by lazy {
         ViewModelProvider(
@@ -55,6 +65,7 @@ class MusicPlayerActivity : BaseActivity<ActivityMusicPlayerBinding>() {
         )[MusicPlayerViewModel::class.java]
     }
 
+    //TODO 歌单测试
     private val playerList by lazy {
         //初始化对话框
         PlayerList(this@MusicPlayerActivity) {
@@ -120,13 +131,21 @@ class MusicPlayerActivity : BaseActivity<ActivityMusicPlayerBinding>() {
             }
 
             isPlaying.observe(this@MusicPlayerActivity) {
-                //唱针
+
+                //图标变化
+                if (it) {
+                    binding.musicplayerPlay.setImageResource(R.drawable.pause)//如果是播放状态下则显示暂停
+                } else {
+                    binding.musicplayerPlay.setImageResource(R.drawable.play)//如果是暂停状态下则显示暂停
+                }
+
+                //唱针动画
                 val targetRotation = if (it) 23f else 0f
                 binding.imgStylus.animate().rotation(targetRotation).apply {
                     duration = 300
                 }
 
-                // CD 转盘动画控制
+                // CD 转盘动画
                 if (it) {
                     // 开始播放
                     if (!cdAnimator.isStarted) {
@@ -147,6 +166,7 @@ class MusicPlayerActivity : BaseActivity<ActivityMusicPlayerBinding>() {
         initClick()
     }
 
+    //对View做一些初始化设置
     private fun initView() {
         lastIndex = viewModel.playIndex.value!! // 初始化
 
@@ -174,32 +194,18 @@ class MusicPlayerActivity : BaseActivity<ActivityMusicPlayerBinding>() {
 
         binding.imgStylus.apply {
             //设置唱针旋转位置居中
-            pivotX = 0.01f
-            pivotY = 0.01f
+            pivotX = 0.03f
+            pivotY = 0.03f
         }
-
-
     }
 
-    /**
-     * 绑定点击事件
-     */
+    //绑定点击事件
     private fun initClick() {
         binding.apply {
 
             //开始播放按键
             musicplayerPlay.setOnClickListener {
-
-                //TODO 临时处理修改播放状态
-                viewModel._isPlaying.value = !viewModel.isPlaying.value!!
-
-
-                //图标变化
-                if (viewModel.isPlaying.value!!) {
-                    musicplayerPlay.setImageResource(R.drawable.pause)//如果是播放状态下则显示暂停
-                } else {
-                    musicplayerPlay.setImageResource(R.drawable.play)//如果是暂停状态下则显示暂停
-                }
+                viewModel.togglePlayOrPause()
             }
 
             //切换播放模式
@@ -259,13 +265,18 @@ class MusicPlayerActivity : BaseActivity<ActivityMusicPlayerBinding>() {
     /**
      * 下一首歌换CD的属性动画
      * nextCd 是换进来的CD
-     * prevCd 是原来播放的那张CD
+     * currentCd 是原来播放的那张CD
      */
     private fun animateToNextCD() {
         if (isAnimating) return // 动画正在执行，直接返回
+        tempAnimator?.cancel() // 取消可能存在的旧动画
         isAnimating = true // 标记动画开始
-        val nextCd = binding.itemCdNext
-        val currentCd = binding.itemCdCurrent
+        val nextCd = binding.imgCdNext //下一张的CD背景
+        val nextCover = binding.imgCoverNext //下一张的CD封面
+
+        val currentCd = binding.imgCdCurrent//当前页的CD背景
+        val currentCover = binding.imgCoverCurrent//当前页的CD封面
+
         //获取屏幕宽度
         val screenWidth = Resources.getSystem().displayMetrics.widthPixels.toFloat()
 
@@ -273,9 +284,13 @@ class MusicPlayerActivity : BaseActivity<ActivityMusicPlayerBinding>() {
         val durationTime = 500L
 
         // 初始化 next CD
+        //显示CD
         nextCd.visibility = View.VISIBLE
-        nextCd.translationX = screenWidth // 从右边开始(把nextCd归位屏幕右侧外)
+        nextCover.visibility = View.VISIBLE
 
+
+        nextCd.translationX = screenWidth // 从右边开始(把nextCd归位屏幕右侧外)
+        nextCover.translationX = screenWidth
         //播放CD抬杠,放杆动画
         binding.imgStylus.animate()
             .rotation(10f)
@@ -291,28 +306,33 @@ class MusicPlayerActivity : BaseActivity<ActivityMusicPlayerBinding>() {
             }
             .start()
 
-
-
         //配置动画
-        ValueAnimator.ofFloat(0f, 1f).apply {
-            interpolator = DecelerateInterpolator()//线性的插值器
+        tempAnimator =ValueAnimator.ofFloat(0f, 1f).apply {
+            interpolator = DecelerateInterpolator()//减速插值器
             duration = durationTime
 
             //更新
             addUpdateListener {
-                currentCd.translationX =
-                    -screenWidth * it.animatedValue as Float // 前一个Cd往左边移动 最后移动一个屏幕的距离
+                val fraction = it.animatedFraction
+
+                // 前一个Cd往左边移动 最后移动一个屏幕的距离
+                currentCd.translationX = -screenWidth * fraction
+                currentCover.translationX = -screenWidth * fraction
+
                 //后一个Cd从右边移动到中间，最后移动一个屏幕距离(初始化在一个屏幕之外)
-                nextCd.translationX = screenWidth * (1 - it.animatedValue as Float)
+                nextCd.translationX = screenWidth * (1 - fraction)
+                nextCover.translationX = screenWidth * (1 - fraction)
             }
 
             //动画结束时
             doOnEnd {
                 //重新归位中间
                 currentCd.translationX = 0f
+                currentCover.translationX = 0f
                 nextCd.translationX = 0f
-                nextCd.visibility = View.INVISIBLE //把下一张重新置空
-
+                nextCover.translationX = 0f
+                nextCd.visibility = View.INVISIBLE //把下一张隐藏
+                nextCover.visibility = View.INVISIBLE
 
                 val requestOptions: RequestOptions =
                     RequestOptions().placeholder(R.drawable.loading)
@@ -325,7 +345,8 @@ class MusicPlayerActivity : BaseActivity<ActivityMusicPlayerBinding>() {
 
                 if (index > 0){
                     val prevSong = viewModel.playerLists.value?.get(index - 1)
-                    Glide.with(this@MusicPlayerActivity).load(prevSong?.coverUrl).apply(requestOptions)
+                    Glide.with(this@MusicPlayerActivity).load(prevSong?.coverUrl)
+                        .apply(requestOptions)
                         .into(binding.imgCoverPrev)
                 }
 
@@ -337,14 +358,24 @@ class MusicPlayerActivity : BaseActivity<ActivityMusicPlayerBinding>() {
                 isAnimating = false // 标记动画结束
             }
 
-        }.start()
+        }
+        tempAnimator?.start()
     }
 
+
+    /**
+     * 下一首歌换CD的属性动画
+     * prevCd 是换进来的CD
+     * currentCd 是原来播放的那张CD
+     */
     private fun animateToPrevCD() {
         if (isAnimating) return // 动画正在执行，直接返回
+        tempAnimator?.cancel() // 取消可能存在的旧动画
         isAnimating = true // 标记动画开始
-        val prevCd = binding.itemCdPrev
-        val currentCd = binding.itemCdCurrent
+        val prevCd = binding.imgCdPrev
+        val prevCover = binding.imgCoverPrev
+        val currentCd = binding.imgCdCurrent
+        val currentCover = binding.imgCoverCurrent
         //获取屏幕宽度
         val screenWidth = Resources.getSystem().displayMetrics.widthPixels.toFloat()
 
@@ -353,8 +384,9 @@ class MusicPlayerActivity : BaseActivity<ActivityMusicPlayerBinding>() {
 
         //初始化位置
         prevCd.visibility = View.VISIBLE
+        prevCover.visibility = View.INVISIBLE
         prevCd.translationX = -screenWidth //移除屏幕外
-
+        prevCover.translationX = -screenWidth
 
         //播放CD抬杠,放杆动画
         binding.imgStylus.animate()
@@ -371,27 +403,31 @@ class MusicPlayerActivity : BaseActivity<ActivityMusicPlayerBinding>() {
             }
             .start()
 
-        ValueAnimator.ofFloat(0f, 1f).apply {
-            interpolator = DecelerateInterpolator()
+        tempAnimator = ValueAnimator.ofFloat(0f, 1f).apply {
             duration = durationTime
             addUpdateListener {
-                currentCd.translationX = screenWidth * it.animatedValue as Float
-
-                prevCd.translationX = -screenWidth * (1 - it.animatedValue as Float)
-
+                val fraction = it.animatedFraction
+                currentCd.translationX = screenWidth * fraction
+                currentCover.translationX = screenWidth * fraction
+                prevCd.translationX = -screenWidth * (1 - fraction)
+                prevCover.translationX = -screenWidth * (1 - fraction)
             }
 
             doOnEnd {
                 //重新归位中间
                 currentCd.translationX = 0f
+                currentCover.translationX = 0f
                 prevCd.translationX = 0f
-                prevCd.visibility = View.INVISIBLE //把下一张重新置空
+                prevCover.translationX = 0f
+                prevCd.visibility = View.INVISIBLE //把上一张隐藏
+                prevCover.visibility = View.INVISIBLE
 
 
                 val requestOptions: RequestOptions =
                     RequestOptions().placeholder(R.drawable.loading)
                         .fallback(R.drawable.loading)
                 val index = viewModel.playIndex.value!!
+
                 //因为这个动画的调用意味着已经完成了viewModel的playIndex更新，所以此时的playIndex已经是更新后的了
                 val currentSong = viewModel.playerLists.value?.get(index)
                 Glide.with(this@MusicPlayerActivity).load(currentSong?.coverUrl)
@@ -411,6 +447,31 @@ class MusicPlayerActivity : BaseActivity<ActivityMusicPlayerBinding>() {
                 isAnimating = false // 标记动画结束
             }
 
-        }.start()
+        }
+        tempAnimator?.start()
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+
+        //释放内存
+        //关闭CD动画
+        cdAnimator.cancel()
+        cdAnimator.removeAllUpdateListeners() // 移除监听器，避免持有引用
+
+        // 取消所有正在执行的属性动画（如唱针动画）
+        binding.imgStylus.animate().cancel()
+        playerList.dismiss() // 关闭对话框
+
+        //关闭跳转动画
+        tempAnimator?.cancel()
+        tempAnimator?.removeAllUpdateListeners() // 移除监听器，避免持有引用
+
+
+        // 清理 Glide 未完成的加载任务
+        Glide.with(this).clear(binding.imgCoverCurrent)
+        Glide.with(this).clear(binding.imgCoverPrev)
+        Glide.with(this).clear(binding.imgCoverNext)
+    }
+
 }
