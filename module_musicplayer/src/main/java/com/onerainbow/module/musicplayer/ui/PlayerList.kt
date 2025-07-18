@@ -20,7 +20,7 @@ import com.onerainbow.module.musicplayer.service.MusicManager
 class PlayerList(
     context: Context,
     private val onSongSelected: (Int) -> Unit, // 歌曲选择回调
-    ) : BottomSheetDialog(context) {
+) : BottomSheetDialog(context) {
 
     private val binding by lazy {
         DialogPlayerlListBinding.inflate(layoutInflater)
@@ -73,7 +73,6 @@ class PlayerList(
             }
         }
     }
-
 
 
     // 设置歌单数据
