@@ -64,6 +64,13 @@ object MusicManager {
             musicBinder = null
         }
     }
+    fun cleanList(){
+        MusicManager.musicBinder?.clearPlaylist()
+    }
+
+    fun removeSongAt(position: Int){
+        MusicManager.musicBinder?.removeSongAt(position)
+    }
 
 
     //播放列表相关

@@ -21,7 +21,6 @@ import com.onerainbow.lib.base.utils.ToastUtils
 import com.onerainbow.lib.route.RoutePath
 import com.onerainbow.module.musicplayer.R
 import com.onerainbow.module.musicplayer.databinding.ActivityMusicPlayerBinding
-import com.onerainbow.module.musicplayer.model.Song
 import com.onerainbow.module.musicplayer.service.MusicManager
 import com.onerainbow.module.musicplayer.viewmodel.MusicPlayerViewModel
 import com.onerainbow.module.share.CustomShare
@@ -32,7 +31,7 @@ import com.therouter.router.Route
 class MusicPlayerActivity : BaseActivity<ActivityMusicPlayerBinding>() {
     private var lastIndex: Int? = null//用来和_playIndex做对比的
     private var isAnimating: Boolean = false //用来标记是否在动画中
-
+    private var isInit: Boolean = false
     private var tempAnimator: ValueAnimator? = null
     private var isUserSeeking = false
 
@@ -90,24 +89,40 @@ class MusicPlayerActivity : BaseActivity<ActivityMusicPlayerBinding>() {
     }
 
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         //进度更新
         progressHandler.post(progressRunnable)
     }
 
-    override fun onStart() {
-        super.onStart()
-        // 恢复CD动画（如果正在播放）
-        if (viewModel.isPlaying.value == true && cdAnimator.isPaused) {
-            cdAnimator.resume()
-        }
-    }
-
     override fun initViewModel() {
         viewModel.apply {
+            isPlaying.observe(this@MusicPlayerActivity) {
+                //图标变化
+                if (it) {
+                    binding.musicplayerPlay.setImageResource(R.drawable.pause)//如果是播放状态下则显示暂停
+                } else {
+                    binding.musicplayerPlay.setImageResource(R.drawable.play)//如果是暂停状态下则显示暂停
+                }
 
+                //唱针动画
+                val targetRotation = if (it) 23f else 0f
+                binding.imgStylus.animate().rotation(targetRotation).apply {
+                    duration = 300
+                }
+
+                // CD 转盘动画
+                if (it) {
+                    // 开始播放
+                    if (!cdAnimator.isStarted) {
+                        cdAnimator.start()
+                    } else if (cdAnimator.isPaused) {
+                        cdAnimator.resume()
+                    }
+                } else {
+                    cdAnimator.pause()
+                }
+            }
 
             isPlayInSingle.observe(this@MusicPlayerActivity) {
                 if (it) {
@@ -117,97 +132,60 @@ class MusicPlayerActivity : BaseActivity<ActivityMusicPlayerBinding>() {
                 }
             }
 
-            currentIndex.observe(this@MusicPlayerActivity) { it ->
-                handleIndexChange(it)
-            }
-
-            isPlaying.observe(this@MusicPlayerActivity) {
-                updatePlayStateUI(it)
-            }
-
             playlist.observe(this@MusicPlayerActivity) {
                 playerList.setSongs(it)
-                initView(it)
-            }
-
-            error.observe(this@MusicPlayerActivity) {
-                if (it) {
-                    binding.imgStylus.animate().rotation(0f).duration = 300
-                    cdAnimator.pause()
+                //重新初始化一下图片
+                if (!isInit) {
+                    initView()
+                    isInit = true
                 }
+
             }
+            currentIndex.observe(this@MusicPlayerActivity) { it ->
+                //播放Index变化
+                if (it > lastIndex!!) {
+                    //播放下一首歌
+                    lastIndex = it
+                    animateToNextCD()
+                } else if (it != lastIndex) {
+                    //播放上一首歌
+                    lastIndex = it
+                    animateToPrevCD()
+                }
+                if (it < 0) return@observe
+                val song = viewModel.playlist.value?.get(it)
+                //更新显示信息
+                binding.musicplayerTitle.text = song?.name
+                binding.musicplayerCreator.text = song?.artists?.joinToString(" / ") { it.name }
+            }
+
         }
     }
 
-    /** 更新播放状态UI */
-    private fun updatePlayStateUI(isPlaying: Boolean) {
-        // 播放/暂停图标切换
-        binding.musicplayerPlay.setImageResource(
-            if (isPlaying) R.drawable.pause else R.drawable.play
-        )
-
-        // 唱针动画
-        val targetRotation = if (isPlaying) 23f else 0f
-        binding.imgStylus.animate().rotation(targetRotation).duration = 300
-
-        // CD旋转动画控制
-        when {
-            isPlaying -> if (cdAnimator.isPaused) cdAnimator.resume() else cdAnimator.start()
-            else -> cdAnimator.pause()
-        }
+    override fun initEvent() {
+        initView()
+        initClick()
     }
 
+    private fun initView() {
+        lastIndex = viewModel.currentIndex.value
 
-    private fun handleIndexChange(newIndex: Int){
-        val list = viewModel.playlist.value ?: return
-        // 过滤无效索引
-        if (newIndex !in list.indices) return
-
-        // 更新歌曲信息（标题、歌手）
-        val currentSong = list[newIndex]
-        binding.musicplayerTitle.text = currentSong.name
-        binding.musicplayerCreator.text = currentSong.artists.joinToString(" / ") { it.name }
-
-        // 处理动画逻辑
-        when {
-            lastIndex == null -> {
-                // 首次加载无动画，直接更新封面
-                lastIndex = newIndex
-                val requestOptions: RequestOptions = RequestOptions().placeholder(R.drawable.loading)
-                    .fallback(R.drawable.loading)
-                Glide.with(this).load(currentSong.coverUrl).apply(requestOptions).into(binding.imgCoverCurrent)
-            }
-            newIndex > lastIndex!! -> {
-                // 下一首动画
-                animateToNextCD()
-                lastIndex = newIndex
-            }
-            newIndex < lastIndex!! -> {
-                // 上一首动画
-                animateToPrevCD()
-                lastIndex = newIndex
-            }
-        }
-    }
-
-    /** 初始化/刷新视图 */
-    private fun initView(playlist: List<Song>) {
-        // 处理空列表
+        // 检查播放列表是否为空
+        val playlist = viewModel.playlist.value ?: emptyList()
         if (playlist.isEmpty()) {
+            // 处理空列表情况：显示空状态UI或提示用户添加歌曲
             showEmptyPlaylistState()
             return
         }
 
-        // 获取当前索引并验证
-        val currentIdx = viewModel.currentIndex.value ?: 0
-        val safeIndex = currentIdx.coerceIn(playlist.indices)
-        lastIndex = safeIndex // 同步索引
-
-        // 加载当前歌曲封面
-        val currentSong = playlist[safeIndex]
+        //加载图片
         val requestOptions: RequestOptions = RequestOptions().placeholder(R.drawable.loading)
             .fallback(R.drawable.loading)
-        Glide.with(this).load(currentSong.coverUrl).apply(requestOptions).into(binding.imgCoverCurrent)
+
+
+        val currentSong = viewModel.playlist.value!![lastIndex!!]
+        Glide.with(this@MusicPlayerActivity).load(currentSong.coverUrl).apply(requestOptions)
+            .into(binding.imgCoverCurrent)
 
         if (lastIndex!! > 0) {
             val prevSong = viewModel.playlist.value!!.get(lastIndex!! - 1)
@@ -219,21 +197,16 @@ class MusicPlayerActivity : BaseActivity<ActivityMusicPlayerBinding>() {
             val nextSong = viewModel.playlist.value!!.get(lastIndex!! + 1)
             Glide.with(this@MusicPlayerActivity).load(nextSong.coverUrl).apply(requestOptions)
                 .into(binding.imgCoverNext)
+
         }
 
-        // 初始化唱针旋转中心
         binding.imgStylus.apply {
+            //设置唱针旋转位置居中
             pivotX = 0.03f
             pivotY = 0.03f
         }
+
     }
-
-
-    override fun initEvent() {
-        initClick()
-    }
-
-
 
     private fun showEmptyPlaylistState() {
         //空播放列表的话则隐藏内容
@@ -261,15 +234,12 @@ class MusicPlayerActivity : BaseActivity<ActivityMusicPlayerBinding>() {
 
     }
 
-    //绑定点击事件
     private fun initClick() {
         binding.apply {
-
-            //开始播放按键
+            //播放按键
             musicplayerPlay.setOnClickListener {
                 viewModel.togglePlayPause()
             }
-
             //切换播放模式
             musicplayerPlayMode.setOnClickListener {
                 viewModel.togglePlayMode()
@@ -332,6 +302,7 @@ class MusicPlayerActivity : BaseActivity<ActivityMusicPlayerBinding>() {
 
             })
 
+
         }
     }
 
@@ -365,6 +336,24 @@ class MusicPlayerActivity : BaseActivity<ActivityMusicPlayerBinding>() {
     }
 
 
+    override fun onDestroy() {
+        super.onDestroy()
+
+        //释放内存
+        //关闭CD动画
+        cdAnimator.cancel()
+        cdAnimator.removeAllUpdateListeners() // 移除监听器，避免持有引用
+
+        // 取消所有正在执行的属性动画（如唱针动画）
+        binding.imgStylus.animate().cancel()
+        playerList.dismiss() // 关闭对话框
+
+        //关闭跳转动画
+        tempAnimator?.cancel()
+        tempAnimator?.removeAllUpdateListeners() // 移除监听器，避免持有引用
+        progressHandler.removeCallbacks(progressRunnable)//移除回调
+    }
+
     /**
      * 下一首歌换CD的属性动画
      * nextCd 是换进来的CD
@@ -388,12 +377,12 @@ class MusicPlayerActivity : BaseActivity<ActivityMusicPlayerBinding>() {
 
         // 初始化 next CD
         //显示CD
+        nextCd.translationX = screenWidth // 从右边开始(把nextCd归位屏幕右侧外)
+        nextCover.translationX = screenWidth
         nextCd.visibility = View.VISIBLE
         nextCover.visibility = View.VISIBLE
 
 
-        nextCd.translationX = screenWidth // 从右边开始(把nextCd归位屏幕右侧外)
-        nextCover.translationX = screenWidth
         //播放CD抬杠,放杆动画
         binding.imgStylus.animate()
             .rotation(10f)
@@ -554,23 +543,6 @@ class MusicPlayerActivity : BaseActivity<ActivityMusicPlayerBinding>() {
         tempAnimator?.start()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-
-        //释放内存
-        //关闭CD动画
-        cdAnimator.cancel()
-        cdAnimator.removeAllUpdateListeners() // 移除监听器，避免持有引用
-
-        // 取消所有正在执行的属性动画（如唱针动画）
-        binding.imgStylus.animate().cancel()
-        playerList.dismiss() // 关闭对话框
-
-        //关闭跳转动画
-        tempAnimator?.cancel()
-        tempAnimator?.removeAllUpdateListeners() // 移除监听器，避免持有引用
-        progressHandler.removeCallbacks(progressRunnable)//移除回调
-    }
 
     //格式时长
     @SuppressLint("DefaultLocale")

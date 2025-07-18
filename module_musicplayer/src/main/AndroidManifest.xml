@@ -3,8 +3,11 @@
 
     <application>
         <activity
+            android:name=".ui.CommentActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.MusicPlayerActivity"
-            android:exported="false"/>
+            android:exported="false" />
     </application>
 
 </manifest>

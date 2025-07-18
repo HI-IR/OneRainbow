@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.onerainbow.lib.base.utils.ToastUtils
 import com.onerainbow.module.musicplayer.databinding.ItemPlayerlistSongBinding
 import com.onerainbow.module.musicplayer.model.Song
+import com.onerainbow.module.musicplayer.service.MusicManager
 
 /**
  * description ： 歌曲播放列表的Adapter
@@ -47,7 +48,7 @@ class PlayerListAdapter(
                     onItemClick(layoutPosition) //回调点击事件
                 }
                 playerlistDelete.setOnClickListener {
-                    ToastUtils.makeText("点击了删除${currentData?.id}")
+                    MusicManager.removeSongAt(layoutPosition)
                 }
             }
         }

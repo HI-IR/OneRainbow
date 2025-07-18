@@ -9,6 +9,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.onerainbow.module.musicplayer.adapter.PlayerListAdapter
 import com.onerainbow.module.musicplayer.databinding.DialogPlayerlListBinding
 import com.onerainbow.module.musicplayer.model.Song
+import com.onerainbow.module.musicplayer.service.MusicManager
 
 /**
  * description ： 播放列表的Dialog
@@ -18,8 +19,8 @@ import com.onerainbow.module.musicplayer.model.Song
  */
 class PlayerList(
     context: Context,
-    private val onSongSelected: (Int) -> Unit // 歌曲选择回调
-) : BottomSheetDialog(context) {
+    private val onSongSelected: (Int) -> Unit, // 歌曲选择回调
+    ) : BottomSheetDialog(context) {
 
     private val binding by lazy {
         DialogPlayerlListBinding.inflate(layoutInflater)
@@ -40,6 +41,15 @@ class PlayerList(
         setCanceledOnTouchOutside(true)
 
         initView()
+        initClick()
+    }
+
+    private fun initClick() {
+        binding.apply {
+            playerlistClean.setOnClickListener {
+                MusicManager.cleanList()
+            }
+        }
     }
 
     private fun initView() {

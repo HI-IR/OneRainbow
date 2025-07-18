@@ -216,7 +216,7 @@ class NewMusicService : Service() {
 
             //生成一个通知渠道
             val channel = NotificationChannel(
-                CHANNEL_ID, "OneRainbow音乐播放", NotificationManager.IMPORTANCE_LOW
+                CHANNEL_ID, "OneRainbow", NotificationManager.IMPORTANCE_DEFAULT
             )
 
             //获取通知管理器
@@ -309,8 +309,9 @@ class NewMusicService : Service() {
             }
         }
 
-        // 其他原有方法（保持不变，仅调整播放相关逻辑）
+        // 其他原有方法（
         fun addSong(song: Song) {
+            //添加在最后
             playlist.add(song)
         }
 
@@ -318,12 +319,32 @@ class NewMusicService : Service() {
             if (index in playlist.indices) {
                 playlist.removeAt(index)
                 player.removeMediaItem(index)
+
+                // 调整 currentIndex
+                if (index < currentIndex) {
+                    currentIndex-- // 被删除的是当前歌曲之前的条目，索引减1
+                } else if (index == currentIndex) {
+                    // 如果删除的是当前播放的歌曲
+                    if (playlist.isEmpty()) {
+                        currentIndex = -1 // 歌单空了，重置索引
+                    } else {
+                        // 自动播放下一首（如果有）或上一首
+                        currentIndex = if (index < playlist.size) index else playlist.lastIndex
+                        playAt(currentIndex) // 播放调整后的当前歌曲
+                    }
+                }
+                MusicManager.notifyPlayIndex(currentIndex) // 通知UI更新
+
             }
+
+
         }
 
         fun clearPlaylist() {
             playlist.clear()
             player.clearMediaItems()
+            currentIndex = -1 // 重置索引为-1，表示无当前歌曲
+            MusicManager.notifyPlayIndex(currentIndex) // 通知UI更新
         }
 
         fun getSongPlaylist(): List<Song> = playlist.toList()  // 返回不可变列表
