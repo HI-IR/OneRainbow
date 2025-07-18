@@ -41,6 +41,19 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.5" />
+    <TextView
+        android:id="@+id/musicplayer_empty"
+        app:layout_constraintTop_toBottomOf="@id/layout_cd"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/musicplayer_creator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="暂无音乐"
+        android:visibility="gone"
+        android:textStyle="bold"
+        android:textSize="30sp"
+        android:textColor="@color/item"/>
 
     <FrameLayout
         android:id="@+id/layout_cd"
@@ -189,7 +202,7 @@
             android:progress="20"
             android:progressDrawable="@drawable/seekbar"
             android:splitTrack="false"
-
+            android:max="1000"
             android:thumb="@drawable/seekbar_thumb" />
     </LinearLayout>
 
@@ -198,7 +211,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="25dp"
-        android:text="00:54"
+        android:text="00:00"
         android:textColor="@color/item"
         android:textSize="10sp"
         android:textStyle="bold"

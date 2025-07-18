@@ -5,14 +5,13 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.Service
-import android.content.BroadcastReceiver
-import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
 import android.os.Binder
 import android.os.Build
 import android.os.IBinder
+import android.util.Log
 import androidx.core.app.NotificationCompat
+import androidx.media3.common.PlaybackException
 import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
 import com.onerainbow.module.musicplayer.R
@@ -27,13 +26,13 @@ import com.onerainbow.module.musicplayer.ui.MusicPlayerActivity
  * date : 2025/7/16 16:20
  */
 class MusicService : Service() {
-
-    companion object {
-        const val ACTION_ADD_SONG = "com.onerainbow.ADD_SONG"//添加单个歌曲
-        const val ACTION_ADD_SONGS = "com.onerainbow.ADD_SONGS"//添加歌单
-        const val EXTRA_SONG = "song"//添加歌曲的Key
-        const val EXTRA_SONGS = "songs"//添加歌单的Key
+    // 播放模式枚举
+    enum class PlayMode {
+        SINGLE_LOOP,  // 单曲循环
+        SEQUENTIAL    // 顺序播放
     }
+
+    private var playMode = PlayMode.SEQUENTIAL
     private val playlist:MutableList<Song> = mutableListOf()
     private lateinit var player: ExoPlayer
     private val mBinder = MusicBinder()
@@ -41,39 +40,77 @@ class MusicService : Service() {
     private val APP_NAME = "OneRainBow"
 
 
-    //用广播接收器来接收天降音乐的广播
-    private val songReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context, intent: Intent) {
-            when (intent.action) {
-                ACTION_ADD_SONG -> {
-                    val song = intent.getParcelableExtra<Song>(EXTRA_SONG)
-                    song?.let { addSongToPlaylist(it) }
-                }
-                ACTION_ADD_SONGS -> {
-                    val songs = intent.getParcelableArrayListExtra<Song>(EXTRA_SONGS)
-                    songs?.let { addSongsToPlaylist(it) }
-                }
-            }
-        }
-    }
-
-
-
     override fun onCreate() {
         super.onCreate()
-        player = ExoPlayer.Builder(this).build()//创建Exoplayer播放器
+        player = ExoPlayer.Builder(this)
+            .build()
+            .also { it.repeatMode = Player.REPEAT_MODE_OFF }
+
+
+        player.addListener(object : Player.Listener {
+            //处理错误逻辑
+            override fun onPlayerError(error: PlaybackException) {
+                // 通知 UI 播放出错
+                MusicManager.notifyPlayError(true)
+                MusicManager.notifyPlayState(false)
+
+                // 尝试自动切换到下一首（仅顺序播放模式）
+                if (playMode == PlayMode.SEQUENTIAL && player.hasNextMediaItem()) {
+                    switchToNextSong()
+                } else {
+                    // 单曲循环或没有下一首，停止播放
+                    updateNotification("播放出错：${player.mediaMetadata.title}")
+                }
+            }
+
+
+            override fun onPlaybackStateChanged(state: Int) {
+                // 当播放完成时，根据模式处理下一个动作
+                if (state == Player.STATE_ENDED) {
+                    handlePlaybackCompletion()
+                }
+            }
+
+            // 处理播放完成逻辑
+            private fun handlePlaybackCompletion() {
+                when (playMode) {
+                    PlayMode.SINGLE_LOOP -> {
+                        // 单曲循环：重新播放当前歌曲
+                        player.seekTo(0)
+                        player.play()
+                        MusicManager.notifyPlayState(true)
+                        updateNotification("单曲循环：${player.mediaMetadata.title}")
+                    }
+                    PlayMode.SEQUENTIAL -> {
+                        // 顺序播放：如果有下一首则播放，否则停止
+                        if (player.hasNextMediaItem()) {
+                            switchToNextSong()
+                        } else {
+                            MusicManager.notifyPlayState(false)
+                            updateNotification("顺序播放已结束")
+                        }
+                    }
+                }
+            }
+
+            // 切换到下一首歌曲
+            private fun switchToNextSong() {
+                player.seekToNext()
+                player.prepare()
+                player.play()
+                MusicManager.notifyPlayError(false)
+                MusicManager.notifyPlayIndex(player.currentMediaItemIndex)
+                MusicManager.notifyPlayState(true)
+                updateNotification("自动播放：${player.mediaMetadata.title}")
+            }
+        })
+
 
         createNotificationChannel()
 
         //将当前服务修改为前台服务
         startForeground(1, createNotification("正在加载中"))
 
-        // 注册广播接收器
-        val filter = IntentFilter().apply {
-            addAction(ACTION_ADD_SONG)
-            addAction(ACTION_ADD_SONGS)
-        }
-        registerReceiver(songReceiver, filter)
     }
 
     //通知栏配置
@@ -87,7 +124,7 @@ class MusicService : Service() {
         return NotificationCompat.Builder(this, CHANNEL_ID)
             .setContentTitle("OneRainBow音乐播放器")
             .setContentText(text)
-            .setSmallIcon(R.drawable.temp)   //配置通知图标待确定软件图标 TODO
+            .setSmallIcon(R.drawable.temp)
             .setContentIntent(pendingIntent)
             .setOnlyAlertOnce(true)
             .build()
@@ -122,25 +159,14 @@ class MusicService : Service() {
 
     override fun onDestroy() {
         player.release()//释放player，避免内存泄漏
-        unregisterReceiver(songReceiver) // 注销接收器
         super.onDestroy()
     }
 
-    private fun addSongToPlaylist(song: Song) {
-        mBinder.addSong(song)
-        updateNotification("已添加: ${song.name}")
-    }
 
-    private fun addSongsToPlaylist(songs: List<Song>) {
-        mBinder.play(songs, playlist.size) // 添加到当前播放列表末尾
-        updateNotification("已添加 ${songs.size} 首歌曲")
-    }
-
-
-
-    //用于和前台服务通信的Binder
+    //用于和前台服务通信的Binder,实现基础功能
     inner class MusicBinder : Binder() {
 
+        //播放相关
         /**
          * 播放，单首歌曲
          */
@@ -155,24 +181,41 @@ class MusicService : Service() {
         }
 
         /**
-         * 添加播放列表
+         * 暂停播放
          */
-        fun play(songs: List<Song>, startIndex: Int = 0) {
+        fun pause() {
+            player.pause()//暂停播放
+            updateNotification("暂停播放：${player.currentMediaItem?.mediaMetadata?.title}")
+        }
+
+        /**
+         * 继续播放歌曲
+         */
+        fun resume() {
+            player.play()
+            updateNotification("继续播放:${player.currentMediaItem?.mediaMetadata?.title}")
+        }
+
+
+        //播放列表相关
+        /**
+         * 添加歌单到播放列表
+         */
+        fun addSongs(songs: List<Song>, startIndex: Int = 0) {
             val mediaItems = songs.map { it.toMediaItem() }
             player.setMediaItems(mediaItems, startIndex, 0L)
             player.prepare()
             player.play()
             playlist.addAll(songs)
-            updateNotification("正在播放：${songs[startIndex].name}")
         }
 
         /**
-         * 添加歌曲（追加到末尾）
+         * 添加歌曲到播放列表
          */
-        fun addSong(vararg songs: Song) {
-            val mediaItems = songs.map { it.toMediaItem() }
-            playlist.addAll(songs)
-            player.addMediaItems(mediaItems)
+        fun addSong( song: Song) {
+            val mediaItems = song.toMediaItem()
+            player.addMediaItem(mediaItems)
+            playlist.add(song)
         }
 
         /**
@@ -199,76 +242,23 @@ class MusicService : Service() {
         fun playAt(index: Int) {
             if (index in 0 until player.mediaItemCount) {
                 player.seekTo(index, 0)
-                player.play()
+                MusicManager.notifyPlayIndex(index)
                 updateNotification("正在播放：${player.getMediaItemAt(index).mediaMetadata.title}")
             }
         }
-
-
-        /**
-         * 暂停播放
-         */
-        fun pause() {
-            player.pause()//暂停播放
-            updateNotification("暂停播放：${player.currentMediaItem?.mediaMetadata?.title}")
-        }
-
-        /**
-         * 继续播放歌曲
-         */
-        fun resume() {
-            player.play()
-            updateNotification("继续播放:${player.currentMediaItem?.mediaMetadata?.title}")
-        }
-
-        /**
-         * 切换音乐播放和暂替
-         */
-        fun togglePlayPause() {
-            when {
-                // 播放器未加载歌曲，但我们有播放列表
-                player.currentMediaItem == null && playlist.isNotEmpty() -> {
-                    val mediaItems = playlist.map { it.toMediaItem() }
-                    player.setMediaItems(mediaItems, 0, 0L)
-                    player.prepare()
-                    player.play()
-                    updateNotification("正在播放：${playlist[0].name}")
-                }
-
-                // 播放结束，从头开始
-                player.playbackState == Player.STATE_ENDED -> {
-                    player.seekTo(0)
-                    player.play()
-                    updateNotification("重新播放：${player.currentMediaItem?.mediaMetadata?.title}")
-                }
-
-                // 正在播放 -> 暂停
-                player.isPlaying -> {
-                    player.pause()
-                    updateNotification("暂停播放：${player.currentMediaItem?.mediaMetadata?.title}")
-                }
-
-                // 未播放但准备好了 -> 恢复播放
-                player.playbackState == Player.STATE_READY -> {
-                    player.play()
-                    updateNotification("继续播放：${player.currentMediaItem?.mediaMetadata?.title}")
-                }
-
-                else -> {
-                    // 其他情况(空歌单)
-                    updateNotification("无法播放，请先添加歌曲")
-                }
-            }
-        }
-
-
 
         /**
          * 获取播放列表
          */
         fun getSongPlaylist(): List<Song> = playlist
 
+        /**
+         * 获取播放列表总数
+         */
+        fun getPlaylistSize(): Int = player.mediaItemCount
 
+
+        //状态相关
         /**
          * 获取播放状态
          */
@@ -279,9 +269,70 @@ class MusicService : Service() {
          */
         fun getCurrentIndex(): Int = player.currentMediaItemIndex
 
+
         /**
-         * 获取播放列表总数
+         * 播放下一首歌
+         * @return true 切换成功，false切换失败
          */
-        fun getPlaylistSize(): Int = player.mediaItemCount
+        fun playNext():Boolean {
+            val currentIndex = getCurrentIndex()
+            //检查边界
+            return if (currentIndex < getPlaylistSize() - 1){
+                playAt(currentIndex +1)
+                true
+            }else false
+        }
+
+        /**
+         * 播放上一首歌
+         * @return true 切换成功，false切换失败
+         */
+        fun playPrev():Boolean {
+            val currentIndex = getCurrentIndex()
+            return if (currentIndex > 0){
+                val prevIndex = (currentIndex - 1)
+                playAt(prevIndex)
+                true
+            }else false
+        }
+
+        /**
+         * 切换音乐播放和暂替
+         */
+        fun togglePlayPause() {
+            if (player.isPlaying) {
+                player.pause()
+            } else {
+                if (player.currentMediaItem == null && playlist.isNotEmpty()) {
+                    player.setMediaItems(playlist.map { it.toMediaItem() }, 0, 0L)
+                    player.prepare()
+                }
+                player.play()
+            }
+            MusicManager.notifyPlayState(player.isPlaying)
+            updateNotification("正在${if (player.isPlaying) "播放" else "暂停"}：${player.mediaMetadata.title}")
+        }
+
+
+
+
+        fun getCurrentPosition():Long = player.currentPosition
+
+        fun getDuration():Long = player.duration
+
+        // 模式切换
+        fun setPlayMode(mode: PlayMode) {
+            playMode = mode
+            // 确保内置循环模式关闭，使用我们自己的逻辑
+            player.repeatMode = Player.REPEAT_MODE_OFF
+            updateNotification("播放模式：${if (mode == PlayMode.SINGLE_LOOP) "单曲循环" else "顺序播放"}")
+        }
+
+        fun seekTo(position: Long){
+            MusicManager.notifyPlayState(true)
+            player.seekTo(position)
+        }
+
+
     }
 }

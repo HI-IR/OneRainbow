@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.onerainbow.lib.route.RoutePath
 import com.onerainbow.module.recommend.R
 import com.onerainbow.module.recommend.bean.Banner
 import com.onerainbow.module.recommend.databinding.FragmentBannerBinding
@@ -42,7 +43,7 @@ class BannerAdapter(private val context: Context): ListAdapter<Banner,BannerAdap
             itemBanner.setOnClickListener{
                 val item = getItem(adapterPosition)
                 if (!item.url.isNullOrBlank()) {
-                    TheRouter.build("/recommend/web")
+                    TheRouter.build(RoutePath.WEB)
                         .withString("url", item.url)
                         .navigation()
                 }

@@ -1,6 +1,6 @@
 plugins {
-    alias(libs.plugins.android.application)
-    //alias(libs.plugins.android.library)
+    //alias(libs.plugins.android.application)
+    alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     id("com.google.devtools.ksp")
 
@@ -12,11 +12,8 @@ android {
 
     defaultConfig {
         minSdk = 24
-        applicationId = "com.onerainbow.module.musicplayer"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        //consumerProguardFiles("consumer-rules.pro")
-        versionCode = 1
-        versionName = "1.0"
+        consumerProguardFiles("consumer-rules.pro")
     }
 
     buildTypes {
@@ -51,7 +48,7 @@ dependencies {
 
     ksp("cn.therouter:apt:1.2.4")
     implementation ("cn.therouter:router:1.2.4")
-
+    implementation(project(":module_share"))
     implementation(project(":lib_route"))
     implementation(project(":lib_net"))
     implementation(project(":lib_base"))

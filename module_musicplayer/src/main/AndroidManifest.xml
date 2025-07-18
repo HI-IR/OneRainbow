@@ -1,30 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-    <uses-permission android:name="android.permission.INTERNET" />
-
-    <application
-        android:name="com.onerainbow.lib.base.BaseApplication"
-        android:allowBackup="true"
-        android:label="musicplayer"
-        android:networkSecurityConfig="@xml/net_config"
-        android:supportsRtl="true"
-        android:theme="@style/Theme.OneRainbow">
-        <service
-            android:name=".service.MusicService"
-            android:enabled="true"
-            android:exported="true"></service>
-
+    <application>
         <activity
             android:name=".ui.MusicPlayerActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:exported="false"/>
     </application>
 
 </manifest>

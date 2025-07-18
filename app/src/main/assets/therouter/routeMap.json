@@ -14,6 +14,13 @@
     "params": {}
   },
   {
+    "path": "/player/music",
+    "className": "com.onerainbow.module.musicplayer.ui.MusicPlayerActivity",
+    "action": "",
+    "description": "",
+    "params": {}
+  },
+  {
     "path": "/home",
     "className": "com.onerainbow.module.home.activity.HomeActivity",
     "action": "",

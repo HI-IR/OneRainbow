@@ -1,27 +1,31 @@
 package com.onerainbow.module.musicplayer.ui
 
 import android.animation.ValueAnimator
-import android.content.Context
+import android.annotation.SuppressLint
 import android.content.res.Resources
 import android.os.Bundle
-import android.util.Log
+import android.os.Handler
+import android.os.Looper
 import android.view.View
 import android.view.animation.DecelerateInterpolator
 import android.view.animation.LinearInterpolator
+import android.widget.SeekBar
+import android.widget.Toast
 import androidx.core.animation.doOnEnd
+import androidx.core.util.TimeUtils.formatDuration
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.onerainbow.lib.base.BaseActivity
-import com.onerainbow.lib.base.BaseApplication
+import com.onerainbow.lib.base.utils.CopyUtils
 import com.onerainbow.lib.base.utils.ToastUtils
 import com.onerainbow.lib.route.RoutePath
 import com.onerainbow.module.musicplayer.R
 import com.onerainbow.module.musicplayer.databinding.ActivityMusicPlayerBinding
-import com.onerainbow.module.musicplayer.model.Artist
-import com.onerainbow.module.musicplayer.model.Song
+import com.onerainbow.module.musicplayer.service.MusicManager
 import com.onerainbow.module.musicplayer.viewmodel.MusicPlayerViewModel
-import com.therouter.TheRouter
+import com.onerainbow.module.share.CustomShare
+import com.onerainbow.module.share.utils.ShareUtils
 import com.therouter.router.Route
 
 @Route(path = RoutePath.MUSIC_PLAYER)
@@ -30,7 +34,7 @@ class MusicPlayerActivity : BaseActivity<ActivityMusicPlayerBinding>() {
     private var isAnimating : Boolean = false //用来标记是否在动画中
 
     private var tempAnimator: ValueAnimator? = null
-
+    private var isUserSeeking = false
 
     override fun getViewBinding(): ActivityMusicPlayerBinding =
         ActivityMusicPlayerBinding.inflate(layoutInflater)
@@ -59,52 +63,36 @@ class MusicPlayerActivity : BaseActivity<ActivityMusicPlayerBinding>() {
     }
 
     private val viewModel by lazy {
-        ViewModelProvider(
-            this,
-            ViewModelProvider.AndroidViewModelFactory.getInstance(BaseApplication.context)
-        )[MusicPlayerViewModel::class.java]
+        ViewModelProvider(this)[MusicPlayerViewModel::class.java]
     }
 
-    //TODO 歌单测试
     private val playerList by lazy {
-        //初始化对话框
+        //初始化对话框,设置点击事件
         PlayerList(this@MusicPlayerActivity) {
-            ToastUtils.makeText("点击了${it.name}")
-        }.apply {
-            setSongs(
-                listOf(
-                    Song(1, "测试数据1", listOf(Artist("测试作者", 1)), "11", "11"),
-                    Song(2, "测试数据1", listOf(Artist("测试作者", 1)), "11", "11"),
-                    Song(3, "测试数据1", listOf(Artist("测试作者", 1)), "11", "11"),
-                    Song(5, "测试数据1", listOf(Artist("测试作者", 1)), "11", "11"),
-                    Song(6, "测试数据1", listOf(Artist("测试作者", 1)), "11", "11"),
-                    Song(7, "测试数据1", listOf(Artist("测试作者", 1)), "11", "11"),
-                    Song(8, "测试数据1", listOf(Artist("测试作者", 1)), "11", "11"),
-                    Song(9, "测试数据1", listOf(Artist("测试作者", 1)), "11", "11"),
-                    Song(11, "测试数据1", listOf(Artist("测试作者", 1)), "11", "11"),
-                    Song(12, "测试数据1", listOf(Artist("测试作者", 1)), "11", "11"),
-                    Song(13, "测试数据1", listOf(Artist("测试作者", 1)), "11", "11"),
-                    Song(14, "测试数据1", listOf(Artist("测试作者", 1)), "11", "11"),
-                    Song(15, "测试数据1", listOf(Artist("测试作者", 1)), "11", "11"),
-                    Song(16, "测试数据1", listOf(Artist("测试作者", 1)), "11", "11"),
-                    Song(17, "测试数据1", listOf(Artist("测试作者", 1)), "11", "11"),
-                    Song(18, "测试数据1", listOf(Artist("测试作者", 1)), "11", "11"),
-                    Song(19, "测试数据1", listOf(Artist("测试作者", 1)), "11", "11"),
-                    Song(20, "测试数据1", listOf(Artist("测试作者", 1)), "11", "11"),
-                    Song(21, "测试数据1", listOf(Artist("测试作者", 1)), "11", "11"),
-                    Song(22, "测试数据1", listOf(Artist("测试作者", 1)), "11", "11"),
-                    Song(23, "测试数据1", listOf(Artist("测试作者", 1)), "11", "11"),
-                )
-            )
+            viewModel.playAt(it)
+            ToastUtils.makeText("点击了${it}")
         }
-
-
     }
 
+    private val progressHandler = Handler(Looper.getMainLooper())
+    private val progressRunnable = object : Runnable {
+        override fun run() {
+            if (!isUserSeeking && viewModel.isPlaying.value!!) {
+                val position = MusicManager.getCurrentPosition()
+                val duration = MusicManager.getDuration()
+                val progress = (position * 1000 / duration).toInt()
+                binding.musicplayerSeekbar.progress = progress
+                binding.musicplayerNow.text = formatTime(position)
+                binding.musicplayerEnd.text = formatTime(duration)
+            }
+            progressHandler.postDelayed(this, 500)
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        //进度更新
+        progressHandler.post(progressRunnable)
     }
 
     override fun initViewModel() {
@@ -117,7 +105,8 @@ class MusicPlayerActivity : BaseActivity<ActivityMusicPlayerBinding>() {
                 }
             }
 
-            playIndex.observe(this@MusicPlayerActivity) {
+            currentIndex.observe(this@MusicPlayerActivity) { it ->
+                //播放Index变化
                 if (it > lastIndex!!) {
                     //播放下一首歌
                     lastIndex = it
@@ -126,12 +115,18 @@ class MusicPlayerActivity : BaseActivity<ActivityMusicPlayerBinding>() {
                     //播放上一首歌
                     lastIndex = it
                     animateToPrevCD()
-
                 }
+                val playlist = viewModel.playlist.value
+                if (!playlist.isNullOrEmpty()) {
+                    val song = playlist[it]
+                    binding.musicplayerTitle.text = song.name
+                    binding.musicplayerCreator.text = song.artists.joinToString(" / ") { it.name }
+                }
+
+
             }
 
             isPlaying.observe(this@MusicPlayerActivity) {
-
                 //图标变化
                 if (it) {
                     binding.musicplayerPlay.setImageResource(R.drawable.pause)//如果是播放状态下则显示暂停
@@ -157,6 +152,22 @@ class MusicPlayerActivity : BaseActivity<ActivityMusicPlayerBinding>() {
                     cdAnimator.pause()
                 }
             }
+
+            playlist.observe(this@MusicPlayerActivity){
+                playerList.setSongs(it)
+                initView()
+            }
+
+            error.observe(this@MusicPlayerActivity) {
+                if (it){
+                    //长针收回
+                    binding.imgStylus.animate().rotation(0f).apply {
+                        duration = 300
+                    }
+                    //CD停止旋转
+                    cdAnimator.pause()
+                }
+            }
         }
     }
 
@@ -166,27 +177,37 @@ class MusicPlayerActivity : BaseActivity<ActivityMusicPlayerBinding>() {
         initClick()
     }
 
+
+
     //对View做一些初始化设置
     private fun initView() {
-        lastIndex = viewModel.playIndex.value!! // 初始化
+        lastIndex = viewModel.currentIndex.value ?: -1 // 初始化
+
+        // 检查播放列表是否为空
+        val playlist = viewModel.playlist.value ?: emptyList()
+        if (playlist.isEmpty()) {
+            // 处理空列表情况：显示空状态UI或提示用户添加歌曲
+            showEmptyPlaylistState()
+            return
+        }
 
         //加载图片
         val requestOptions: RequestOptions = RequestOptions().placeholder(R.drawable.loading)
             .fallback(R.drawable.loading)
 
-        Log.d("动画!!!", lastIndex!!.toString());
-        val currentSong = viewModel.playerLists.value!![lastIndex!!]
+
+        val currentSong = viewModel.playlist.value!![lastIndex!!]
         Glide.with(this@MusicPlayerActivity).load(currentSong.coverUrl).apply(requestOptions)
             .into(binding.imgCoverCurrent)
 
         if (lastIndex!! > 0) {
-            val prevSong = viewModel.playerLists.value!!.get(lastIndex!! - 1)
+            val prevSong = viewModel.playlist.value!!.get(lastIndex!! - 1)
             Glide.with(this@MusicPlayerActivity).load(prevSong.coverUrl).apply(requestOptions)
                 .into(binding.imgCoverPrev)
 
         }
-        if (lastIndex!! < viewModel.playerLists.value?.size!! - 1) {
-            val nextSong = viewModel.playerLists.value!!.get(lastIndex!! + 1)
+        if (lastIndex!! < viewModel.playlist.value?.size!! - 1) {
+            val nextSong = viewModel.playlist.value!!.get(lastIndex!! + 1)
             Glide.with(this@MusicPlayerActivity).load(nextSong.coverUrl).apply(requestOptions)
                 .into(binding.imgCoverNext)
 
@@ -199,13 +220,39 @@ class MusicPlayerActivity : BaseActivity<ActivityMusicPlayerBinding>() {
         }
     }
 
+    private fun showEmptyPlaylistState() {
+        //空播放列表的话则隐藏内容
+        binding.apply {
+            imgCdCurrent.visibility = View.VISIBLE
+            imgCdNext.visibility = View.GONE
+            imgCdPrev.visibility = View.GONE
+            imgCoverCurrent.visibility = View.GONE
+            imgCoverNext.visibility = View.GONE
+            imgCoverPrev.visibility = View.GONE
+
+            musicplayerTitle.visibility = View.GONE
+            musicplayerCreator.visibility = View.GONE
+            musicplayerCollected.visibility = View.GONE
+            musicplayerComment.visibility = View.GONE
+            musicplayerSeekbarLine.visibility = View.GONE
+            musicplayerNow.visibility = View.GONE
+            musicplayerEnd.visibility = View.GONE
+            musicplayerControl.visibility = View.GONE
+            musicplayerShare.visibility = View.GONE
+
+            musicplayerEmpty.visibility = View.VISIBLE
+        }
+
+
+    }
+
     //绑定点击事件
     private fun initClick() {
         binding.apply {
 
             //开始播放按键
             musicplayerPlay.setOnClickListener {
-                viewModel.togglePlayOrPause()
+                viewModel.togglePlayPause()
             }
 
             //切换播放模式
@@ -218,47 +265,88 @@ class MusicPlayerActivity : BaseActivity<ActivityMusicPlayerBinding>() {
                 playerList.show()
             }
 
+            //下一首歌
             musicplayerPlayNext.setOnClickListener {
                 if (isAnimating) return@setOnClickListener //如果在进行下一首歌的动画则特return
-                viewModel.toggleNext()//在这里面有判断是否最后一首歌歌曲
+                viewModel.playNext()
             }
+
+            //上一首歌
             musicplayerPlayPrev.setOnClickListener {
                 if (isAnimating) return@setOnClickListener //如果在进行下一首歌的动画则特return
-                viewModel.togglePrev()//在这里面有判断是否为第一首歌
+                viewModel.playPrev()
             }
+
+            //返回
+            musicplayerFoldup.setOnClickListener {
+                finish()
+            }
+
+            //分享
+            musicplayerShare.setOnClickListener {
+                //初始化分享弹窗
+                initShare()
+            }
+
+            //seekBar的滑动
+            musicplayerSeekbar.setOnSeekBarChangeListener(object :SeekBar.OnSeekBarChangeListener{
+                override fun onProgressChanged(
+                    seekBar: SeekBar?,
+                    progress: Int,
+                    fromUser: Boolean
+                ) {
+                    // 用户拖动过程中，更新 UI 显示当前时间（可选）
+                    if (fromUser) {
+                        val duration = MusicManager.getDuration()
+                        val position = duration * progress / 1000
+                        binding.musicplayerNow.text = formatTime(position)
+                    }
+                }
+
+                override fun onStartTrackingTouch(seekBar: SeekBar?) {
+                    isUserSeeking = true // 标记进入拖动状态
+                }
+
+                override fun onStopTrackingTouch(seekBar: SeekBar) {
+                    val duration = MusicManager.getDuration()
+                    val seekBarProgress = seekBar.progress
+                    val targetPosition = duration * seekBarProgress / 1000  // 百分比进度映射到实际时长
+                    MusicManager.seekTo(targetPosition)
+                    isUserSeeking = false
+                }
+
+            })
 
         }
     }
 
+    //初始化分享弹窗
+    private fun initShare() {
+        val playlist = viewModel.playlist.value ?: emptyList()
+        if (playlist.isEmpty()) return
+        val index =viewModel.currentIndex.value ?: 0
+        val item = viewModel.playlist.value?.get(index)!!
+        val customShare = CustomShare(this)
+        customShare.setOnQqClickListener{
+            ShareUtils.shareToQQ(this,"我正在听${item.name},点击链接你也来听吧！ \n ${item.url}")
+            customShare.dismiss()
+        }
+        customShare.setOnWxClickListener{
+            ShareUtils.shareToWX(this,"我正在听${item.name},点击链接你也来听吧！ \n ${item.url}")
+            customShare.dismiss()
+        }
+        customShare.setOnBrowseClickListener{
+            ShareUtils.shareToBrowser(this,item.url)
+            customShare.dismiss()
+        }
+        customShare.setOnLinkClickListener(){
+            CopyUtils.copy(this ,"我正在听${item.name},点击链接你也来听吧！ \n ${item.url}")
+            Toast.makeText(this, "已复制链接", Toast.LENGTH_SHORT).show()
+            customShare.dismiss()
+        }
 
-    /**
-     * 初始化音乐服务
-     */
-    private fun initMusicService() {
-        viewModel.bindService()
-    }
-
-    /**
-     * 解绑
-     */
-    protected fun unbindMusicService() {
-        viewModel.unbindService()
-    }
-
-    override fun onStart() {
-        super.onStart()
-        initMusicService()
-        initPlayerMode()
-    }
-
-    private fun initPlayerMode() {
-        viewModel.initPlayMode()
-    }
-
-    override fun onStop() {
-        super.onStop()
-        unbindMusicService()
-        viewModel.savePlayMode()
+        //显示弹窗
+        customShare.show()
     }
 
 
@@ -337,21 +425,21 @@ class MusicPlayerActivity : BaseActivity<ActivityMusicPlayerBinding>() {
                 val requestOptions: RequestOptions =
                     RequestOptions().placeholder(R.drawable.loading)
                         .fallback(R.drawable.loading)
-                val index = viewModel.playIndex.value!!
+                val index = viewModel.currentIndex.value!!
                 //因为这个动画的调用意味着已经完成了viewModel的playIndex更新，所以此时的playIndex已经是更新后的了
-                val currentSong = viewModel.playerLists.value?.get(index)
+                val currentSong = viewModel.playlist.value?.get(index)
                 Glide.with(this@MusicPlayerActivity).load(currentSong?.coverUrl)
                     .apply(requestOptions).into(binding.imgCoverCurrent)
 
                 if (index > 0){
-                    val prevSong = viewModel.playerLists.value?.get(index - 1)
+                    val prevSong = viewModel.playlist.value?.get(index - 1)
                     Glide.with(this@MusicPlayerActivity).load(prevSong?.coverUrl)
                         .apply(requestOptions)
                         .into(binding.imgCoverPrev)
                 }
 
-                if (index < viewModel.playerLists.value!!.size - 1) {
-                    val nextSong = viewModel.playerLists.value?.get(viewModel.playIndex.value!! + 1)
+                if (index < viewModel.playlist.value!!.size - 1) {
+                    val nextSong = viewModel.playlist.value?.get(viewModel.currentIndex.value!! + 1)
                     Glide.with(this@MusicPlayerActivity).load(nextSong?.coverUrl)
                         .apply(requestOptions).into(binding.imgCoverNext)
                 }
@@ -384,7 +472,7 @@ class MusicPlayerActivity : BaseActivity<ActivityMusicPlayerBinding>() {
 
         //初始化位置
         prevCd.visibility = View.VISIBLE
-        prevCover.visibility = View.INVISIBLE
+        prevCover.visibility = View.VISIBLE
         prevCd.translationX = -screenWidth //移除屏幕外
         prevCover.translationX = -screenWidth
 
@@ -426,21 +514,21 @@ class MusicPlayerActivity : BaseActivity<ActivityMusicPlayerBinding>() {
                 val requestOptions: RequestOptions =
                     RequestOptions().placeholder(R.drawable.loading)
                         .fallback(R.drawable.loading)
-                val index = viewModel.playIndex.value!!
+                val index = viewModel.currentIndex.value!!
 
                 //因为这个动画的调用意味着已经完成了viewModel的playIndex更新，所以此时的playIndex已经是更新后的了
-                val currentSong = viewModel.playerLists.value?.get(index)
+                val currentSong = viewModel.playlist.value?.get(index)
                 Glide.with(this@MusicPlayerActivity).load(currentSong?.coverUrl)
                     .apply(requestOptions).into(binding.imgCoverCurrent)
 
                 if (index > 0) {
-                    val prevSong = viewModel.playerLists.value?.get(index - 1)
+                    val prevSong = viewModel.playlist.value?.get(index - 1)
                     Glide.with(this@MusicPlayerActivity).load(prevSong?.coverUrl)
                         .apply(requestOptions).into(binding.imgCoverPrev)
                 }
 
-                if (index < viewModel.playerLists.value!!.size - 1) {
-                    val nextSong = viewModel.playerLists.value?.get(viewModel.playIndex.value!! + 1)
+                if (index < viewModel.playlist.value!!.size - 1) {
+                    val nextSong = viewModel.playlist.value?.get(viewModel.currentIndex.value!! + 1)
                     Glide.with(this@MusicPlayerActivity).load(nextSong?.coverUrl)
                         .apply(requestOptions).into(binding.imgCoverNext)
                 }
@@ -466,12 +554,15 @@ class MusicPlayerActivity : BaseActivity<ActivityMusicPlayerBinding>() {
         //关闭跳转动画
         tempAnimator?.cancel()
         tempAnimator?.removeAllUpdateListeners() // 移除监听器，避免持有引用
-
-
-        // 清理 Glide 未完成的加载任务
-        Glide.with(this).clear(binding.imgCoverCurrent)
-        Glide.with(this).clear(binding.imgCoverPrev)
-        Glide.with(this).clear(binding.imgCoverNext)
+        progressHandler.removeCallbacks(progressRunnable)//移除回调
     }
 
+    //格式时长
+    @SuppressLint("DefaultLocale")
+    private fun formatTime(ms: Long): String {
+        val totalSec = ms / 1000
+        val min = totalSec / 60
+        val sec = totalSec % 60
+        return String.format("%02d:%02d",min,sec)
+    }
 }

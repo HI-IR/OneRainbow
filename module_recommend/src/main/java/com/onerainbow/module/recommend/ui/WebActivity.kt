@@ -11,6 +11,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.onerainbow.lib.base.BaseActivity
 import com.onerainbow.lib.base.utils.CopyUtils
+import com.onerainbow.lib.route.RoutePath
 import com.onerainbow.module.recommend.R
 import com.onerainbow.module.recommend.databinding.ActivityWebBinding
 import com.onerainbow.module.share.CustomShare
@@ -18,7 +19,7 @@ import com.onerainbow.module.share.utils.ShareUtils
 import com.therouter.router.Autowired
 import com.therouter.router.Route
 //TODO 更改路由
-@Route(path = "/recommend/web")
+@Route(path = RoutePath.WEB)
 class WebActivity : BaseActivity<ActivityWebBinding>() {
 
     @Autowired(name = "url")
@@ -78,7 +79,5 @@ class WebActivity : BaseActivity<ActivityWebBinding>() {
 
         //显示弹窗
         customShare.show()
-
-
     }
 }

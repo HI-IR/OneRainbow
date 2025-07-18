@@ -49,6 +49,7 @@ dependencies {
 
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
+    implementation(project(":module_musicplayer"))
     ksp("cn.therouter:apt:1.2.4")
     implementation ("cn.therouter:router:1.2.4")
     implementation(libs.androidx.core.ktx)

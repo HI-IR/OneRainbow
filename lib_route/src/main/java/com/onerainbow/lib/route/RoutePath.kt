@@ -12,4 +12,5 @@ object RoutePath {
     const val MAIN = "/main"
     const val MUSIC_PLAYER = "/player/music"
     const val MV_PLAYER = "/player/mv"
+    const val WEB = "/recommend/web"
 }
