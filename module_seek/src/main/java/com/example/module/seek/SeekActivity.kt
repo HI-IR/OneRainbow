@@ -2,6 +2,7 @@ package com.example.module.seek
 
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.Gravity
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.widget.LinearLayout
@@ -23,10 +24,14 @@ import com.example.module.seek.viewmodel.SeekViewModel
 import com.google.android.flexbox.FlexboxLayout
 import com.onerainbow.lib.base.BaseActivity
 import com.onerainbow.lib.route.RoutePath
+import com.therouter.TheRouter
+import com.therouter.router.Autowired
 import com.therouter.router.Route
 
 @Route(path = RoutePath.SEEK)
 class SeekActivity : BaseActivity<ActivitySeekBinding>() {
+    @Autowired(name="keywords")
+    var keywords: String? =null
     private val seekViewModel: SeekViewModel by viewModels()
     private lateinit var viewpager2Adapter: PopmusicListAdapter
 
@@ -42,15 +47,26 @@ class SeekActivity : BaseActivity<ActivitySeekBinding>() {
             val playlists: List<Playlist> = result.map { it.playlist }
             viewpager2Adapter.submitList(playlists)
         }
+
     }
 
     override fun initEvent() {
         seekViewModel.getPopmusic()
         setHistory()
+        binding.tvSeek.setOnClickListener{
+
+            Log.d("keywordone",binding.etSeek.text.toString())
+            TheRouter.build(RoutePath.FINISHSEEK).withString("keyword",binding.etSeek.text.toString())
+                .navigation()
+        }
+        LiveDataBus.keywordResult.observe(this) { result ->
+            binding.etSeek.setText(result)
+        }
+
     }
 
     fun setHistory() {
-        val tags = listOf("流行", "摇滚", "爵士", "古典", "电子", "说唱", "乡村", "程豪演的要不要")
+        val tags = listOf("流行", "摇滚", "爵士", "古典", "电子", "说唱", "乡村", "要不要")
 
         // 清空之前的内容（防止重复添加）
         binding.flexboxLayout.removeAllViews()

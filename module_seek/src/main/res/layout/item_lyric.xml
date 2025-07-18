@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="15dp">
+
+    <TextView
+        android:id="@+id/tv_single_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="冬眠"
+        android:textColor="@color/single"
+        android:textSize="17dp"
+        app:layout_constraintLeft_toLeftOf="@id/tv_lyric"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/single_img"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginRight="30dp"
+        android:src="@drawable/sungle_close"
+        app:layout_constraintRight_toRightOf="@id/tv_lyric"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/layout_singers_album"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginLeft="-10dp"
+        app:layout_constraintStart_toStartOf="@id/tv_lyric"
+        app:layout_constraintTop_toBottomOf="@id/tv_single_title">
+
+        <com.google.android.flexbox.FlexboxLayout
+            android:id="@+id/flex_singers"
+            flexWrap="wrap"
+            justifyContent="flex-start"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp" />
+
+        <TextView
+            android:id="@+id/tv_single_ablum"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:textColor="@color/text_second"
+            android:textSize="12sp"
+            android:paddingStart="8dp"
+            android:text="专辑" />
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/lyric_img"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        android:layout_marginLeft="15dp"
+        android:src="@drawable/lyric"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/layout_singers_album" />
+
+    <TextView
+        android:id="@+id/tv_lyric"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:ellipsize="end"
+        android:maxLines="3"
+        android:textSize="14dp"
+        android:textStyle="bold"
+        app:layout_constraintLeft_toRightOf="@id/lyric_img"
+        app:layout_constraintTop_toBottomOf="@id/layout_singers_album" />
+
+    <TextView
+        android:id="@+id/tv_expand"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="8dp"
+        android:textSize="12sp"
+        android:text="展开 v"
+        app:layout_constraintLeft_toLeftOf="@id/tv_lyric"
+        app:layout_constraintTop_toBottomOf="@id/tv_lyric" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

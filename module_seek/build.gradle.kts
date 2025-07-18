@@ -40,6 +40,8 @@ dependencies {
     implementation(project(":lib_net"))
     implementation(project(":lib_route"))
     implementation(project(":lib_base"))
+    implementation ("com.github.bumptech.glide:glide:4.16.0")
+    ksp ("com.github.bumptech.glide:compiler:4.16.0")
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
     implementation ("com.google.android.flexbox:flexbox:3.0.0")

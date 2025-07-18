@@ -1,0 +1,123 @@
+package com.example.module.seek.adapter
+
+import android.graphics.Color
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
+import androidx.recyclerview.widget.RecyclerView
+import com.example.module.seek.R
+import com.example.module.seek.data.LyricData
+import com.example.module.seek.data.SongLyric
+import com.example.module.seek.databinding.FragmentLyricBinding
+import com.example.module.seek.databinding.ItemLyricBinding
+
+/**
+ * description ： TODO:类的作用
+ * author : summer_palace2
+ * email : 2992203079qq.com
+ * date : 2025/7/18 14:02
+ */
+class LyricDataAdapter : ListAdapter<SongLyric, LyricDataAdapter.ViewHolder>(DiffCallback) {
+    private var selectedPosition = RecyclerView.NO_POSITION
+
+    inner class ViewHolder(var binding: ItemLyricBinding) : RecyclerView.ViewHolder(binding.root) {
+        fun bind(item: SongLyric, isSelected: Boolean) {
+            binding.tvLyric.text = item.lyrics.txt
+            var isExpanded = false
+
+            binding.tvLyric.maxLines = 3 // 初始显示3行
+            binding.tvExpand.setOnClickListener {
+                if (isExpanded) {
+                    binding.tvLyric.maxLines = 3
+                    binding.tvExpand.text = "展开 v" // 切换按钮文字
+                } else {
+                    binding.tvLyric.maxLines = Int.MAX_VALUE
+                    binding.tvExpand.text = "收起 ^"
+                }
+                isExpanded = !isExpanded
+            }
+
+            val flexSongLyric = binding.flexSingers
+            flexSongLyric.removeAllViews()
+            item.artists.forEach { artist ->
+                val maxTitleLen = 10
+                val displayTitle = if (item.name.length > maxTitleLen) {
+                    item.name.substring(0, maxTitleLen) + "…"
+                } else {
+                    item.name
+                }
+                binding.tvSingleTitle.text = displayTitle
+                val maxAblum = 6
+                val displayAblum = if (item.album.name.length > maxAblum) {
+                    item.album.name.substring(0, maxAblum) + "…"
+                } else {
+                    item.album.name
+                }
+                binding.tvSingleAblum.text = "-${displayAblum}"
+                val maxSingerLen = 12
+                val allNames = item.artists.joinToString(separator = "、") { it.name }
+                val displaySingers = if (allNames.length > maxSingerLen) {
+                    allNames.substring(0, maxSingerLen) + "…"
+                } else {
+                    allNames
+                }
+
+                val flexSingers = binding.flexSingers
+                flexSingers.removeAllViews()
+                val tv = TextView(binding.root.context).apply {
+                    text = displaySingers
+                    textSize = 12f
+                    setTextColor(Color.GRAY)
+                    setPadding(8, 4, 8, 4)
+                }
+                flexSingers.addView(tv)
+            }
+            // 根据是否选中设置歌名字体颜色
+            binding.tvSingleTitle.setTextColor(
+                if (isSelected)
+                    binding.root.context.getColor(android.R.color.holo_red_dark) // 选中：红色
+                else
+                    binding.root.context.getColor(android.R.color.holo_blue_dark) // 未选中：黑色
+            )
+            // 根据是否选中切换图片
+            if (isSelected) {
+                binding.singleImg.setImageResource(R.drawable.single_open) // 替换成播放中的图片
+            } else {
+                binding.singleImg.setImageResource(R.drawable.sungle_close) // 恢复成默认图片
+            }
+            // 点击事件：更新选中状态
+            binding.root.setOnClickListener {
+                val previousPosition = selectedPosition
+                selectedPosition = adapterPosition
+                notifyItemChanged(previousPosition) // 刷新之前选中的
+                notifyItemChanged(selectedPosition) // 刷新当前选中的
+
+            }
+        }
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        val binding = ItemLyricBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return ViewHolder(binding)
+    }
+
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        val isSelected = (position == selectedPosition)
+        holder.bind(getItem(position), isSelected)
+    }
+
+    companion object {
+        private val DiffCallback = object : DiffUtil.ItemCallback<SongLyric>() {
+            override fun areItemsTheSame(oldItem: SongLyric, newItem: SongLyric): Boolean {
+                return oldItem.id == newItem.id
+            }
+
+            override fun areContentsTheSame(oldItem: SongLyric, newItem: SongLyric): Boolean {
+                return oldItem == newItem
+            }
+
+        }
+    }
+}

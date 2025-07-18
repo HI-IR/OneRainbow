@@ -1,7 +1,7 @@
 package com.example.module.seek.adapter
 
 /**
- * description ： TODO:类的作用
+ * description ： 榜单适配器
  * author : summer_palace2
  * email : 2992203079qq.com
  * date : 2025/7/16 12:04

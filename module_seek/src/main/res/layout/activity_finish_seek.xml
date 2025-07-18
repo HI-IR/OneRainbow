@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="@color/background"
     android:fitsSystemWindows="true"
-    tools:context=".SeekActivity">
+    tools:context=".FinishSeekActivity">
 
     <LinearLayout
         android:id="@+id/toolbar"
@@ -57,58 +57,32 @@
                 android:textSize="15sp" />
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/tv_seek"
-            android:layout_width="50dp"
-            android:layout_height="30dp"
-            android:gravity="center"
-            android:text="搜索"
-            app:tint="@color/black" />
     </LinearLayout>
 
-    <androidx.core.widget.NestedScrollView
-        android:id="@+id/nestedScrollView"
+
+    <!-- TabLayout -->
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/finish_seek_tabLayout"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        app:tabIndicatorColor="@color/red"
+        app:tabRippleColor="@android:color/transparent"
+        android:background="@android:color/transparent"
+        app:tabBackground="@android:color/transparent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:tabMode="scrollable"
+        app:tabTextColor="@color/black" />
+
+    <!-- ViewPager2 -->
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/finish_seek_vp2"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintTop_toBottomOf="@id/toolbar"
-        app:layout_constraintBottom_toBottomOf="parent">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-    <TextView
-        android:id="@+id/tv_history"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="20dp"
-        android:text="浏览历史"
-        android:textSize="16dp"
-        android:textStyle="bold"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/toolbar" />
-
-    <com.google.android.flexbox.FlexboxLayout
-        android:id="@+id/flexboxLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="8dp"
-        app:alignItems="flex_start"
-        app:flexWrap="wrap"
-        app:justifyContent="flex_start"
-        app:layout_constraintTop_toBottomOf="@id/tv_history" />
-
-
-
-        <androidx.viewpager2.widget.ViewPager2
-            android:id="@+id/viewpager2_popmusic"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="20dp"
-            android:layout_marginTop="30dp"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/flexboxLayout" />
-        </LinearLayout>
-    </androidx.core.widget.NestedScrollView>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/finish_seek_tabLayout"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

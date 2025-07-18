@@ -1,10 +1,6 @@
 package com.onerainbow.module.account.repository
 
-import android.util.Log
-import androidx.compose.runtime.key
-import com.onerainbow.lib.base.utils.CookieUtils
 import com.onerainbow.lib.net.RetrofitClient
-import com.onerainbow.module.account.data.KeyData
 import com.onerainbow.module.account.data.QRData
 import com.onerainbow.module.account.data.StateData
 import com.onerainbow.module.account.interfaces.QRService

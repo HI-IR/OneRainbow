@@ -11,4 +11,5 @@ object RoutePath {
     const val LOGIN = "/account/LoginActivity"
     const val MAIN = "/main/MainActivity"
     const val SEEK = "/seek/SeekActivity"
+    const val FINISHSEEK ="/seek/FinishSeekActivity"
 }
