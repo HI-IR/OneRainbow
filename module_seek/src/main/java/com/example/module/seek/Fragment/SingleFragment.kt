@@ -66,13 +66,23 @@ class SingleFragment :BaseFragment<FragmentSingleBinding>(),GetImgUrl {
 
     }
 
-    override fun getGetImgUrl(id: Long, callback: (String) -> Unit){
-        finishSeekViewmodel.getUrlData(id)
-        finishSeekViewmodel.getUrlDataLiveData.observe(viewLifecycleOwner) { result ->
-            val url = result.songs[0].al.picUrl
-            Log.d("urling",url)
-            callback(url)
-        }
+    override fun getGetImgUrl(id: Long, callback: (String) -> Unit) {
+        // 每次点击先取消之前的请求（防止连点）
+        finishSeekViewmodel.cancelUrlRequest()
+
+        // 调用 ViewModel 获取数据
+        finishSeekViewmodel.getUrlData(
+            id,
+            onResult = { result ->
+                val url = result.songs[0].al.picUrl
+                Log.d("SingleFragment", "图片 URL: $url")
+                callback(url)
+            },
+            onError = { error ->
+                Log.e("SingleFragment", "获取图片 URL 失败", error)
+                callback("") // 失败时回调空字符串或默认图
+            }
+        )
     }
 
 }

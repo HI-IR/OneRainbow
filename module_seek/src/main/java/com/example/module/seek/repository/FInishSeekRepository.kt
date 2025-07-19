@@ -10,6 +10,7 @@ import com.example.module.seek.interfaces.FinishSeekDataService
 import com.onerainbow.lib.net.RetrofitClient
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.schedulers.Schedulers
 
 
@@ -21,6 +22,8 @@ import io.reactivex.rxjava3.schedulers.Schedulers
  */
 class FInishSeekRepository {
     private val FinishSeekDataService =RetrofitClient.create(FinishSeekDataService::class.java)
+    private var urlDataDisposable: Disposable? = null
+
 
     fun getSingleData(keyWord:String): Observable<SingleData> {
         return FinishSeekDataService.getSinglekData(keyWord,1)
@@ -47,10 +50,28 @@ class FInishSeekRepository {
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
     }
-    fun getUrlData(id:Long):Observable<UrlData>{
-        return  FinishSeekDataService.getImgUrl(id)
+    fun getUrlData(id: Long, onResult: (UrlData) -> Unit, onError: (Throwable) -> Unit) {
+        // 取消之前的请求
+        urlDataDisposable?.dispose()
+
+        // 重新订阅
+        urlDataDisposable = FinishSeekDataService.getImgUrl(id)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                { result ->
+                    onResult(result)
+                },
+                { error ->
+                    onError(error)
+                }
+            )
+    }
+
+
+    fun cancelUrlRequest() {
+        urlDataDisposable?.dispose()
+        urlDataDisposable = null
     }
 
 
