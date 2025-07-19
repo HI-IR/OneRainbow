@@ -239,4 +239,10 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>() {
         }
 
     }
+
+    override fun onDestroy() {
+        cdAnimator.cancel()
+        cdAnimator.removeAllUpdateListeners() // 移除监听器
+        super.onDestroy()
+    }
 }

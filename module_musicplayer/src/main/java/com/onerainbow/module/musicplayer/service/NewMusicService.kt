@@ -319,7 +319,7 @@ class NewMusicService : Service() {
         fun removeSongAt(index: Int) {
             if (index in playlist.indices) {
                 playlist.removeAt(index)
-                player.removeMediaItem(index)
+                //player.removeMediaItem(index)
 
                 // 调整 currentIndex
                 if (index < currentIndex) {
@@ -328,6 +328,7 @@ class NewMusicService : Service() {
                     // 如果删除的是当前播放的歌曲
                     if (playlist.isEmpty()) {
                         currentIndex = -1 // 歌单空了，重置索引
+                        player.clearMediaItems()
                     } else {
                         // 自动播放下一首（如果有）或上一首
                         currentIndex = if (index < playlist.size) index else playlist.lastIndex
@@ -337,8 +338,6 @@ class NewMusicService : Service() {
                 MusicManager.notifyPlayIndex(currentIndex) // 通知UI更新
 
             }
-
-
         }
 
         fun clearPlaylist() {

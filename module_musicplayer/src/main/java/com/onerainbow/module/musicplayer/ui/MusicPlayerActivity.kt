@@ -150,19 +150,24 @@ class MusicPlayerActivity : BaseActivity<ActivityMusicPlayerBinding>() {
                 if (it > lastIndex!!) {
                     //播放下一首歌
                     lastIndex = it
+
                     animateToNextCD()
-                } else if (it != lastIndex) {
+                } else if (it < lastIndex!!) {
                     //播放上一首歌
                     lastIndex = it
                     animateToPrevCD()
+                }else{
+                    if (it < 0) return@observe
+                    val song = viewModel.playlist.value?.get(it)
+                    Glide.with(this@MusicPlayerActivity).load(song?.coverUrl).apply(requestOptions)
+                        .into(binding.imgCoverCurrent)
                 }
                 if (it < 0) return@observe
                 val song = viewModel.playlist.value?.get(it)
                 //更新显示信息
-                Glide.with(this@MusicPlayerActivity).load(song?.coverUrl)
-                    .apply(requestOptions).into(binding.imgCoverCurrent)
                 binding.musicplayerTitle.text = song?.name
                 binding.musicplayerCreator.text = song?.artists?.joinToString(" / ") { it.name }
+
             }
 
         }
@@ -183,8 +188,6 @@ class MusicPlayerActivity : BaseActivity<ActivityMusicPlayerBinding>() {
             showEmptyPlaylistState()
             return
         }
-
-
 
 
         val currentSong = viewModel.playlist.value!![lastIndex!!]
