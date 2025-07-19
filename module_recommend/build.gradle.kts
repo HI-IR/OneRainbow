@@ -39,6 +39,7 @@ android {
 
 dependencies {
     //Glide
+    implementation(project(":module_seek"))
     implementation ("com.github.bumptech.glide:glide:4.12.0")
     implementation(project(":module_share"))
     implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")

@@ -12,6 +12,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.module.seek.data.Playlist
 import com.example.module.seek.data.PopmusicData
 import com.example.module.seek.databinding.ItemHotBinding
+import com.onerainbow.lib.route.RoutePath
+import com.therouter.TheRouter
 
 /**
  * description ： viewpager2适配器
@@ -45,7 +47,9 @@ class PopmusicListAdapter(private val context: Context) :
         var adapter=PopmusicAdapter{
                 item ->
             // 点击事件逻辑
-            Toast.makeText(context, "点击了 ${item.name} id${item.id}", Toast.LENGTH_SHORT).show()
+            TheRouter.build(RoutePath.FINISHSEEK)
+                .withString("keyword", item.name)
+                .navigation()
         }
         recycleview.layoutManager=LinearLayoutManager(context)
         LinearLayoutManager(context).isSmoothScrollbarEnabled = false // 关闭平滑滚动效果（可选）

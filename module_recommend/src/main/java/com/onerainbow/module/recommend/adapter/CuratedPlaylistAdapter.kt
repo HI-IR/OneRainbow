@@ -9,9 +9,13 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.example.module.seek.data.Creator
+import com.example.module.seek.data.Playlists
+import com.onerainbow.lib.route.RoutePath
 import com.onerainbow.module.recommend.R
 import com.onerainbow.module.recommend.bean.Curated
 import com.onerainbow.module.recommend.databinding.ItemCuratedBinding
+import com.therouter.TheRouter
 
 /**
  * description ： 甄选歌单的Adapter
@@ -31,6 +35,7 @@ class CuratedPlaylistAdapter(val context: Context) : ListAdapter<Curated, Curate
 
 }) {
     inner class ViewModel(binding: ItemCuratedBinding) : RecyclerView.ViewHolder(binding.root) {
+        private var currentData : Curated? = null
         private val imgPic = binding.imgPic
         private val tvName = binding.tvName
         private val item = binding.root
@@ -39,6 +44,7 @@ class CuratedPlaylistAdapter(val context: Context) : ListAdapter<Curated, Curate
             initClick()
         }
         fun bind(data: Curated){
+            currentData =data
             tvName.text = data.name
             tvCount.text = data.playCount.toText()
             //加载网络图片
@@ -47,14 +53,34 @@ class CuratedPlaylistAdapter(val context: Context) : ListAdapter<Curated, Curate
             Glide.with(context).load(data.picUrl).apply(requestOptions).into(imgPic)
 
 
+
+        }
+        fun Curated.toPlaylists(): Playlists {
+            return Playlists(
+                coverImgUrl = this.picUrl,
+                creator = Creator(
+                    avatarUrl = this.picUrl,
+                    nickname = "帅哥",
+                    userId = -1
+                ),
+                description = this.copywriter,
+                id = this.id,
+                name = this.name,
+                userId = -1,
+                trackCount = this.trackCount.toInt()
+            )
         }
 
         private fun initClick() {
             item.setOnClickListener {
-                //TODO 歌曲列表
-                Toast.makeText(context,"点击了歌单${tvName.text}，${getItem(adapterPosition).id}",Toast.LENGTH_SHORT).show()
+                val playlist =currentData?.toPlaylists()
+                TheRouter.build(RoutePath.PLAYLIST)
+                    .withParcelable("playlists",playlist)
+                    .navigation()
+
             }
         }
+
 
         //将数据转为从多少万
         fun Long.toText(): String {

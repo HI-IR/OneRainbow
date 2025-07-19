@@ -9,9 +9,12 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.onerainbow.lib.route.RoutePath
 import com.onerainbow.module.recommend.R
+import com.onerainbow.module.recommend.bean.Creator
 import com.onerainbow.module.recommend.bean.Playlists
 import com.onerainbow.module.recommend.databinding.ItemCommunityPicksBinding
+import com.therouter.TheRouter
 
 /**
  * description ： 网友推荐的Adapter
@@ -78,16 +81,31 @@ class CommunityPicksAdapter(private val context: Context) :ListAdapter<List<Play
         private fun initClick() {
             items.forEachIndexed { index, item ->
                 item.setOnClickListener {
-                    Toast.makeText(context,"点击了歌单,歌单ID ${currentData?.getOrNull(index)?.id}",Toast.LENGTH_SHORT).show()
+                    val playlist = currentData?.getOrNull(index)
+                    if (playlist != null) {
+                        // 转换成简版 Playlists
+                        val simplePlaylist = playlist.toSimple()
+                        TheRouter.build(RoutePath.PLAYLIST)
+                            .withParcelable("playlists",simplePlaylist)
+                            .navigation()
+
+                    }
 
                 }
+                plays.forEachIndexed { index, play ->
+                    play.setOnClickListener {
+                        val playlist = currentData?.getOrNull(index)
+                        if (playlist != null) {
+                            // 转换成简版 Playlists
+                            val simplePlaylist = playlist.toSimple()
+                            TheRouter.build(RoutePath.PLAYLIST)
+                                .withParcelable("playlists",simplePlaylist)
+                                .navigation()
 
-            }
-            plays.forEachIndexed { index, play ->
-                play.setOnClickListener {
-                    Toast.makeText(context,"点击了歌单播放,歌单ID ${currentData?.getOrNull(index)?.id}",Toast.LENGTH_SHORT).show()
+                        }
+                    }
+
                 }
-
             }
         }
 
@@ -105,6 +123,27 @@ class CommunityPicksAdapter(private val context: Context) :ListAdapter<List<Play
                 creators[index].text = "-${playlists.creator.nickname}"
             }
         }
+        fun Playlists.toSimple(): com.example.module.seek.data.Playlists{
+            return com.example.module.seek.data.Playlists(
+                coverImgUrl = this.coverImgUrl,
+                creator = this.creator.toSimple(),
+                description = this.description,
+                id = this.id,
+                name = this.name,
+                userId = this.userId,
+                trackCount = this.trackCount.toInt()
+            )
+        }
+        fun Creator.toSimple(): com.example.module.seek.data.Creator {
+            return com.example.module.seek.data.Creator(
+                avatarUrl = this.avatarUrl,
+                nickname = this.nickname,
+                userId = this.userId
+            )
+        }
+
+
+
 
     }
 
