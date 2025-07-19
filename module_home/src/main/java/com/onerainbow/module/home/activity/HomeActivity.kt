@@ -1,10 +1,13 @@
 package com.onerainbow.module.home.activity
 
 import android.animation.ValueAnimator
+import android.content.res.Resources
 import android.os.Bundle
+import android.util.TypedValue
 import android.view.View
 import android.view.animation.LinearInterpolator
 import android.widget.Toast
+import androidx.core.util.TypedValueCompat.dpToPx
 import androidx.core.view.GravityCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.widget.ViewPager2
@@ -168,16 +171,24 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>() {
                 if (it.isNullOrEmpty()){
                     binding.playBar.visibility = View.GONE
                     playerList.setSongs(emptyList())
-                    playerList.dismiss()
+                    binding.vp2Home.setPadding(0, 0, 0, 0)
                     return@observe
                 }
                 //不为空则显示
+                binding.vp2Home.setPadding(0, 0, 0, dpToPx(40))
+                binding.vp2Home.clipToPadding = false
                 binding.playBar.visibility = View.VISIBLE
                 playerList.setSongs(it)
             }
 
         }
     }
+    fun dpToPx(dp: Int): Int {
+        return TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_DIP, dp.toFloat(), Resources.getSystem().displayMetrics
+        ).toInt()
+    }
+
     //TODO 流出点击事件的接口，等待完善
     override fun initEvent() {
         binding.apply {
@@ -209,6 +220,7 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>() {
 
             playBar.setOnClickListener {
                 TheRouter.build(RoutePath.MUSIC_PLAYER).navigation()
+                overridePendingTransition(R.anim.slide_bottom, R.anim.hold)
             }
         }
 

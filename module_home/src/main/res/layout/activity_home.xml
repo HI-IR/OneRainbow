@@ -110,7 +110,8 @@
                 android:textColor="@color/text_first"
                 app:layout_constraintStart_toEndOf="@id/img_cd"
                 android:layout_marginStart="10dp"
-                android:maxEms="15"
+                android:maxEms="5"
+                android:maxLines="1"
                 android:ellipsize="marquee"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"/>
@@ -128,7 +129,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:maxLines="1"
-                android:maxEms="12"
+                android:maxEms="5"
                 android:ellipsize="marquee"
                 android:textColor="@color/text_second"
                 app:layout_constraintStart_toEndOf="@id/tv_desc"

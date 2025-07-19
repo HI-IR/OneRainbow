@@ -9,6 +9,7 @@ import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.onerainbow.lib.base.BaseActivity
 import com.onerainbow.lib.route.RoutePath
+import com.onerainbow.module.musicplayer.R
 import com.onerainbow.module.musicplayer.adapter.CommentAdapter
 import com.onerainbow.module.musicplayer.databinding.ActivityCommentBinding
 import com.onerainbow.module.musicplayer.viewmodel.CommentViewModel

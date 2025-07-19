@@ -48,6 +48,7 @@ class PlayerList(
         binding.apply {
             playerlistClean.setOnClickListener {
                 MusicManager.cleanList()
+                dismiss()
             }
         }
     }
@@ -65,11 +66,10 @@ class PlayerList(
             //行为控制器
             BottomSheetBehavior.from(it).apply {
                 //折叠高度
-                peekHeight = 800
+                peekHeight = 1500
                 //初始状态
                 state = BottomSheetBehavior.STATE_COLLAPSED
                 isDraggable = true
-                skipCollapsed = true
             }
         }
     }

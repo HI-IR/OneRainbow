@@ -172,6 +172,7 @@ class MusicPlayerActivity : BaseActivity<ActivityMusicPlayerBinding>() {
     }
 
     private fun initView() {
+        binding.musicplayerTitle.isSelected = true
         lastIndex = viewModel.currentIndex.value
 
         // 检查播放列表是否为空
@@ -267,6 +268,7 @@ class MusicPlayerActivity : BaseActivity<ActivityMusicPlayerBinding>() {
             //返回
             musicplayerFoldup.setOnClickListener {
                 finish()
+                overridePendingTransition(R.anim.hold_anim, R.anim.slide_out_bottom)
             }
 
             //分享
@@ -563,7 +565,6 @@ class MusicPlayerActivity : BaseActivity<ActivityMusicPlayerBinding>() {
         }
         tempAnimator?.start()
     }
-
 
     //格式时长
     @SuppressLint("DefaultLocale")

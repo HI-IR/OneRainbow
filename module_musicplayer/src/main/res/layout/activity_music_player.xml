@@ -141,8 +141,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="梅间雪"
-        android:maxEms="15"
+        android:maxEms="10"
+        android:maxLines="1"
         android:ellipsize="marquee"
+
         android:textColor="@color/item"
         android:textSize="20sp"
         android:textStyle="bold" />
@@ -157,7 +159,9 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="2dp"
         android:text="梨香JZH"
-        android:maxEms="20"
+        android:maxLines="1"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:maxEms="15"
         android:ellipsize="marquee"
         android:textColor="@color/text_second"
         android:textSize="12sp"
