@@ -17,22 +17,39 @@ import org.intellij.lang.annotations.JdkConstants.TitledBorderTitlePosition
 object MusicManager {
     private var musicBinder: NewMusicService.MusicBinder? = null
     private var isServiceConnected = false
-    private var listener: PlaybackStateListener? = null
 
-    fun setPlaybackStateListener(l: PlaybackStateListener) {
-        listener = l
+    //多监听器
+    private val listenerList = mutableListOf<PlaybackStateListener>()
+
+    //设置播放状态监听器
+    fun addPlaybackStateListener(l: PlaybackStateListener) {
+        if (!listenerList.contains(l)) {
+            listenerList.add(l)
+        }
     }
 
+    //移除播放状态监听器
+    fun removePlaybackStateListener(l: PlaybackStateListener) {
+        listenerList.remove(l)
+    }
+
+    //清空所有监听器
+    fun clearListeners() {
+        listenerList.clear()
+    }
+
+
+    // 通知方法修改为遍历所有监听器
     fun notifyPlayState(isPlaying: Boolean) {
-        listener?.onPlayStateChanged(isPlaying)
+        listenerList.forEach { it.onPlayStateChanged(isPlaying) }
     }
 
     fun notifyPlayIndex(index: Int) {
-        listener?.onPlayIndexChanged(index)
+        listenerList.forEach { it.onPlayIndexChanged(index) }
     }
 
-    fun notifyPlayError(error:Boolean){
-        listener?.onPlayError(error)
+    fun notifyPlayError(error: Boolean) {
+        listenerList.forEach { it.onPlayError(error) }
     }
 
     // 服务连接回调
@@ -205,6 +222,7 @@ object MusicManager {
 
         }
     }
+
 
 }
 //用来监听变化的接口

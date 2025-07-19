@@ -40,22 +40,24 @@ class MusicPlayerViewModel() : ViewModel() {
     private val _playlist = MutableLiveData<List<Song>>(emptyList())
     val playlist: LiveData<List<Song>> = _playlist
 
+    private val playbackListener = object : PlaybackStateListener {
+        override fun onPlayStateChanged(isPlaying: Boolean) {
+            _isPlaying.postValue(isPlaying)
+        }
+
+        override fun onPlayIndexChanged(index: Int) {
+            _currentIndex.postValue(index)
+            _playlist.postValue(MusicManager.getPlaylist())//索引发生变化，同步更新歌单
+        }
+
+        override fun onPlayError(error: Boolean) {
+            _error.postValue(error)
+        }
+    }
+
     //初始化数据
     init {
-        MusicManager.setPlaybackStateListener(object : PlaybackStateListener {
-            override fun onPlayStateChanged(isPlaying: Boolean) {
-                _isPlaying.postValue(isPlaying)
-            }
-
-            override fun onPlayIndexChanged(index: Int) {
-                _currentIndex.postValue(index)
-                _playlist.postValue(MusicManager.getPlaylist())//索引发生变化，同步更新歌单
-            }
-
-            override fun onPlayError(error: Boolean) {
-                _error.postValue(error)
-            }
-        })
+        MusicManager.addPlaybackStateListener(playbackListener)
 
         // 尝试从 Manager 拉取初始状态
         _playlist.value = MusicManager.getPlaylist()
@@ -113,5 +115,9 @@ class MusicPlayerViewModel() : ViewModel() {
         MusicManager.seekTo(position)
     }
 
+    override fun onCleared() {
+        MusicManager.removePlaybackStateListener(playbackListener)//移除设置的监听器，防止内存泄露
+        super.onCleared()
+    }
 
 }

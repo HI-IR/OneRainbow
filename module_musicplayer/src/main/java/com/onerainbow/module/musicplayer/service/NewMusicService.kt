@@ -84,6 +84,7 @@ class NewMusicService : Service() {
 
             // 处理播放完成（播放到末尾）
             override fun onPlaybackStateChanged(state: Int) {
+
                 if (state == Player.STATE_ENDED) {
                     handlePlaybackCompletion()
                 }
@@ -110,7 +111,7 @@ class NewMusicService : Service() {
 
     // 切换到下一首歌曲（强制请求最新URL）
     private fun switchToNextSong() {
-        val nextIndex = player.currentMediaItemIndex + 1
+        val nextIndex = currentIndex + 1
         if (nextIndex < playlist.size) {
             mBinder.playAt(nextIndex)  // 调用playAt触发URL请求
         }
@@ -181,7 +182,7 @@ class NewMusicService : Service() {
 
         // 顺序播放模式下自动切换到下一首
         if (playMode == PlayMode.SEQUENTIAL) {
-            val currentIndex = playlist.indexOf(song)
+            currentIndex = playlist.indexOf(song)
             if (currentIndex + 1 < playlist.size) {
                 switchToNextSong()  // 尝试播放下一首
             }
@@ -256,7 +257,7 @@ class NewMusicService : Service() {
         // 播放指定索引的歌曲（强制请求最新URL）
         fun playAt(index: Int) {
             if (index in playlist.indices) {
-                currentIndex = index // 显式更新当前索引
+                currentIndex = index // 更新当前索引
                 val targetSong = playlist[index]
                 playWithFreshUrl(targetSong)  // 强制请求URL后播放
             }

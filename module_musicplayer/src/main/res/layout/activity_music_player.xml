@@ -261,7 +261,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_weight="1.5"
-            android:src="@drawable/play" />
+            android:src="@drawable/play_item" />
 
         <ImageView
             android:id="@+id/musicplayer_play_next"
@@ -277,7 +277,7 @@
             android:layout_height="23dp"
             android:layout_gravity="center_vertical"
             android:layout_weight="0.5"
-            android:src="@drawable/playlist" />
+            android:src="@drawable/playlist_item" />
     </LinearLayout>
 
     <androidx.constraintlayout.widget.Guideline

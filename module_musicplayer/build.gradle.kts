@@ -44,7 +44,8 @@ dependencies {
     implementation ("androidx.media3:media3-ui:1.7.1")
 
     implementation ("com.github.bumptech.glide:glide:4.12.0")
-    
+
+    implementation(libs.androidx.paging.runtime)
 
     ksp("cn.therouter:apt:1.2.4")
     implementation ("cn.therouter:router:1.2.4")

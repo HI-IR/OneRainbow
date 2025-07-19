@@ -21,6 +21,13 @@
     "params": {}
   },
   {
+    "path": "/comments",
+    "className": "com.onerainbow.module.musicplayer.ui.CommentActivity",
+    "action": "",
+    "description": "",
+    "params": {}
+  },
+  {
     "path": "/home",
     "className": "com.onerainbow.module.home.activity.HomeActivity",
     "action": "",
@@ -44,6 +51,20 @@
   {
     "path": "/seek/SeekActivity",
     "className": "com.example.module.seek.SeekActivity",
+    "action": "",
+    "description": "",
+    "params": {}
+  },
+  {
+    "path": "/seek",
+    "className": "com.example.module.seek.SeekActivity",
+    "action": "",
+    "description": "",
+    "params": {}
+  },
+  {
+    "path": "/seek/finish",
+    "className": "com.example.module.seek.FinishSeekActivity",
     "action": "",
     "description": "",
     "params": {}

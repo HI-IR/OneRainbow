@@ -1,18 +1,26 @@
 package com.onerainbow.module.home.activity
 
+import android.animation.ValueAnimator
 import android.os.Bundle
+import android.view.View
+import android.view.animation.LinearInterpolator
 import android.widget.Toast
 import androidx.core.view.GravityCompat
+import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.widget.ViewPager2
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.onerainbow.lib.base.BaseActivity
 import com.onerainbow.lib.route.RoutePath
 import com.onerainbow.module.home.R
 import com.onerainbow.module.home.adapter.HomeVpAdapter
 import com.onerainbow.module.home.databinding.ActivityHomeBinding
 import com.onerainbow.module.home.databinding.LayoutDrawerBinding
+import com.onerainbow.module.home.viewmodel.HomeViewModel
 import com.onerainbow.module.musicplayer.model.Artist
 import com.onerainbow.module.musicplayer.model.Song
 import com.onerainbow.module.musicplayer.service.MusicManager
+import com.onerainbow.module.musicplayer.ui.PlayerList
 import com.onerainbow.module.recommend.ui.RecommendFragment
 import com.onerainbow.module.top.TopFragment
 import com.onerainbow.module.user.UserFragment
@@ -34,7 +42,36 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>() {
             UserFragment()
         )
     }
+    private val viewModel by lazy {
+        ViewModelProvider(this)[HomeViewModel::class.java]
+    }
+    //图片加载配置
+    val requestOptions: RequestOptions =
+        RequestOptions().placeholder(com.onerainbow.module.musicplayer.R.drawable.loading)
+            .fallback(com.onerainbow.module.musicplayer.R.drawable.loading)
 
+    private val playerList by lazy {
+        //初始化对话框,设置点击事件
+        PlayerList(this@HomeActivity) {
+            viewModel.playAt(it)
+        }
+    }
+
+    /**
+     * CD旋转
+     */
+    private val cdAnimator by lazy {
+        ValueAnimator.ofFloat(0f, 360f).apply {
+            duration = 20000 //20秒一圈
+            interpolator = LinearInterpolator() //线性变化
+            repeatCount = ValueAnimator.INFINITE //无限循环
+            addUpdateListener {
+                val currentRotation = it.animatedValue as Float
+                binding.imgCover.rotation = currentRotation
+                binding.imgCd.rotation = currentRotation
+            }
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -90,7 +127,56 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>() {
 
 
     override fun initViewModel() {
+        //注册ViewModel的监听
+        viewModel.apply {
+            isPlaying.observe(this@HomeActivity){
+                //图标变化
+                if (it) {
+                    binding.btnPlay.setImageResource(R.drawable.pause)//如果是播放状态下则显示暂停
+                } else {
+                    binding.btnPlay.setImageResource(R.drawable.play)//如果是暂停状态下则显示暂停
+                }
 
+                //CD 旋转动画
+                if (it){
+                    //如果在播放状态下
+                    if (!cdAnimator.isStarted){
+                        cdAnimator.start()//没启动则启动
+                    }else{
+                        cdAnimator.resume()//启动过了则恢复
+                    }
+                }else{
+                    cdAnimator.pause()
+                }
+            }
+
+            currentIndex.observe(this@HomeActivity){
+                if (viewModel.playlist.value == null) return@observe
+                if (it in viewModel.playlist.value!!.indices){
+                    val currentSong = viewModel.playlist.value!![it]
+                    Glide.with(this@HomeActivity).load(currentSong.coverUrl).apply(requestOptions)
+                        .into(binding.imgCover)
+                    binding.apply {
+                        tvTitle.text = currentSong.name
+                        tvCreator.text = currentSong.artists.joinToString("/") { it.name }
+                    }
+                }
+            }
+
+            //播放列表为空，则隐藏
+            playlist.observe(this@HomeActivity){
+                if (it.isNullOrEmpty()){
+                    binding.playBar.visibility = View.GONE
+                    playerList.setSongs(emptyList())
+                    playerList.dismiss()
+                    return@observe
+                }
+                //不为空则显示
+                binding.playBar.visibility = View.VISIBLE
+                playerList.setSongs(it)
+            }
+
+        }
     }
     //TODO 流出点击事件的接口，等待完善
     override fun initEvent() {
@@ -111,6 +197,14 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>() {
                         Song(2724462272,"u sure u do?",listOf(Artist("张天枢",33371675)),"https://p2.music.126.net/whaVtSBYZlo-CqPRqU4Sig==/109951171439212278.jpg")
                     )
                 )
+            }
+
+            btnPlay.setOnClickListener {
+                viewModel.togglePlayPause()
+            }
+
+            btnPlaylist.setOnClickListener {
+                playerList.show()
             }
         }
 

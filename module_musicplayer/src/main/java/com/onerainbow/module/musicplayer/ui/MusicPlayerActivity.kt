@@ -25,6 +25,7 @@ import com.onerainbow.module.musicplayer.service.MusicManager
 import com.onerainbow.module.musicplayer.viewmodel.MusicPlayerViewModel
 import com.onerainbow.module.share.CustomShare
 import com.onerainbow.module.share.utils.ShareUtils
+import com.therouter.TheRouter
 import com.therouter.router.Route
 
 @Route(path = RoutePath.MUSIC_PLAYER)
@@ -50,6 +51,9 @@ class MusicPlayerActivity : BaseActivity<ActivityMusicPlayerBinding>() {
         }
     }
 
+    //加载图片
+    val requestOptions: RequestOptions = RequestOptions().placeholder(R.drawable.loading)
+        .fallback(R.drawable.loading)
     override fun getViewBinding(): ActivityMusicPlayerBinding =
         ActivityMusicPlayerBinding.inflate(layoutInflater)
 
@@ -100,9 +104,9 @@ class MusicPlayerActivity : BaseActivity<ActivityMusicPlayerBinding>() {
             isPlaying.observe(this@MusicPlayerActivity) {
                 //图标变化
                 if (it) {
-                    binding.musicplayerPlay.setImageResource(R.drawable.pause)//如果是播放状态下则显示暂停
+                    binding.musicplayerPlay.setImageResource(R.drawable.pause_item)//如果是播放状态下则显示暂停
                 } else {
-                    binding.musicplayerPlay.setImageResource(R.drawable.play)//如果是暂停状态下则显示暂停
+                    binding.musicplayerPlay.setImageResource(R.drawable.play_item)//如果是暂停状态下则显示暂停
                 }
 
                 //唱针动画
@@ -155,6 +159,8 @@ class MusicPlayerActivity : BaseActivity<ActivityMusicPlayerBinding>() {
                 if (it < 0) return@observe
                 val song = viewModel.playlist.value?.get(it)
                 //更新显示信息
+                Glide.with(this@MusicPlayerActivity).load(song?.coverUrl)
+                    .apply(requestOptions).into(binding.imgCoverCurrent)
                 binding.musicplayerTitle.text = song?.name
                 binding.musicplayerCreator.text = song?.artists?.joinToString(" / ") { it.name }
             }
@@ -178,9 +184,7 @@ class MusicPlayerActivity : BaseActivity<ActivityMusicPlayerBinding>() {
             return
         }
 
-        //加载图片
-        val requestOptions: RequestOptions = RequestOptions().placeholder(R.drawable.loading)
-            .fallback(R.drawable.loading)
+
 
 
         val currentSong = viewModel.playlist.value!![lastIndex!!]
@@ -302,6 +306,17 @@ class MusicPlayerActivity : BaseActivity<ActivityMusicPlayerBinding>() {
 
             })
 
+            musicplayerComment.setOnClickListener {
+                val currentIndex = viewModel.currentIndex.value!!
+                if (currentIndex<0) return@setOnClickListener
+                val id = viewModel.playlist.value?.get(currentIndex)?.id
+                if (id != null) {
+                    TheRouter.build(RoutePath.COMMENTS)
+                        .withLong("musicId", id)
+                        .navigation()
+                }
+
+            }
 
         }
     }
@@ -430,6 +445,10 @@ class MusicPlayerActivity : BaseActivity<ActivityMusicPlayerBinding>() {
                     RequestOptions().placeholder(R.drawable.loading)
                         .fallback(R.drawable.loading)
                 val index = viewModel.currentIndex.value!!
+                if (index !in viewModel.playlist.value?.indices!!) {
+                    showEmptyPlaylistState()
+                    return@doOnEnd
+                }
                 //因为这个动画的调用意味着已经完成了viewModel的playIndex更新，所以此时的playIndex已经是更新后的了
                 val currentSong = viewModel.playlist.value?.get(index)
                 Glide.with(this@MusicPlayerActivity).load(currentSong?.coverUrl)
@@ -519,6 +538,10 @@ class MusicPlayerActivity : BaseActivity<ActivityMusicPlayerBinding>() {
                     RequestOptions().placeholder(R.drawable.loading)
                         .fallback(R.drawable.loading)
                 val index = viewModel.currentIndex.value!!
+                if (index !in viewModel.playlist.value?.indices!!) {
+                    showEmptyPlaylistState()
+                    return@doOnEnd
+                }
 
                 //因为这个动画的调用意味着已经完成了viewModel的playIndex更新，所以此时的playIndex已经是更新后的了
                 val currentSong = viewModel.playlist.value?.get(index)

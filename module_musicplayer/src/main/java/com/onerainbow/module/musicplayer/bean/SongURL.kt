@@ -1,4 +1,4 @@
-package com.onerainbow.module.musicplayer.model
+package com.onerainbow.module.musicplayer.bean
 
 /**
  * description ： TODO:类的作用

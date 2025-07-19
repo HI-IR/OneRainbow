@@ -39,6 +39,8 @@ android {
 }
 
 dependencies {
+    implementation ("com.github.bumptech.glide:glide:4.12.0")
+    implementation("com.github.bumptech.glide:compiler:4.12.0")
     implementation(project(":lib_route"))
     implementation(project(":lib_base"))
     implementation(project(":lib_net"))

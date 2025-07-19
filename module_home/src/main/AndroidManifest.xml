@@ -4,6 +4,7 @@
     <application>
         <activity
             android:name=".activity.HomeActivity"
+            android:launchMode="singleTask"
             android:exported="false" />
     </application>
 

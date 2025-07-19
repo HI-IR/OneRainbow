@@ -13,7 +13,7 @@ import io.reactivex.rxjava3.schedulers.Schedulers
  */
 object SongModel {
     private val api by lazy {
-        RetrofitClient.create(MusicRepo::class.java)
+        RetrofitClient.create(MusicApi::class.java)
     }
 
     fun getSongById(songId: Long): Observable<String> {
