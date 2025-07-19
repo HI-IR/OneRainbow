@@ -41,6 +41,9 @@ class FinishSeekActivity : BaseActivity<ActivityFinishSeekBinding>() {
 
 
         initVp2()
+        binding.btnOpenDrawer.setOnClickListener{
+            finish()
+        }
         binding.toolbar.setOnClickListener {
             val newKeyword = binding.etSeek.text.toString()
             LiveDataBus.keywordResult.postValue(newKeyword)

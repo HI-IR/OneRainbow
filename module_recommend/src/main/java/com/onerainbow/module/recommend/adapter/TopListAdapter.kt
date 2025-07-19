@@ -9,9 +9,14 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.onerainbow.lib.route.RoutePath
 import com.onerainbow.module.recommend.R
+import com.onerainbow.module.recommend.bean.Creator
+import com.onerainbow.module.recommend.bean.Creator2
 import com.onerainbow.module.recommend.bean.Playlist
+import com.onerainbow.module.recommend.bean.Playlists
 import com.onerainbow.module.recommend.databinding.ItemToplistBinding
+import com.therouter.TheRouter
 
 /**
  * description ： 推荐页的热榜适配器
@@ -53,9 +58,14 @@ class TopListAdapter(private val context: Context) :
 
         private fun initClick() {
             item.setOnClickListener {
-                currentData?.let {
-                    Toast.makeText(context, "你点击了${it.name},id:${it.id}", Toast.LENGTH_SHORT)
-                        .show()
+                currentData?.let { playlist ->
+                    // 这里调用转换方法
+                    val simplePlaylist = playlist.toSimple()
+                    TheRouter.build(RoutePath.PLAYLIST)
+                        .withParcelable("playlists", simplePlaylist)
+                        .navigation()
+                } ?: run {
+                    Toast.makeText(context, "数据异常", Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -88,6 +98,24 @@ class TopListAdapter(private val context: Context) :
                 }
             }
 
+        }
+        fun Playlist.toSimple(): com.example.module.seek.data.Playlists{
+            return com.example.module.seek.data.Playlists(
+                coverImgUrl = this.coverImgUrl,
+                creator = this.creator.toSimple(),
+                description = this.description,
+                id = this.id,
+                name = this.name,
+                userId = this.userId,
+                trackCount = this.trackCount.toInt()
+            )
+        }
+        fun Creator2.toSimple(): com.example.module.seek.data.Creator {
+            return com.example.module.seek.data.Creator(
+                avatarUrl = this.avatarUrl,
+                nickname = this.nickname,
+                userId = this.userId
+            )
         }
     }
 

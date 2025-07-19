@@ -30,8 +30,8 @@ import com.therouter.router.Route
 
 @Route(path = RoutePath.SEEK)
 class SeekActivity : BaseActivity<ActivitySeekBinding>() {
-    @Autowired(name="keywords")
-    var keywords: String? =null
+    @Autowired(name = "keywords")
+    var keywords: String? = null
     private val seekViewModel: SeekViewModel by viewModels()
     private lateinit var viewpager2Adapter: PopmusicListAdapter
 
@@ -41,6 +41,33 @@ class SeekActivity : BaseActivity<ActivitySeekBinding>() {
         super.onCreate(savedInstanceState)
         setViewPager2()
     }
+
+    fun addTag(tag: String) {
+        val prefs = getSharedPreferences("seek_prefs", MODE_PRIVATE)
+        val tags = prefs.getStringSet("tags_key", mutableSetOf())?.toMutableSet() ?: mutableSetOf()
+
+        // 检查是否已经存在
+        if (tags.contains(tag)) {
+            return  // 已存在，不重复添加
+        }
+
+        tags.add(tag) // 加入新标签
+        prefs.edit().putStringSet("tags_key", tags).apply()
+    }
+
+
+
+    fun getAllTags(): List<String> {
+        val prefs = getSharedPreferences("seek_prefs", MODE_PRIVATE)
+        return prefs.getStringSet("tags_key", emptySet())?.toList() ?: emptyList()
+    }
+
+    fun clearAllTags() {
+        val prefs = getSharedPreferences("seek_prefs", MODE_PRIVATE)
+        prefs.edit().remove("tags_key").apply()
+        setHistory()
+    }
+
 
     override fun initViewModel() {
         seekViewModel.PopmusicDataLiveData.observe(this) { result ->
@@ -53,11 +80,18 @@ class SeekActivity : BaseActivity<ActivitySeekBinding>() {
     override fun initEvent() {
         seekViewModel.getPopmusic()
         setHistory()
-        binding.tvSeek.setOnClickListener{
+        binding.tvDelete.setOnClickListener{
+            clearAllTags()
+        }
+        binding.tvSeek.setOnClickListener {
 
-            Log.d("keywordone",binding.etSeek.text.toString())
-            TheRouter.build(RoutePath.FINISHSEEK).withString("keyword",binding.etSeek.text.toString())
+            Log.d("keywordone", binding.etSeek.text.toString())
+            TheRouter.build(RoutePath.FINISHSEEK)
+                .withString("keyword", binding.etSeek.text?.toString()?.trim() ?: "冬眠")
                 .navigation()
+            addTag(binding.etSeek.text.toString())
+            setHistory()
+
         }
         LiveDataBus.keywordResult.observe(this) { result ->
             binding.etSeek.setText(result)
@@ -66,35 +100,34 @@ class SeekActivity : BaseActivity<ActivitySeekBinding>() {
     }
 
     fun setHistory() {
-        val tags = listOf("流行", "摇滚", "爵士", "古典", "电子", "说唱", "乡村", "要不要")
+        val tags = getAllTags().ifEmpty {
+            listOf("流行", "摇滚", "爵士", "古典", "电子", "说唱", "乡村", "要不要")
+        }
 
-        // 清空之前的内容（防止重复添加）
         binding.flexboxLayout.removeAllViews()
 
         for (tag in tags) {
             val textView = TextView(this).apply {
                 text = tag
-                setTextColor(Color.parseColor("#17182C")) // 深色文字
+                setTextColor(Color.parseColor("#17182C"))
                 textSize = 14f
                 setPadding(40, 20, 40, 20)
                 background = ContextCompat.getDrawable(this@SeekActivity, R.drawable.bg_tag)
                 setOnClickListener {
-                    Toast.makeText(this@SeekActivity, "点击了 $tag", Toast.LENGTH_SHORT).show()
+                    TheRouter.build(RoutePath.FINISHSEEK)
+                        .withString("keyword", tag)
+                        .navigation()
+
                 }
             }
 
-            val params = FlexboxLayout.LayoutParams(
-                FlexboxLayout.LayoutParams.WRAP_CONTENT,
-                FlexboxLayout.LayoutParams.WRAP_CONTENT
-            ).apply {
+            val params = FlexboxLayout.LayoutParams(WRAP_CONTENT, WRAP_CONTENT).apply {
                 setMargins(16, 16, 16, 16)
             }
-
-            // 用 binding 引用布局里的 flexboxLayout
             binding.flexboxLayout.addView(textView, params)
         }
-
     }
+
 
     fun setViewPager2() {
         viewpager2Adapter = PopmusicListAdapter(this)

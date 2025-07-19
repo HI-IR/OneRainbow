@@ -81,7 +81,9 @@ data class Playlist(
     val userId: Long,
     val videoIds: Any,
     val videos: Any
-)
+) {
+
+}
 
 data class Privilege(
     val chargeInfoList: List<ChargeInfo>,
@@ -157,7 +159,9 @@ data class Creator2(
     val userId: Long,
     val userType: Long,
     val vipType: Long
-)
+) {
+
+}
 
 data class Subscriber2(
     val accountStatus: Long,
