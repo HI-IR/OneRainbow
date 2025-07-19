@@ -1,6 +1,7 @@
 package com.example.module.seek.adapter
 
 import android.graphics.Color
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.TextView
@@ -12,6 +13,9 @@ import com.example.module.seek.data.LyricData
 import com.example.module.seek.data.SongLyric
 import com.example.module.seek.databinding.FragmentLyricBinding
 import com.example.module.seek.databinding.ItemLyricBinding
+import com.example.module.seek.interfaces.GetImgUrl
+import com.onerainbow.module.musicplayer.model.Song
+import com.onerainbow.module.musicplayer.service.MusicManager
 
 /**
  * description ： TODO:类的作用
@@ -19,7 +23,7 @@ import com.example.module.seek.databinding.ItemLyricBinding
  * email : 2992203079qq.com
  * date : 2025/7/18 14:02
  */
-class LyricDataAdapter : ListAdapter<SongLyric, LyricDataAdapter.ViewHolder>(DiffCallback) {
+class LyricDataAdapter(private val getImgUrl: GetImgUrl) : ListAdapter<SongLyric, LyricDataAdapter.ViewHolder>(DiffCallback) {
     private var selectedPosition = RecyclerView.NO_POSITION
 
     inner class ViewHolder(var binding: ItemLyricBinding) : RecyclerView.ViewHolder(binding.root) {
@@ -74,6 +78,12 @@ class LyricDataAdapter : ListAdapter<SongLyric, LyricDataAdapter.ViewHolder>(Dif
                 }
                 flexSingers.addView(tv)
             }
+            val convertedArtists = item.artists.map {
+                com.onerainbow.module.musicplayer.model.Artist(
+                    id = it.id,
+                    name = it.name
+                )
+            }
             // 根据是否选中设置歌名字体颜色
             binding.tvSingleTitle.setTextColor(
                 if (isSelected)
@@ -93,6 +103,20 @@ class LyricDataAdapter : ListAdapter<SongLyric, LyricDataAdapter.ViewHolder>(Dif
                 selectedPosition = adapterPosition
                 notifyItemChanged(previousPosition) // 刷新之前选中的
                 notifyItemChanged(selectedPosition) // 刷新当前选中的
+                getImgUrl.getGetImgUrl(item.id) { imgUrl ->
+                    val song = Song(
+                        id = item.id,
+                        name = item.name,
+                        artists = convertedArtists,
+                        coverUrl = imgUrl
+                    )
+                    if (MusicManager.getPlaylist().isEmpty()){
+                        MusicManager.play(song)
+                    }else{
+                        MusicManager.addSong(song)
+                    }
+
+                }
 
             }
         }

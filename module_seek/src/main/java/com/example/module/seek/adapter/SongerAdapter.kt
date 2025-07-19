@@ -1,6 +1,7 @@
 package com.example.module.seek.adapter
 
 import android.graphics.Color
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.TextView
@@ -12,6 +13,8 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.module.seek.R
 import com.example.module.seek.data.SongData
 import com.example.module.seek.databinding.ItemPlaylistSongBinding
+import com.onerainbow.module.musicplayer.model.Song
+import com.onerainbow.module.musicplayer.service.MusicManager
 
 /**
  * description ： TODO:类的作用
@@ -57,6 +60,12 @@ class SongerAdapter : ListAdapter<SongData, SongerAdapter.ViewHolder>(DiffCallba
                     else
                         binding.root.context.getColor(android.R.color.black) // 未选中：黑色
                 )
+                val convertedArtists = item.ar.map {
+                    com.onerainbow.module.musicplayer.model.Artist(
+                        id = it.id,
+                        name = it.name
+                    )
+                }
                 // 点击事件：更新选中状态
                 binding.root.setOnClickListener {
                     val previousPosition = selectedPosition
@@ -64,7 +73,21 @@ class SongerAdapter : ListAdapter<SongData, SongerAdapter.ViewHolder>(DiffCallba
                     notifyItemChanged(previousPosition) // 刷新之前选中的
                     notifyItemChanged(selectedPosition) // 刷新当前选中的
 
+                    val song = Song(
+                        id = item.id,
+                        name = item.name,
+                        artists = convertedArtists,
+                        coverUrl = item.al.picUrl
+                    )
+                    Log.d("SongDatail",song.toString())
+                    if (MusicManager.getPlaylist().isEmpty()){
+                        MusicManager.play(song)
+                    }else{
+                        MusicManager.addSong(song)
+                    }
+
                 }
+
             }
 
         }

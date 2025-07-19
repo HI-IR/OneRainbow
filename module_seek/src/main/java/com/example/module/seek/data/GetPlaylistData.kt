@@ -15,6 +15,7 @@ data class SongGetPlay(
     val al: Al,
     val ar: List<Artist>,
     val id: Long,
+    val name: String,
     val mainTitle: String,
 )
 

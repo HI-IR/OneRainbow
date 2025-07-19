@@ -145,28 +145,31 @@ class FinishSeekViewModel : ViewModel() {
 
         })
     }
-    fun getUrlData(id:Long) {
-        fInishSeekRepository.getUrlData(id).subscribe(object : Observer<UrlData> {
-            override fun onSubscribe(d: Disposable) {
+    fun getUrlData(id: Long, onResult: (UrlData) -> Unit, onError: (Throwable) -> Unit) {
+        // 每次新请求前取消旧请求
+        fInishSeekRepository.cancelUrlRequest()
 
+        fInishSeekRepository.getUrlData(
+            id,
+            { result ->
+                getUrlDataLiveData.postValue(result)
+                onResult(result)
+            },
+            { error ->
+                onError(error)
             }
-
-            override fun onError(e: Throwable) {
-                e.printStackTrace()
-            }
-
-            override fun onComplete() {
-
-            }
-
-            override fun onNext(t: UrlData) {
-                Log.d("UrlData", t.toString())
-                getUrlDataLiveData.postValue(t)
-
-            }
-
-        })
+        )
     }
+
+    override fun onCleared() {
+        super.onCleared()
+        fInishSeekRepository.cancelUrlRequest() // 清理 URL 请求
+    }
+    fun cancelUrlRequest() {
+        fInishSeekRepository.cancelUrlRequest()
+    }
+
+
 
 
 }

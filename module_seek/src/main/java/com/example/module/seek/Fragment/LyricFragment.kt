@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.module.seek.adapter.LyricDataAdapter
 import com.example.module.seek.adapter.SingleAdapter
 import com.example.module.seek.databinding.FragmentLyricBinding
+import com.example.module.seek.interfaces.GetImgUrl
 import com.example.module.seek.viewmodel.FinishSeekViewModel
 import com.onerainbow.lib.base.BaseFragment
 
@@ -16,7 +17,7 @@ import com.onerainbow.lib.base.BaseFragment
  * email : 2992203079qq.com
  * date : 2025/7/17 11:18
  */
-class LyricFragment :BaseFragment<FragmentLyricBinding>() {
+class LyricFragment :BaseFragment<FragmentLyricBinding>(),GetImgUrl {
     private var keyword: String? = null
     private lateinit var lyricAdapter: LyricDataAdapter
     private val finishSeekViewmodel: FinishSeekViewModel by lazy {
@@ -24,7 +25,7 @@ class LyricFragment :BaseFragment<FragmentLyricBinding>() {
     }
     override fun getViewBinding(): FragmentLyricBinding =FragmentLyricBinding.inflate(layoutInflater)
     override fun initEvent() {
-        lyricAdapter = LyricDataAdapter()
+        lyricAdapter = LyricDataAdapter(this)
         binding.lyricRecycleview.layoutManager= LinearLayoutManager(context)
         binding.lyricRecycleview.adapter=lyricAdapter
         Log.d("keywordone",keyword.toString())
@@ -59,4 +60,23 @@ class LyricFragment :BaseFragment<FragmentLyricBinding>() {
             return fragment
         }
     }
+    override fun getGetImgUrl(id: Long, callback: (String) -> Unit) {
+        // 每次点击先取消之前的请求（防止连点）
+        finishSeekViewmodel.cancelUrlRequest()
+
+        // 调用 ViewModel 获取数据
+        finishSeekViewmodel.getUrlData(
+            id,
+            onResult = { result ->
+                val url = result.songs[0].al.picUrl
+                Log.d("SingleFragment", "图片 URL: $url")
+                callback(url)
+            },
+            onError = { error ->
+                Log.e("SingleFragment", "获取图片 URL 失败", error)
+                callback("") // 失败时回调空字符串或默认图
+            }
+        )
+    }
+
 }
