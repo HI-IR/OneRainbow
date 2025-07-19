@@ -206,6 +206,10 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>() {
             btnPlaylist.setOnClickListener {
                 playerList.show()
             }
+
+            playBar.setOnClickListener {
+                TheRouter.build(RoutePath.MUSIC_PLAYER).navigation()
+            }
         }
 
 
