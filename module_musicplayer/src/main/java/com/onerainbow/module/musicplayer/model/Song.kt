@@ -17,7 +17,18 @@ data class Song(
     val name: String,
     val artists: List<Artist>,
     val coverUrl: String
-)
+){
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is Song) return false
+        return id == other.id // 基于id判断唯一性
+    }
+
+    override fun hashCode(): Int {
+        return id.hashCode()
+    }
+}
+
 
 
 data class Artist(

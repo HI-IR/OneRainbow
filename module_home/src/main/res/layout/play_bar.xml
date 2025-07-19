@@ -19,7 +19,7 @@
         android:layout_height="40dp"
         android:layout_gravity="center"
         android:scaleType="centerInside"
-        android:src="@drawable/img_default" />
+        android:src="@drawable/cd_item" />
 
     <com.google.android.material.imageview.ShapeableImageView
         app:layout_constraintTop_toTopOf="@id/img_cd"

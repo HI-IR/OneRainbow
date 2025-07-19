@@ -248,9 +248,13 @@ class NewMusicService : Service() {
 
         // 添加歌单并从指定索引播放（强制请求该索引歌曲的URL）
         fun addSongs(songs: List<Song>, startIndex: Int = 0) {
-            playlist.addAll(songs)
-            if (startIndex in songs.indices) {
-                playAt(startIndex)  // 从指定索引播放（触发URL请求）
+            // 过滤掉已在playlist中的歌曲
+            val newSongs = songs.filterNot { playlist.contains(it) }
+            if (newSongs.isNotEmpty()) {
+                playlist.addAll(newSongs)
+                if (startIndex in songs.indices) {
+                    playAt(startIndex)  // 从指定索引播放（触发URL请求）
+                }
             }
         }
 
@@ -312,8 +316,12 @@ class NewMusicService : Service() {
 
         // 其他原有方法（
         fun addSong(song: Song) {
-            //添加在最后
-            playlist.add(song)
+            // 检查列表中是否已存在相同id的歌曲（基于Song的equals判断）
+            if (!playlist.contains(song)) {
+                playlist.add(song)
+                // 可选：通知UI列表更新
+                MusicManager.notifyPlayIndex(currentIndex)
+            }
 
         }
 
