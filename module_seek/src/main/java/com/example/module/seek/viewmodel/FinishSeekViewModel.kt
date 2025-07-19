@@ -8,7 +8,7 @@ import com.example.module.seek.data.GetMvData
 import com.example.module.seek.data.LyricData
 import com.example.module.seek.data.PlaylistData
 import com.example.module.seek.data.SingleData
-import com.example.module.seek.data.SpecialData
+import com.example.module.seek.data.UrlData
 import com.example.module.seek.data.UserData
 import com.example.module.seek.repository.FInishSeekRepository
 import io.reactivex.rxjava3.core.Observer
@@ -26,8 +26,8 @@ class FinishSeekViewModel : ViewModel() {
     val playlistDataLiveData = MutableLiveData<PlaylistData>()
     val userDataLiveData = MutableLiveData<UserData>()
     val LyricDataLiveData = MutableLiveData<LyricData>()
-    val SpecialDataLiveData = MutableLiveData<SpecialData>()
     val getMvDataLiveData = MutableLiveData<GetMvData>()
+    val getUrlDataLiveData =MutableLiveData<UrlData>()
 
 
     fun getSingle(keyWord: String) {
@@ -123,28 +123,6 @@ class FinishSeekViewModel : ViewModel() {
         })
     }
 
-    fun getSpecial(keyWord: String) {
-        fInishSeekRepository.getSpecialData(keyWord).subscribe(object : Observer<SpecialData> {
-            override fun onSubscribe(d: Disposable) {
-
-            }
-
-            override fun onError(e: Throwable) {
-                e.printStackTrace()
-            }
-
-            override fun onComplete() {
-
-            }
-
-            override fun onNext(t: SpecialData) {
-                Log.d("SpecialData", t.toString())
-                SpecialDataLiveData.postValue(t)
-
-            }
-
-        })
-    }
     fun getGetMv(keyWord: String) {
         fInishSeekRepository.getGetMvData(keyWord).subscribe(object : Observer<GetMvData> {
             override fun onSubscribe(d: Disposable) {
@@ -162,6 +140,28 @@ class FinishSeekViewModel : ViewModel() {
             override fun onNext(t: GetMvData) {
                 Log.d("GetMvlData", t.toString())
                 getMvDataLiveData.postValue(t)
+
+            }
+
+        })
+    }
+    fun getUrlData(id:Long) {
+        fInishSeekRepository.getUrlData(id).subscribe(object : Observer<UrlData> {
+            override fun onSubscribe(d: Disposable) {
+
+            }
+
+            override fun onError(e: Throwable) {
+                e.printStackTrace()
+            }
+
+            override fun onComplete() {
+
+            }
+
+            override fun onNext(t: UrlData) {
+                Log.d("UrlData", t.toString())
+                getUrlDataLiveData.postValue(t)
 
             }
 

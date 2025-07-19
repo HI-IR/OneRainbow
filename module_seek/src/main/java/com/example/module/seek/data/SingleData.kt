@@ -13,23 +13,25 @@ data class SingleData(
 
 data class Result(
     val songCount: Int,
-    val songs: List<Song>
+    val songs: List<Songi>
 )
 
-data class Song(
+data class Songi(
     val album: Album,
-    val artists: List<ArtistX>,
+    val artists: List<Artist>,
     val id: Long,
     val name: String,
 )
 
 data class Album(
-    val artist: ArtistX,
+    val artist: Artist,
     val id: Long,
     val name: String,
+    val img1v1Url :String
 )
 
-data class ArtistX(
+data class Artist(
     val id: Long,
     val name: String,
+    val img1v1Url :String
 )

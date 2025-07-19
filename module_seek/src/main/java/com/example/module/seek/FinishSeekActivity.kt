@@ -20,7 +20,7 @@ class FinishSeekActivity : BaseActivity<ActivityFinishSeekBinding>() {
      var keyword: String? =null
     private var tabLayoutMediator: TabLayoutMediator? = null
     private val tabTitles = listOf(
-        "歌词", "歌单", "单曲", "专辑", "歌手", "视频"
+        "歌词", "歌单", "单曲", "歌手", "视频"
     )
 
     override fun getViewBinding(): ActivityFinishSeekBinding =

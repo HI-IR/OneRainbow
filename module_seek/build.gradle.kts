@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     id("com.google.devtools.ksp")
+    id ("kotlin-parcelize")
 }
 
 android {
@@ -37,6 +38,7 @@ android {
 }
 
 dependencies {
+    implementation(project(":module_musicplayer"))
     implementation(project(":lib_net"))
     implementation(project(":lib_route"))
     implementation(project(":lib_base"))

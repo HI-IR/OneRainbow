@@ -15,5 +15,6 @@ object RoutePath {
     const val WEB = "/recommend/web"
     const val SEEK = "/seek"
     const val FINISHSEEK ="/seek/finish"
+    const val PLAYLIST ="/seek/playlist"
     const val COMMENTS ="/comments"
 }

@@ -314,6 +314,7 @@ class NewMusicService : Service() {
         fun addSong(song: Song) {
             //添加在最后
             playlist.add(song)
+
         }
 
         fun removeSongAt(index: Int) {
