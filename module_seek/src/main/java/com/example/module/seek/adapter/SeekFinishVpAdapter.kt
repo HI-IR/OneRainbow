@@ -6,7 +6,6 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.example.module.seek.Fragment.LyricFragment
 import com.example.module.seek.Fragment.PlaylistFragment
 import com.example.module.seek.Fragment.SingleFragment
-import com.example.module.seek.Fragment.SpecialFragment
 import com.example.module.seek.Fragment.UsersFragment
 import com.example.module.seek.Fragment.VideoFragment
 
@@ -22,16 +21,15 @@ class SeekFinishVpAdapter(
 ) : FragmentStateAdapter(activity) {
 
 
-    override fun getItemCount(): Int = 6
+    override fun getItemCount(): Int = 5
 
     override fun createFragment(position: Int): Fragment {
         return when (position) {
             0 -> LyricFragment.newInstance(keyword)
             1 -> PlaylistFragment.newInstance(keyword)
             2 -> SingleFragment.newInstance(keyword)
-            3 -> SpecialFragment.newInstance(keyword)
-            4 -> UsersFragment.newInstance(keyword)
-            5 -> VideoFragment.newInstance(keyword)
+            3 -> UsersFragment.newInstance(keyword)
+            4 -> VideoFragment.newInstance(keyword)
             else -> throw IllegalArgumentException("Invalid position")
         }
     }

@@ -18,7 +18,7 @@ data class ResultLyric(
 
 data class SongLyric(
     val album: Album,
-    val artists: List<ArtistX>,
+    val artists: List<Artist>,
     val id: Long,
     val lyrics: Lyrics,
     val name: String,

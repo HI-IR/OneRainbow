@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.module.seek.adapter.SingleAdapter
 import com.example.module.seek.databinding.FragmentSingleBinding
+import com.example.module.seek.interfaces.GetImgUrl
 import com.example.module.seek.viewmodel.FinishSeekViewModel
 import com.onerainbow.lib.base.BaseFragment
 
@@ -15,7 +16,7 @@ import com.onerainbow.lib.base.BaseFragment
  * email : 2992203079qq.com
  * date : 2025/7/17 11:15
  */
-class SingleFragment :BaseFragment<FragmentSingleBinding>() {
+class SingleFragment :BaseFragment<FragmentSingleBinding>(),GetImgUrl {
     private val finishSeekViewmodel: FinishSeekViewModel by lazy {
         ViewModelProvider(requireActivity())[FinishSeekViewModel::class.java]
     }
@@ -45,7 +46,7 @@ class SingleFragment :BaseFragment<FragmentSingleBinding>() {
 
 
     override fun initEvent() {
-        singlerAdapter = SingleAdapter()
+        singlerAdapter = SingleAdapter(this)
         binding.singleRecycleview.layoutManager=LinearLayoutManager(context)
         binding.singleRecycleview.adapter=singlerAdapter
         Log.d("keywordone",keyword.toString())
@@ -64,4 +65,14 @@ class SingleFragment :BaseFragment<FragmentSingleBinding>() {
 
 
     }
+
+    override fun getGetImgUrl(id: Long, callback: (String) -> Unit){
+        finishSeekViewmodel.getUrlData(id)
+        finishSeekViewmodel.getUrlDataLiveData.observe(viewLifecycleOwner) { result ->
+            val url = result.songs[0].al.picUrl
+            Log.d("urling",url)
+            callback(url)
+        }
+    }
+
 }

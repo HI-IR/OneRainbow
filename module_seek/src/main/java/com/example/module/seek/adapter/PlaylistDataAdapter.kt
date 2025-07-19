@@ -9,6 +9,8 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.module.seek.data.Playlists
 import com.example.module.seek.databinding.ItemPlaylistBinding
+import com.onerainbow.lib.route.RoutePath
+import com.therouter.TheRouter
 
 /**
  * description ： 歌单列表适配器
@@ -28,8 +30,9 @@ class PlaylistDataAdapter :ListAdapter<Playlists,PlaylistDataAdapter.ViewHolder>
             binding.tvPlaylistAuthor.text ="by${item.creator.nickname}"
             binding.tvPlaylistNumber.text ="${item.trackCount}首音乐"
             binding.root.setOnClickListener{
-
-
+                TheRouter.build(RoutePath.PLAYLIST)
+                    .withParcelable("playlists",item)
+                    .navigation()
             }
         }
     }

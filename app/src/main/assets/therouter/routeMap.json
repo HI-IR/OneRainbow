@@ -63,6 +63,13 @@
     "params": {}
   },
   {
+    "path": "/seek/playlist",
+    "className": "com.example.module.seek.PlaylistActivity",
+    "action": "",
+    "description": "",
+    "params": {}
+  },
+  {
     "path": "/seek/finish",
     "className": "com.example.module.seek.FinishSeekActivity",
     "action": "",

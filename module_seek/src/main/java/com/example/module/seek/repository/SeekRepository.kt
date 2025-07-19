@@ -29,7 +29,7 @@ class SeekRepository {
                     pop3: PopmusicData
                 ): List<PopmusicData> {
                     return listOf(
-                        pop1,pop2,pop3
+                        pop1, pop2, pop3
                     )
                 }
             }

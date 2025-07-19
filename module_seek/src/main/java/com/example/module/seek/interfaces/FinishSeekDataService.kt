@@ -6,7 +6,7 @@ import com.example.module.seek.data.LyricData
 import com.example.module.seek.data.Playlist
 import com.example.module.seek.data.PlaylistData
 import com.example.module.seek.data.SingleData
-import com.example.module.seek.data.SpecialData
+import com.example.module.seek.data.UrlData
 import com.example.module.seek.data.UserData
 import io.reactivex.rxjava3.core.Observable
 import retrofit2.http.GET
@@ -28,8 +28,7 @@ interface FinishSeekDataService {
     @GET("search")
     fun getLyricData(@Query("keywords")keyword:String,@Query("type")type:Int) :Observable<LyricData>
     @GET("search")
-    fun getSpecialData(@Query("keywords")keyword:String,@Query("type")type:Int) :Observable<SpecialData>
-    @GET("search")
     fun getGetMvData(@Query("keywords")keyword:String,@Query("type")type:Int) :Observable<GetMvData>
-
+    @GET("song/detail")
+    fun getImgUrl(@Query("ids")id: Long):Observable<UrlData>
 }

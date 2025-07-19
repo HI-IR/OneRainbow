@@ -1,0 +1,15 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="200dp"
+    android:height="200dp"
+    android:viewportWidth="1024"
+    android:viewportHeight="1024">
+  <!-- 整个圆填充红色 -->
+  <path
+      android:pathData="M511.4,7.7c-279.8,0 -506.6,225.9 -506.6,504.5s226.8,504.5 506.6,504.5 506.6,-225.9 506.6,-504.5S791.2,7.7 511.4,7.7z"
+      android:fillColor="#FF0000" />
+
+  <!-- 内部三角形保持白色 -->
+  <path
+      android:pathData="M680.2,486.9 L445.5,355.8c-24.9,-13.9 -45.2,-2.1 -45.2,26.4v259.9c0,28.4 20.2,40.3 45.2,26.4l234.7,-131.1c24.9,-13.9 24.9,-36.6 0,-50.5z"
+      android:fillColor="#FFFFFF" />
+</vector>

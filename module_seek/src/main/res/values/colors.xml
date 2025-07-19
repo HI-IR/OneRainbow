@@ -7,5 +7,6 @@
     <color name="pressed">#CCCCCC</color>
     <color name="red">#FE3A3B</color>
     <color name="single">#7FA1C4</color>
+    <color name="playlist">#39423D</color>
 
 </resources>

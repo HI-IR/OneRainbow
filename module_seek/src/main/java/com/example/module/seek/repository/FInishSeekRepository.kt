@@ -4,7 +4,7 @@ import com.example.module.seek.data.GetMvData
 import com.example.module.seek.data.LyricData
 import com.example.module.seek.data.PlaylistData
 import com.example.module.seek.data.SingleData
-import com.example.module.seek.data.SpecialData
+import com.example.module.seek.data.UrlData
 import com.example.module.seek.data.UserData
 import com.example.module.seek.interfaces.FinishSeekDataService
 import com.onerainbow.lib.net.RetrofitClient
@@ -42,13 +42,13 @@ class FInishSeekRepository {
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
     }
-    fun getSpecialData(keyWord: String):Observable<SpecialData>{
-        return  FinishSeekDataService.getSpecialData(keyWord,10)
+    fun getGetMvData(keyWord: String):Observable<GetMvData>{
+        return  FinishSeekDataService.getGetMvData(keyWord,1004)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
     }
-    fun getGetMvData(keyWord: String):Observable<GetMvData>{
-        return  FinishSeekDataService.getGetMvData(keyWord,1004)
+    fun getUrlData(id:Long):Observable<UrlData>{
+        return  FinishSeekDataService.getImgUrl(id)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
     }

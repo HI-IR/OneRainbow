@@ -9,8 +9,11 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.module.seek.R
-import com.example.module.seek.data.Song
+import com.example.module.seek.data.Songi
 import com.example.module.seek.databinding.ItemSingleBinding
+import com.example.module.seek.interfaces.GetImgUrl
+import com.onerainbow.module.musicplayer.model.Song
+import com.onerainbow.module.musicplayer.service.MusicManager
 
 /**
  * description ： 单曲列表适配器
@@ -18,13 +21,14 @@ import com.example.module.seek.databinding.ItemSingleBinding
  * email : 2992203079@qq.com
  * date : 2025/7/17 15:45
  */
-class SingleAdapter : ListAdapter<Song, SingleAdapter.ViewHolder>(DiffCallback) {
+class SingleAdapter(private val getImgUrl: GetImgUrl) : ListAdapter<Songi, SingleAdapter.ViewHolder>(DiffCallback) {
 
     private var selectedPosition = RecyclerView.NO_POSITION // 当前选中的播放项
 
+
     inner class ViewHolder(val binding: ItemSingleBinding) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(item: Song, isSelected: Boolean) {
+        fun bind(item: Songi, isSelected: Boolean) {
             binding.tvSingleAblum.text = "-${item.album.name}"
 
             // 处理歌手名显示
@@ -81,18 +85,46 @@ class SingleAdapter : ListAdapter<Song, SingleAdapter.ViewHolder>(DiffCallback) 
             } else {
                 binding.singleImg.setImageResource(R.drawable.sungle_close) // 恢复成默认图片
             }
-
+            val convertedArtists = item.artists.map {
+                com.onerainbow.module.musicplayer.model.Artist(
+                    id = it.id,
+                    name = it.name
+                )
+            }
 
             // 点击事件：更新选中状态
+
             binding.root.setOnClickListener {
+                val position = bindingAdapterPosition
+                if (position == RecyclerView.NO_POSITION) return@setOnClickListener
+
                 val previousPosition = selectedPosition
-                selectedPosition = adapterPosition
-                notifyItemChanged(previousPosition) // 刷新之前选中的
-                notifyItemChanged(selectedPosition) // 刷新当前选中的
+                selectedPosition = position
 
+                notifyItemChanged(previousPosition)
+                notifyItemChanged(selectedPosition)
+                Log.d("SingleAdapter", "Clicked: ${item.name}")
 
+                getImgUrl.getGetImgUrl(item.id) { imgUrl ->
+                    val song = Song(
+                        id = item.id,
+                        name = item.name,
+                        artists = convertedArtists,
+                        coverUrl = imgUrl
+                    )
+                    Log.d("SingleAdapter", "Song added: $song")
+                    if (MusicManager.getPlaylist().isEmpty()){
+                        MusicManager.play(song)
+                    }else{
+                        MusicManager.addSong(song)
+                    }
+
+                }
             }
+
         }
+
+
 
 
     }
@@ -108,16 +140,17 @@ class SingleAdapter : ListAdapter<Song, SingleAdapter.ViewHolder>(DiffCallback) 
     }
 
     companion object {
-        private val DiffCallback = object : DiffUtil.ItemCallback<Song>() {
-            override fun areItemsTheSame(oldItem: Song, newItem: Song): Boolean {
+        private val DiffCallback = object : DiffUtil.ItemCallback<Songi>() {
+            override fun areItemsTheSame(oldItem: Songi, newItem: Songi): Boolean {
                 // 通过 ID 判断是否是同一首歌
                 return oldItem.id == newItem.id
             }
 
-            override fun areContentsTheSame(oldItem: Song, newItem: Song): Boolean {
+            override fun areContentsTheSame(oldItem: Songi, newItem: Songi): Boolean {
                 // 判断内容是否相同
                 return oldItem == newItem
             }
         }
     }
+
 }

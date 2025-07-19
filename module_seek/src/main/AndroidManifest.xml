@@ -3,12 +3,15 @@
 
     <application>
         <activity
+            android:name=".PlaylistActivity"
+            android:exported="false" />
+        <activity
             android:name=".FinishSeekActivity"
             android:exported="false" />
         <activity
             android:name=".SeekActivity"
-            android:launchMode="singleTask"
-            android:exported="false" />
+            android:exported="false"
+            android:launchMode="singleTask" />
     </application>
 
 </manifest>
