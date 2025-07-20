@@ -6,7 +6,6 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.os.IBinder
 import com.onerainbow.module.musicplayer.model.Song
-import org.intellij.lang.annotations.JdkConstants.TitledBorderTitlePosition
 
 /**
  * description ： 音乐管理类，用于往服务中添加音乐

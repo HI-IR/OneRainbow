@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.onerainbow.lib.base.utils.ToastUtils
 import com.onerainbow.module.seek.R
 import com.onerainbow.module.seek.data.SongData
 import com.onerainbow.module.seek.databinding.ItemPlaylistSongBinding
@@ -80,7 +81,11 @@ class SongerAdapter : ListAdapter<SongData, SongerAdapter.ViewHolder>(DiffCallba
                         coverUrl = item.al.picUrl
                     )
                     Log.d("SongDatail",song.toString())
-                    MusicManager.addToPlayerList(song)
+                    if (MusicManager.addToPlayerList(song)){
+                        ToastUtils.makeText("添加成功")
+                    }else{
+                        ToastUtils.makeText("添加失败")
+                    }
                 }
 
             }

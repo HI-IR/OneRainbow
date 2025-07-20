@@ -8,6 +8,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.onerainbow.lib.base.utils.ToastUtils
 import com.onerainbow.module.seek.R
 import com.onerainbow.module.seek.data.LyricData
 import com.onerainbow.module.seek.data.SongLyric
@@ -110,7 +111,11 @@ class LyricDataAdapter(private val getImgUrl: GetImgUrl) : ListAdapter<SongLyric
                         artists = convertedArtists,
                         coverUrl = imgUrl
                     )
-                    MusicManager.addToPlayerList(song)
+                    if (MusicManager.addToPlayerList(song)){
+                        ToastUtils.makeText("添加成功")
+                    }else{
+                        ToastUtils.makeText("添加失败")
+                    }
 
                 }
 

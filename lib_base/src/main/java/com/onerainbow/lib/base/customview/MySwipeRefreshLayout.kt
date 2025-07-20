@@ -1,10 +1,11 @@
-package com.onerainbow.module.recommend.customview
+package com.onerainbow.lib.base.customview
 
 import android.content.Context
 import android.util.AttributeSet
 import android.util.Log
 import android.view.MotionEvent
 import android.view.ViewConfiguration
+import android.widget.ScrollView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import kotlin.math.abs
 

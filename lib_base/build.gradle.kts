@@ -48,6 +48,7 @@ dependencies {
     api ("androidx.lifecycle:lifecycle-livedata-ktx:2.5.0")
     api ("androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.0")
 
+    api("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
 
 
 

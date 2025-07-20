@@ -3,7 +3,7 @@ package com.onerainbow.module.musicplayer.model
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.onerainbow.module.musicplayer.bean.toComment
-import com.onerainbow.module.musicplayer.repository.MusicApi
+import com.onerainbow.module.musicplayer.net.MusicApi
 
 /**
  * description ： 评论的PagingSource

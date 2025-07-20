@@ -12,6 +12,7 @@
         app:tabTextColor="@color/text_second"
         app:tabSelectedTextColor="@color/text_first"
         app:tabIndicatorFullWidth="false"
+        app:tabRippleColor="@null"
         app:tabIndicatorColor="@color/app_first_color"
         app:tabMode="fixed"
         />

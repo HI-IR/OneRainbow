@@ -1,4 +1,4 @@
-package com.onerainbow.module.musicplayer.repository
+package com.onerainbow.module.musicplayer.net
 
 import com.onerainbow.module.musicplayer.bean.CommentResponses
 import com.onerainbow.module.musicplayer.bean.SongURL

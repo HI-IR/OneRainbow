@@ -1,6 +1,7 @@
-package com.onerainbow.module.musicplayer.repository
+package com.onerainbow.module.musicplayer.model
 
 import com.onerainbow.lib.net.RetrofitClient
+import com.onerainbow.module.musicplayer.net.MusicApi
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers

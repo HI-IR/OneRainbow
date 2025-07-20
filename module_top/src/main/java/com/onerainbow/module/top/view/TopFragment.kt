@@ -14,11 +14,10 @@ import com.onerainbow.module.top.databinding.FragmentTopBinding
  */
 class TopFragment : BaseFragment<FragmentTopBinding>(){
     override fun getViewBinding(): FragmentTopBinding = FragmentTopBinding.inflate(layoutInflater)
-    private val titleList = listOf("排行榜","榜单推荐","歌手榜")
+    private val titleList = listOf("排行榜","歌手榜")
     private val fragments by lazy {
         listOf(
             DetailFragment(),
-            AllRanksFragment(),
             ArtistsFragment()
             )
     }
@@ -28,7 +27,6 @@ class TopFragment : BaseFragment<FragmentTopBinding>(){
 
     private fun initView() {
         binding.topVp2.adapter = TopVp2Adapter(requireActivity(),fragments)
-
         //tab的设置
         binding.apply {
             TabLayoutMediator(topTablayout,topVp2,object : TabLayoutMediator.TabConfigurationStrategy{
@@ -43,6 +41,6 @@ class TopFragment : BaseFragment<FragmentTopBinding>(){
     }
 
     override fun initViewModel() {
-        //TODO("Not yet implemented")
+
     }
 }

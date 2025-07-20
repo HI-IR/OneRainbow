@@ -77,7 +77,6 @@ class CuratedPlaylistAdapter(val context: Context) : ListAdapter<Curated, Curate
                 TheRouter.build(RoutePath.PLAYLIST)
                     .withParcelable("playlists",playlist)
                     .navigation()
-
             }
         }
 

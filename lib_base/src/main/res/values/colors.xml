@@ -8,4 +8,5 @@
     <color name="background_second">#FFFFFF</color>
     <color name="second">#BFBFBF</color>
     <color name="app_first_color">#64EDAC</color>
+    <color name="background_pressed">#E0EEF7</color>
 </resources>
