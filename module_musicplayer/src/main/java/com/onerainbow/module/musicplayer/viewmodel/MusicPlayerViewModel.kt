@@ -47,11 +47,14 @@ class MusicPlayerViewModel() : ViewModel() {
 
         override fun onPlayIndexChanged(index: Int) {
             _currentIndex.postValue(index)
-            _playlist.postValue(MusicManager.getPlaylist())//索引发生变化，同步更新歌单
         }
 
         override fun onPlayError(error: Boolean) {
             _error.postValue(error)
+        }
+
+        override fun onPlayerListChanged(playerList: List<Song>) {
+            _playlist.postValue(playerList)
         }
     }
 

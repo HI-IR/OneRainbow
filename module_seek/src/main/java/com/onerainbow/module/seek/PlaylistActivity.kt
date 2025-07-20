@@ -80,11 +80,8 @@ class PlaylistActivity : BaseActivity<ActivityPlaylistBinding>() {
                 }
                 binding.playAllContainer.setOnClickListener {
                     if (songs != null) {
-                        if (MusicManager.getPlaylist().isEmpty()) {
-                            MusicManager.play(songs)
-                        } else {
-                            MusicManager.addSongs(songs)
-                        }
+                        MusicManager.addToPlayerList(songs)
+
                     }
 
                 }
@@ -128,11 +125,8 @@ class PlaylistActivity : BaseActivity<ActivityPlaylistBinding>() {
                 }
                 binding.playAllContainer.setOnClickListener {
                     if (songs != null) {
-                        if (MusicManager.getPlaylist().isEmpty()) {
-                            MusicManager.play(songs)
-                        } else {
-                            MusicManager.addSongs(songs)
-                        }
+                        MusicManager.addToPlayerList(songs)
+
                     }
 
                 }

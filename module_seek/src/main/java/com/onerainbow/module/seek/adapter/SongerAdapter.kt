@@ -80,12 +80,7 @@ class SongerAdapter : ListAdapter<SongData, SongerAdapter.ViewHolder>(DiffCallba
                         coverUrl = item.al.picUrl
                     )
                     Log.d("SongDatail",song.toString())
-                    if (MusicManager.getPlaylist().isEmpty()){
-                        MusicManager.play(song)
-                    }else{
-                        MusicManager.addSong(song)
-                    }
-
+                    MusicManager.addToPlayerList(song)
                 }
 
             }

@@ -110,11 +110,7 @@ class LyricDataAdapter(private val getImgUrl: GetImgUrl) : ListAdapter<SongLyric
                         artists = convertedArtists,
                         coverUrl = imgUrl
                     )
-                    if (MusicManager.getPlaylist().isEmpty()){
-                        MusicManager.play(song)
-                    }else{
-                        MusicManager.addSong(song)
-                    }
+                    MusicManager.addToPlayerList(song)
 
                 }
 

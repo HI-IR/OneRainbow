@@ -113,11 +113,8 @@ class SingleAdapter(private val getImgUrl: GetImgUrl) : ListAdapter<Songi, Singl
                         coverUrl = imgUrl
                     )
                     Log.d("SingleAdapter", "Song added: $song")
-                    if (MusicManager.getPlaylist().isEmpty()){
-                        MusicManager.play(song)
-                    }else{
-                        MusicManager.addSong(song)
-                    }
+                    MusicManager.addToPlayerList(song)
+
 
                 }
             }

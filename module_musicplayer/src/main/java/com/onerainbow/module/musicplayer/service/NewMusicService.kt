@@ -244,14 +244,40 @@ class NewMusicService : Service() {
             playlist.clear()
             playlist.add(song)
             currentIndex = 0 // 重置索引为 0
+            MusicManager.notifyPlayerList(playlist)
             playWithFreshUrl(song)  // 强制请求URL后播放
         }
 
+        /**
+         * 直接调用这个方法即可加入歌单，并且自动播放
+         */
+        fun addToPlayerList(songs: List<Song>) {
+            val isEmpty = playlist.isEmpty()
+            // 去重后添加
+            val newSongs = songs.filterNot { playlist.contains(it) }
+            if (newSongs.isNotEmpty()) {
+                playlist.addAll(newSongs)
+                MusicManager.notifyPlayerList(playlist)
+            }
+
+            // 如果之前是空列表，则自动播放第一首
+            if (isEmpty) {
+                currentIndex = 0
+
+                playAt(0)
+            }
+        }
+
+
         // 添加歌单并从指定索引播放（强制请求该索引歌曲的URL）
+        /**
+         *废弃，使用这个需要手动先判度目前维护的播放列表是否为空
+         */
         fun addSongs(songs: List<Song>, startIndex: Int = 0) {
             val newSongs = songs.filterNot { playlist.contains(it) }
             if (newSongs.isNotEmpty()) {
                 playlist.addAll(newSongs)
+                MusicManager.notifyPlayerList(playlist)
                 if (startIndex in songs.indices) {
                     playAt(startIndex)
                 }
@@ -314,15 +340,14 @@ class NewMusicService : Service() {
             }
         }
 
-        // 其他原有方法（
         fun addSong(song: Song) {
             // 检查列表中是否已存在相同id的歌曲（基于Song的equals判断）
             if (!playlist.contains(song)) {
                 playlist.add(song)
                 // 可选：通知UI列表更新
+                MusicManager.notifyPlayerList(playlist)
                 MusicManager.notifyPlayIndex(currentIndex)
             }
-
         }
 
         fun removeSongAt(index: Int) {
@@ -345,6 +370,7 @@ class NewMusicService : Service() {
                     }
                 }
                 MusicManager.notifyPlayIndex(currentIndex) // 通知UI更新
+                MusicManager.notifyPlayerList(playlist)
 
             }
         }
@@ -355,6 +381,7 @@ class NewMusicService : Service() {
             player.clearMediaItems()
             currentIndex = -1 // 重置索引为-1，表示无当前歌曲
             MusicManager.notifyPlayIndex(currentIndex) // 通知UI更新
+            MusicManager.notifyPlayerList(playlist)
             MusicManager.notifyPlayState(false)
         }
 

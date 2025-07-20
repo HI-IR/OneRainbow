@@ -77,11 +77,7 @@ class SongListDetailAdapter :ListAdapter<SongGetPlay,SongListDetailAdapter.ViewH
                         coverUrl = item.al.picUrl
                     )
                     Log.d("SongDatail",song.toString())
-                    if (MusicManager.getPlaylist().isEmpty()){
-                        MusicManager.play(song)
-                    }else{
-                        MusicManager.addSong(song)
-                    }
+                    MusicManager.addToPlayerList(song)
 
                 }
             }

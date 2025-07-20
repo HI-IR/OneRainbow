@@ -52,6 +52,10 @@ object MusicManager {
         listenerList.forEach { it.onPlayError(error) }
     }
 
+    fun notifyPlayerList(list: List<Song>){
+        listenerList.forEach { it.onPlayerListChanged(list) }
+    }
+
     // 服务连接回调
     private val serviceConnection = object : ServiceConnection {
         override fun onServiceConnected(className: ComponentName, service: IBinder) {
@@ -91,9 +95,30 @@ object MusicManager {
 
 
     //播放列表相关
+    //使用这个
+    fun addToPlayerList(vararg song: Song):Boolean{
+        return if (isServiceConnected){
+            musicBinder?.addToPlayerList(song.toList())
+            true
+        }else{
+            false
+        }
+    }
+
+    //使用这个
+    fun addToPlayerList(songs: List<Song>):Boolean{
+        return if (isServiceConnected){
+            musicBinder?.addToPlayerList(songs)
+            true
+        }else{
+            false
+        }
+    }
+
 
     /**
      * 添加歌单到播放列表
+     * 废弃
      */
     fun addSongs(songs: List<Song>): Boolean {
         return if (isServiceConnected) {
@@ -107,6 +132,7 @@ object MusicManager {
 
     /**
      * 添加歌曲到播放列表
+     * 废弃
      */
     fun addSong(song:Song):Boolean{
         return if (isServiceConnected){
@@ -121,7 +147,7 @@ object MusicManager {
 
 
     //播放相关控制
-    /** 播放单首歌曲 */
+    /** 播放单首歌曲  废弃*/
     fun play(song: Song): Boolean =
         if (isServiceConnected) {
             musicBinder?.play(song)
@@ -129,7 +155,7 @@ object MusicManager {
         } else false
 
 
-    /** 播放整个歌单，从 startIndex 开始 */
+    /** 播放整个歌单，从 startIndex 开始  */
     fun play(songs: List<Song>, startIndex: Int = 0): Boolean =
         if (isServiceConnected) {
             musicBinder?.addSongs(songs, startIndex)
@@ -230,4 +256,5 @@ interface PlaybackStateListener {
     fun onPlayStateChanged(isPlaying: Boolean)
     fun onPlayIndexChanged(index: Int)
     fun onPlayError(error: Boolean)//出现错误时回调
+    fun onPlayerListChanged(playerList:List<Song>)//歌曲变化后的回调
 }
