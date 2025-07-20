@@ -7,7 +7,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.module.account"
+    namespace = "com.onerainbow.module.module.account"
     compileSdk = 35
 
 

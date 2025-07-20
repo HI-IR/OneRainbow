@@ -99,8 +99,8 @@ class TopListAdapter(private val context: Context) :
             }
 
         }
-        fun Playlist.toSimple(): com.example.module.seek.data.Playlists{
-            return com.example.module.seek.data.Playlists(
+        fun Playlist.toSimple(): com.onerainbow.module.seek.data.Playlists{
+            return com.onerainbow.module.seek.data.Playlists(
                 coverImgUrl = this.coverImgUrl,
                 creator = this.creator.toSimple(),
                 description = this.description,
@@ -110,8 +110,8 @@ class TopListAdapter(private val context: Context) :
                 trackCount = this.trackCount.toInt()
             )
         }
-        fun Creator2.toSimple(): com.example.module.seek.data.Creator {
-            return com.example.module.seek.data.Creator(
+        fun Creator2.toSimple(): com.onerainbow.module.seek.data.Creator {
+            return com.onerainbow.module.seek.data.Creator(
                 avatarUrl = this.avatarUrl,
                 nickname = this.nickname,
                 userId = this.userId

@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.module.seek"
+    namespace = "com.onerainbow.module.seek"
     compileSdk = 35
 
     defaultConfig {

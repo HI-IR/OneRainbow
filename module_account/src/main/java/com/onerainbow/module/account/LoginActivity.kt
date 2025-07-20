@@ -2,10 +2,12 @@ package com.onerainbow.module.account
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
-import com.example.module.account.databinding.ActivityLoginBinding
+import androidx.annotation.RequiresApi
+import com.onerainbow.module.module.account.databinding.ActivityLoginBinding
 import com.onerainbow.lib.base.BaseActivity
 import com.onerainbow.lib.base.utils.CookieUtils
 import com.onerainbow.lib.route.RoutePath
@@ -29,6 +31,7 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>() {
     }
 
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun initViewModel() {
         loginviewmodle.qrDataLiveData.observe(this) { QR ->
             Log.d("ErrorQR", QR.toString())
@@ -71,6 +74,8 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>() {
 
     }
 
+
+    @RequiresApi(Build.VERSION_CODES.O)
     fun base64ToBitmap(base64Str: String): Bitmap {
         val pureBase64 = base64Str.substringAfter("base64,", base64Str)
         val decodedBytes = Base64.getDecoder().decode(pureBase64)

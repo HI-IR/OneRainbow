@@ -23,7 +23,7 @@ import com.onerainbow.module.home.viewmodel.HomeViewModel
 import com.onerainbow.module.musicplayer.model.Artist
 import com.onerainbow.module.musicplayer.model.Song
 import com.onerainbow.module.musicplayer.service.MusicManager
-import com.onerainbow.module.musicplayer.ui.PlayerList
+import com.onerainbow.module.musicplayer.ui.PlayerListDialog
 import com.onerainbow.module.recommend.ui.RecommendFragment
 import com.onerainbow.module.top.TopFragment
 import com.onerainbow.module.user.UserFragment
@@ -55,7 +55,7 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>() {
 
     private val playerList by lazy {
         //初始化对话框,设置点击事件
-        PlayerList(this@HomeActivity) {
+        PlayerListDialog(this@HomeActivity) {
             viewModel.playAt(it)
         }
     }

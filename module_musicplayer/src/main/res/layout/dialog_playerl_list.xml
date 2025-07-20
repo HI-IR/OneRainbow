@@ -3,8 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/background_playerlist">
+    android:layout_height="match_parent">
 
     <View
         android:layout_gravity="center"
@@ -31,9 +30,10 @@
         android:src="@drawable/clean"/>
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/playerlist_rv"
-        app:layout_constraintTop_toBottomOf="@+id/playerlist_clean"
+        android:background="@android:color/transparent"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="0dp"
+        android:layout_weight="1" />
 
 
 

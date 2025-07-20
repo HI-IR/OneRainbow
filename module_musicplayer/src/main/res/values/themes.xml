@@ -10,4 +10,17 @@
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">50%</item>
     </style>
+
+    <!-- 1. 给 BottomSheetDialog 整体用的主题 -->
+    <style name="BottomSheetDialogTheme" parent="Theme.MaterialComponents.Light.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/BottomSheetTheme</item>
+    </style>
+
+    <!-- 2. 真正作用在 design_bottom_sheet 上的样式 -->
+    <style name="BottomSheetTheme" parent="Widget.Design.BottomSheet.Modal">
+        <!-- 用你自己的 shape drawable 作为背景 -->
+        <item name="android:background">@drawable/background_playerlist</item>
+
+        <item name="backgroundTint">@null</item>
+    </style>
 </resources>
