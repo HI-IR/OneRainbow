@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     id("com.google.devtools.ksp")
     id ("kotlin-parcelize")
+
 }
 
 android {
@@ -38,6 +39,7 @@ android {
 }
 
 dependencies {
+    implementation ("com.github.CarGuo.GSYVideoPlayer:GSYVideoPlayer:v8.4.0-release-jitpack")
     implementation(project(":module_musicplayer"))
     implementation(project(":lib_net"))
     implementation(project(":lib_route"))

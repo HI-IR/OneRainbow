@@ -12,6 +12,8 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.module.seek.data.GetMvData
 import com.example.module.seek.data.Mv
 import com.example.module.seek.databinding.ItemMvBinding
+import com.onerainbow.lib.route.RoutePath
+import com.therouter.TheRouter
 
 /**
  * description ： TODO:类的作用
@@ -48,6 +50,9 @@ class GetMvDataAdapter : ListAdapter<Mv, GetMvDataAdapter.ViewHolder>(DiffCallba
                     setPadding(8, 4, 8, 4)
                 }
                 flexSingers.addView(tv)
+            }
+            binding.root.setOnClickListener{
+                TheRouter.build(RoutePath.MV).withLong("id",item.id.toLong()).navigation()
             }
 
 

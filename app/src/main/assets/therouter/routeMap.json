@@ -49,6 +49,13 @@
     "params": {}
   },
   {
+    "path": "/seek/video",
+    "className": "com.example.module.seek.ViedoActivity",
+    "action": "",
+    "description": "",
+    "params": {}
+  },
+  {
     "path": "/seek/SeekActivity",
     "className": "com.example.module.seek.SeekActivity",
     "action": "",
