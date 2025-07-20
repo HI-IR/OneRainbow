@@ -239,6 +239,11 @@ class NewMusicService : Service() {
 
     // Binder类：对外提供的播放控制接口
     inner class MusicBinder : Binder() {
+
+        @Deprecated(
+            message = "请使用 addToPlayerList 替代，支持自动播放",
+            replaceWith = ReplaceWith("addToPlayerList(songs)")
+        )
         // 播放单首歌曲（强制请求最新URL）
         fun play(song: Song) {
             playlist.clear()
@@ -273,6 +278,10 @@ class NewMusicService : Service() {
         /**
          *废弃，使用这个需要手动先判度目前维护的播放列表是否为空
          */
+        @Deprecated(
+            message = "请使用 addToPlayerList 替代，支持自动播放",
+            replaceWith = ReplaceWith("addToPlayerList(songs)")
+        )
         fun addSongs(songs: List<Song>, startIndex: Int = 0) {
             val newSongs = songs.filterNot { playlist.contains(it) }
             if (newSongs.isNotEmpty()) {
@@ -320,8 +329,12 @@ class NewMusicService : Service() {
             MusicManager.notifyPlayState(false)
         }
 
-        // 继续播放（无需重新请求URL，直接恢复播放）
+        // 继续播放
         fun resume() {
+            if (player.playbackState == Player.STATE_ENDED) {
+                playAt(currentIndex)
+                return
+            }
             player.play()
             updateNotification("继续播放：${player.mediaMetadata.title}")
             MusicManager.notifyPlayState(true)
@@ -340,6 +353,10 @@ class NewMusicService : Service() {
             }
         }
 
+        @Deprecated(
+            message = "请使用 addToPlayerList 替代，支持自动播放",
+            replaceWith = ReplaceWith("addToPlayerList(songs)")
+        )
         fun addSong(song: Song) {
             // 检查列表中是否已存在相同id的歌曲（基于Song的equals判断）
             if (!playlist.contains(song)) {
