@@ -7,6 +7,27 @@
     "params": {}
   },
   {
+    "path": "/seek",
+    "className": "com.onerainbow.module.seek.SeekActivity",
+    "action": "",
+    "description": "",
+    "params": {}
+  },
+  {
+    "path": "/seek/playlist",
+    "className": "com.onerainbow.module.seek.PlaylistActivity",
+    "action": "",
+    "description": "",
+    "params": {}
+  },
+  {
+    "path": "/seek/finish",
+    "className": "com.onerainbow.module.seek.FinishSeekActivity",
+    "action": "",
+    "description": "",
+    "params": {}
+  },
+  {
     "path": "/recommend/web",
     "className": "com.onerainbow.module.recommend.ui.WebActivity",
     "action": "",
@@ -35,57 +56,8 @@
     "params": {}
   },
   {
-    "path": "/user/login",
-    "className": "com.onerainbow.module.account.LoginActivity",
-    "action": "",
-    "description": "",
-    "params": {}
-  },
-  {
     "path": "/account/login",
     "className": "com.onerainbow.module.account.LoginActivity",
-    "action": "",
-    "description": "",
-    "params": {}
-  },
-  {
-    "path": "/seek/video",
-    "className": "com.example.module.seek.ViedoActivity",
-    "action": "",
-    "description": "",
-    "params": {}
-  },
-  {
-    "path": "/seek/SeekActivity",
-    "className": "com.example.module.seek.SeekActivity",
-    "action": "",
-    "description": "",
-    "params": {}
-  },
-  {
-    "path": "/seek",
-    "className": "com.example.module.seek.SeekActivity",
-    "action": "",
-    "description": "",
-    "params": {}
-  },
-  {
-    "path": "/seek/playlist",
-    "className": "com.example.module.seek.PlaylistActivity",
-    "action": "",
-    "description": "",
-    "params": {}
-  },
-  {
-    "path": "/seek/finish",
-    "className": "com.example.module.seek.FinishSeekActivity",
-    "action": "",
-    "description": "",
-    "params": {}
-  },
-  {
-    "path": "/seek/FinishSeekActivity",
-    "className": "com.example.module.seek.FinishSeekActivity",
     "action": "",
     "description": "",
     "params": {}

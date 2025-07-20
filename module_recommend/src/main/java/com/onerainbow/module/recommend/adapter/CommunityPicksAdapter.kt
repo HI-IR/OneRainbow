@@ -39,36 +39,43 @@ class CommunityPicksAdapter(private val context: Context) :ListAdapter<List<Play
 
     inner class ViewHolder(binding:ItemCommunityPicksBinding):RecyclerView.ViewHolder(binding.root){
         private var currentData : List<Playlists>? = null
-
+        //暂时用列表存储一下View，方便后续的绑定操作
+        //该列表用于存储标题：第一名的标题，第二名的标题，第三名的标题，
         val titles = listOf(
             binding.tvTitle1,
             binding.tvTitle2,
             binding.tvTitle3,
         )
 
+        //该列表用于存储描述：第一名的描述，第二名的描述，第三名的描述，
         val descs = listOf(
             binding.tvDesc1,
             binding.tvDesc2,
             binding.tvDesc3,
         )
 
+        //该列表用于存储封面：第一名的封面，第二名的封面，第三名的封面，
         val covers = listOf(
             binding.imgCover1,
             binding.imgCover2,
             binding.imgCover3,
         )
+
+        //该列表用于存储创作者信息的View：第一名的创作者信息，第二名的创作者信息，第三名的创作者信息，
         val creators = listOf(
             binding.tvCreator1,
             binding.tvCreator2,
             binding.tvCreator3,
         )
 
+        //用于存储播放的按钮
         val plays = listOf(
             binding.btnPlay1,
             binding.btnPlay2,
             binding.btnPlay3,
         )
 
+        //用于存储那个item
         val items = listOf(
             binding.item1,
             binding.item2,
@@ -123,8 +130,8 @@ class CommunityPicksAdapter(private val context: Context) :ListAdapter<List<Play
                 creators[index].text = "-${playlists.creator.nickname}"
             }
         }
-        fun Playlists.toSimple(): com.example.module.seek.data.Playlists{
-            return com.example.module.seek.data.Playlists(
+        fun Playlists.toSimple(): com.onerainbow.module.seek.data.Playlists{
+            return com.onerainbow.module.seek.data.Playlists(
                 coverImgUrl = this.coverImgUrl,
                 creator = this.creator.toSimple(),
                 description = this.description,
@@ -134,8 +141,8 @@ class CommunityPicksAdapter(private val context: Context) :ListAdapter<List<Play
                 trackCount = this.trackCount.toInt()
             )
         }
-        fun Creator.toSimple(): com.example.module.seek.data.Creator {
-            return com.example.module.seek.data.Creator(
+        fun Creator.toSimple(): com.onerainbow.module.seek.data.Creator {
+            return com.onerainbow.module.seek.data.Creator(
                 avatarUrl = this.avatarUrl,
                 nickname = this.nickname,
                 userId = this.userId

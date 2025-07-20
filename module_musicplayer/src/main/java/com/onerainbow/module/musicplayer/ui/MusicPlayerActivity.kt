@@ -86,7 +86,7 @@ class MusicPlayerActivity : BaseActivity<ActivityMusicPlayerBinding>() {
 
     private val playerList by lazy {
         //初始化对话框,设置点击事件
-        PlayerList(this@MusicPlayerActivity) {
+        PlayerListDialog(this@MusicPlayerActivity) {
             viewModel.playAt(it)
             ToastUtils.makeText("点击了${it}")
         }
@@ -172,6 +172,7 @@ class MusicPlayerActivity : BaseActivity<ActivityMusicPlayerBinding>() {
     }
 
     private fun initView() {
+        binding.musicplayerTitle.isSelected = true
         lastIndex = viewModel.currentIndex.value
 
         // 检查播放列表是否为空
@@ -267,6 +268,7 @@ class MusicPlayerActivity : BaseActivity<ActivityMusicPlayerBinding>() {
             //返回
             musicplayerFoldup.setOnClickListener {
                 finish()
+                overridePendingTransition(R.anim.hold_anim, R.anim.slide_out_bottom)
             }
 
             //分享
@@ -563,7 +565,6 @@ class MusicPlayerActivity : BaseActivity<ActivityMusicPlayerBinding>() {
         }
         tempAnimator?.start()
     }
-
 
     //格式时长
     @SuppressLint("DefaultLocale")

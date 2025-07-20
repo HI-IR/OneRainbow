@@ -122,7 +122,8 @@ class NewMusicService : Service() {
      */
     private fun playWithFreshUrl(song: Song) {
         // 取消当前正在进行的URL请求（避免重复请求）
-        currentUrlRequest?.let { compositeDisposable.remove(it) }
+        currentUrlRequest?.dispose()  // 取消请求
+        currentUrlRequest = null  // 置空引用
 
         // 更新状态：正在获取资源
         updateNotification("正在获取歌曲资源：${song.name}")
@@ -179,7 +180,7 @@ class NewMusicService : Service() {
         updateNotification("获取资源失败：${song.name}")
         MusicManager.notifyPlayError(true)
         MusicManager.notifyPlayState(false)
-
+        player.clearMediaItems()  // 清理当前媒体项
         // 顺序播放模式下自动切换到下一首
         if (playMode == PlayMode.SEQUENTIAL) {
             currentIndex = playlist.indexOf(song)
@@ -248,12 +249,11 @@ class NewMusicService : Service() {
 
         // 添加歌单并从指定索引播放（强制请求该索引歌曲的URL）
         fun addSongs(songs: List<Song>, startIndex: Int = 0) {
-            // 过滤掉已在playlist中的歌曲
             val newSongs = songs.filterNot { playlist.contains(it) }
             if (newSongs.isNotEmpty()) {
                 playlist.addAll(newSongs)
                 if (startIndex in songs.indices) {
-                    playAt(startIndex)  // 从指定索引播放（触发URL请求）
+                    playAt(startIndex)
                 }
             }
         }
@@ -351,9 +351,11 @@ class NewMusicService : Service() {
 
         fun clearPlaylist() {
             playlist.clear()
+            player.stop()
             player.clearMediaItems()
             currentIndex = -1 // 重置索引为-1，表示无当前歌曲
             MusicManager.notifyPlayIndex(currentIndex) // 通知UI更新
+            MusicManager.notifyPlayState(false)
         }
 
         fun getSongPlaylist(): List<Song> = playlist.toList()  // 返回不可变列表
@@ -380,8 +382,10 @@ class NewMusicService : Service() {
 
     // 资源释放：取消订阅和播放器
     override fun onDestroy() {
+        stopForeground(STOP_FOREGROUND_REMOVE)
         compositeDisposable.clear()  // 清除所有网络请求订阅
         player.release()  // 释放播放器资源
+        stopSelf()  // 停止服务
         super.onDestroy()
     }
 
