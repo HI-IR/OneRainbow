@@ -1,10 +1,11 @@
-package com.onerainbow.module.recommend.customview
+package com.onerainbow.lib.base.customview
 
 import android.content.Context
 import android.util.AttributeSet
 import android.util.Log
 import android.view.MotionEvent
 import android.view.ViewConfiguration
+import android.widget.ScrollView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import kotlin.math.abs
 
@@ -32,8 +33,9 @@ class MySwipeRefreshLayout @JvmOverloads constructor(
             MotionEvent.ACTION_MOVE ->{
                 val dx = ev.x - startX
                 val dy = ev.y - startY
-                if (abs(dx) > abs(dy) * 1.5 && abs(dx) >= touchSlop){
+                if (abs(dx) > abs(dy) * 0.75 && abs(dx) >= touchSlop){
                     //水平滑动
+                    Log.d("conflict", "dx -> ${dx},dy -> ${dy}")
                     return false
                 }
             }

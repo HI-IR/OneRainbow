@@ -1,11 +1,11 @@
 package com.onerainbow.module.musicplayer.adapter
 
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.onerainbow.lib.base.utils.ToastUtils
 import com.onerainbow.module.musicplayer.databinding.ItemPlayerlistSongBinding
 import com.onerainbow.module.musicplayer.model.Song
 import com.onerainbow.module.musicplayer.service.MusicManager
@@ -28,14 +28,26 @@ class PlayerListAdapter(
     }
 
 }) {
+    var selectionPosition = -1
+
     inner class ViewHolder(val binding: ItemPlayerlistSongBinding):RecyclerView.ViewHolder(binding.root){
         private var currentData: Song? = null
 
-        fun bind(data: Song){
+        fun bind(data: Song,position: Int){
             currentData = data
             binding.apply {
                 playerlistItemName.text = data.name
                 playerlistItemCreator.text = data.artists.joinToString(separator = "/") { it.name} //作者用/连接e
+
+                if (position == selectionPosition){
+                    playerlistItemName.setTextColor(Color.parseColor("#d81e06"))
+                    playerlistItemCreator.setTextColor(Color.parseColor("#d81e06"))
+                }else{
+                    playerlistItemName.setTextColor(Color.parseColor("#17182C"))
+                    playerlistItemCreator.setTextColor(Color.parseColor("#17182C"))
+                }
+
+
             }
         }
         init {
@@ -61,6 +73,6 @@ class PlayerListAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(getItem(position))
+        holder.bind(getItem(position),position)
     }
 }

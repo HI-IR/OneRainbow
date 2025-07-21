@@ -9,6 +9,7 @@ import android.os.Looper
 import android.view.View
 import android.view.animation.DecelerateInterpolator
 import android.view.animation.LinearInterpolator
+import android.widget.ImageView
 import android.widget.SeekBar
 import android.widget.Toast
 import androidx.core.animation.doOnEnd
@@ -21,6 +22,7 @@ import com.onerainbow.lib.base.utils.ToastUtils
 import com.onerainbow.lib.route.RoutePath
 import com.onerainbow.module.musicplayer.R
 import com.onerainbow.module.musicplayer.databinding.ActivityMusicPlayerBinding
+import com.onerainbow.module.musicplayer.model.Song
 import com.onerainbow.module.musicplayer.service.MusicManager
 import com.onerainbow.module.musicplayer.viewmodel.MusicPlayerViewModel
 import com.onerainbow.module.share.CustomShare
@@ -54,6 +56,7 @@ class MusicPlayerActivity : BaseActivity<ActivityMusicPlayerBinding>() {
     //加载图片
     val requestOptions: RequestOptions = RequestOptions().placeholder(R.drawable.loading)
         .fallback(R.drawable.loading)
+
     override fun getViewBinding(): ActivityMusicPlayerBinding =
         ActivityMusicPlayerBinding.inflate(layoutInflater)
 
@@ -68,12 +71,8 @@ class MusicPlayerActivity : BaseActivity<ActivityMusicPlayerBinding>() {
             repeatCount = ValueAnimator.INFINITE //无限循环
             addUpdateListener {
                 val currentRotation = it.animatedValue as Float
-                binding.imgCdNext.rotation = currentRotation
-                binding.imgCoverNext.rotation = currentRotation
-
-                binding.imgCdPrev.rotation = currentRotation
-                binding.imgCoverPrev.rotation = currentRotation
-
+                binding.imgCdTool.rotation = currentRotation
+                binding.imgCoverTool.rotation = currentRotation
                 binding.imgCdCurrent.rotation = currentRotation
                 binding.imgCoverCurrent.rotation = currentRotation
             }
@@ -138,6 +137,11 @@ class MusicPlayerActivity : BaseActivity<ActivityMusicPlayerBinding>() {
 
             playlist.observe(this@MusicPlayerActivity) {
                 playerList.setSongs(it)
+                if (it.isEmpty()) {
+                    showEmptyPlaylistState()
+                    return@observe
+                }
+
                 //重新初始化一下图片
                 if (!isInit) {
                     initView()
@@ -146,21 +150,24 @@ class MusicPlayerActivity : BaseActivity<ActivityMusicPlayerBinding>() {
 
             }
             currentIndex.observe(this@MusicPlayerActivity) { it ->
-                //播放Index变化
-                if (it > lastIndex!!) {
-                    //播放下一首歌
-                    lastIndex = it
-                    animateToNextCD()
-                } else if (it != lastIndex) {
-                    //播放上一首歌
-                    lastIndex = it
-                    animateToPrevCD()
+                //第一次加载
+                if (lastIndex == null) {
+                    initView()
                 }
-                if (it < 0) return@observe
+                //如果播放列表为空则直接显示空白页，并且退出
+
+                if (it !in playlist.value!!.indices) return@observe
+
+                if (lastIndex != it){
+                    cdChangeAnimator(lastIndex!!, it, playlist.value!!)
+                }
+
                 val song = viewModel.playlist.value?.get(it)
                 //更新显示信息
                 binding.musicplayerTitle.text = song?.name
                 binding.musicplayerCreator.text = song?.artists?.joinToString(" / ") { it.name }
+                playerList.setSelectedPosition(it)
+                lastIndex = it
             }
 
         }
@@ -184,24 +191,9 @@ class MusicPlayerActivity : BaseActivity<ActivityMusicPlayerBinding>() {
         }
 
 
-
-
         val currentSong = viewModel.playlist.value!![lastIndex!!]
         Glide.with(this@MusicPlayerActivity).load(currentSong.coverUrl).apply(requestOptions)
             .into(binding.imgCoverCurrent)
-
-        if (lastIndex!! > 0) {
-            val prevSong = viewModel.playlist.value!!.get(lastIndex!! - 1)
-            Glide.with(this@MusicPlayerActivity).load(prevSong.coverUrl).apply(requestOptions)
-                .into(binding.imgCoverPrev)
-
-        }
-        if (lastIndex!! < viewModel.playlist.value?.size!! - 1) {
-            val nextSong = viewModel.playlist.value!!.get(lastIndex!! + 1)
-            Glide.with(this@MusicPlayerActivity).load(nextSong.coverUrl).apply(requestOptions)
-                .into(binding.imgCoverNext)
-
-        }
 
         binding.imgStylus.apply {
             //设置唱针旋转位置居中
@@ -215,12 +207,9 @@ class MusicPlayerActivity : BaseActivity<ActivityMusicPlayerBinding>() {
         //空播放列表的话则隐藏内容
         binding.apply {
             imgCdCurrent.visibility = View.VISIBLE
-            imgCdNext.visibility = View.GONE
-            imgCdPrev.visibility = View.GONE
+            imgCdTool.visibility = View.GONE
             imgCoverCurrent.visibility = View.GONE
-            imgCoverNext.visibility = View.GONE
-            imgCoverPrev.visibility = View.GONE
-
+            imgCoverTool.visibility = View.GONE
             musicplayerTitle.visibility = View.GONE
             musicplayerCreator.visibility = View.GONE
             musicplayerCollected.visibility = View.GONE
@@ -284,7 +273,7 @@ class MusicPlayerActivity : BaseActivity<ActivityMusicPlayerBinding>() {
                     progress: Int,
                     fromUser: Boolean
                 ) {
-                    // 用户拖动过程中，更新 UI 显示当前时间（可选）
+
                     if (fromUser) {
                         val duration = MusicManager.getDuration()
                         val position = duration * progress / 1000
@@ -299,7 +288,7 @@ class MusicPlayerActivity : BaseActivity<ActivityMusicPlayerBinding>() {
                 override fun onStopTrackingTouch(seekBar: SeekBar) {
                     val duration = MusicManager.getDuration()
                     val seekBarProgress = seekBar.progress
-                    val targetPosition = duration * seekBarProgress / 1000  // 百分比进度映射到实际时长
+                    val targetPosition = duration * seekBarProgress / 1000
                     MusicManager.seekTo(targetPosition)
                     isUserSeeking = false
                 }
@@ -308,7 +297,7 @@ class MusicPlayerActivity : BaseActivity<ActivityMusicPlayerBinding>() {
 
             musicplayerComment.setOnClickListener {
                 val currentIndex = viewModel.currentIndex.value!!
-                if (currentIndex<0) return@setOnClickListener
+                if (currentIndex < 0) return@setOnClickListener
                 val id = viewModel.playlist.value?.get(currentIndex)?.id
                 if (id != null) {
                     TheRouter.build(RoutePath.COMMENTS)
@@ -329,24 +318,32 @@ class MusicPlayerActivity : BaseActivity<ActivityMusicPlayerBinding>() {
         val item = viewModel.playlist.value?.get(index)!!
         val customShare = CustomShare(this)
         customShare.setOnQqClickListener {
-            ShareUtils.shareToQQ(this, "我正在听${item.name},点击链接你也来听吧！")
+            ShareUtils.shareToQQ(
+                this,
+                "我正在听${item.name},点击链接你也来听吧！\n${viewModel.getCurrentUrl()}"
+            )
             customShare.dismiss()
         }
         customShare.setOnWxClickListener {
-            ShareUtils.shareToWX(this, "我正在听${item.name},点击链接你也来听吧！")
+            ShareUtils.shareToWX(
+                this,
+                "我正在听${item.name},点击链接你也来听吧！\n${viewModel.getCurrentUrl()}"
+            )
             customShare.dismiss()
         }
-//        customShare.setOnBrowseClickListener{
-//            ShareUtils.shareToBrowser(this,item.url)
-//            customShare.dismiss()
-//        }
+        customShare.setOnBrowseClickListener{
+            ShareUtils.shareToBrowser(this,viewModel.getCurrentUrl())
+            customShare.dismiss()
+        }
         customShare.setOnLinkClickListener() {
-            CopyUtils.copy(this, "我正在听${item.name},点击链接你也来听吧")
+            CopyUtils.copy(
+                this,
+                "我正在听${item.name},点击链接你也来听吧\n${viewModel.getCurrentUrl()}"
+            )
             Toast.makeText(this, "已复制链接", Toast.LENGTH_SHORT).show()
             customShare.dismiss()
         }
 
-        //显示弹窗
         customShare.show()
     }
 
@@ -355,215 +352,127 @@ class MusicPlayerActivity : BaseActivity<ActivityMusicPlayerBinding>() {
         super.onDestroy()
 
         //释放内存
-        //关闭CD动画
+
         cdAnimator.cancel()
-        cdAnimator.removeAllUpdateListeners() // 移除监听器，避免持有引用
+        cdAnimator.removeAllUpdateListeners()
 
-        // 取消所有正在执行的属性动画（如唱针动画）
+
         binding.imgStylus.animate().cancel()
-        playerList.dismiss() // 关闭对话框
+        playerList.dismiss()
 
-        //关闭跳转动画
+        //关闭Cd跳转动画
         tempAnimator?.cancel()
-        tempAnimator?.removeAllUpdateListeners() // 移除监听器，避免持有引用
-        progressHandler.removeCallbacks(progressRunnable)//移除回调
+        tempAnimator?.removeAllUpdateListeners()
+        progressHandler.removeCallbacks(progressRunnable)
     }
 
-    /**
-     * 下一首歌换CD的属性动画
-     * nextCd 是换进来的CD
-     * currentCd 是原来播放的那张CD
+    /*
+    在currentIndex已经变化后调用
+    实现原理，通过比较oldIndex 和 newIndex的大小，决定currentView是从哪边飘进来，tool是用来做动画的工具View，用来临时显示
      */
-    private fun animateToNextCD() {
-        if (isAnimating) return // 动画正在执行，直接返回
-        tempAnimator?.cancel() // 取消可能存在的旧动画
-        isAnimating = true // 标记动画开始
-        val nextCd = binding.imgCdNext //下一张的CD背景
-        val nextCover = binding.imgCoverNext //下一张的CD封面
-
-        val currentCd = binding.imgCdCurrent//当前页的CD背景
-        val currentCover = binding.imgCoverCurrent//当前页的CD封面
-
-        //获取屏幕宽度
-        val screenWidth = Resources.getSystem().displayMetrics.widthPixels.toFloat()
-
-        //持续时间
-        val durationTime = 500L
-
-        // 初始化 next CD
-        //显示CD
-        nextCd.translationX = screenWidth // 从右边开始(把nextCd归位屏幕右侧外)
-        nextCover.translationX = screenWidth
-        nextCd.visibility = View.VISIBLE
-        nextCover.visibility = View.VISIBLE
-
-
-        //播放CD抬杠,放杆动画
-        binding.imgStylus.animate()
-            .rotation(10f)
-            .setDuration(250) // 第一阶段时长
-            .withEndAction {
-                // 第一阶段结束后
-                val rotation = if (viewModel.isPlaying.value!!) 23f else 0f
-
-                binding.imgStylus.animate()
-                    .rotation(rotation)
-                    .setDuration(250) // 第二阶段时长
-                    .start()
-            }
-            .start()
-
-        //配置动画
-        tempAnimator = ValueAnimator.ofFloat(0f, 1f).apply {
-            interpolator = DecelerateInterpolator()//减速插值器
-            duration = durationTime
-
-            //更新
-            addUpdateListener {
-                val fraction = it.animatedFraction
-
-                // 前一个Cd往左边移动 最后移动一个屏幕的距离
-                currentCd.translationX = -screenWidth * fraction
-                currentCover.translationX = -screenWidth * fraction
-
-                //后一个Cd从右边移动到中间，最后移动一个屏幕距离(初始化在一个屏幕之外)
-                nextCd.translationX = screenWidth * (1 - fraction)
-                nextCover.translationX = screenWidth * (1 - fraction)
-            }
-
-            //动画结束时
-            doOnEnd {
-                //重新归位中间
-                currentCd.translationX = 0f
-                currentCover.translationX = 0f
-                nextCd.translationX = 0f
-                nextCover.translationX = 0f
-                nextCd.visibility = View.INVISIBLE //把下一张隐藏
-                nextCover.visibility = View.INVISIBLE
-
-                val requestOptions: RequestOptions =
-                    RequestOptions().placeholder(R.drawable.loading)
-                        .fallback(R.drawable.loading)
-                val index = viewModel.currentIndex.value!!
-                if (index !in viewModel.playlist.value?.indices!!) {
-                    showEmptyPlaylistState()
-                    return@doOnEnd
-                }
-                //因为这个动画的调用意味着已经完成了viewModel的playIndex更新，所以此时的playIndex已经是更新后的了
-                val currentSong = viewModel.playlist.value?.get(index)
-                Glide.with(this@MusicPlayerActivity).load(currentSong?.coverUrl)
-                    .apply(requestOptions).into(binding.imgCoverCurrent)
-
-                if (index > 0) {
-                    val prevSong = viewModel.playlist.value?.get(index - 1)
-                    Glide.with(this@MusicPlayerActivity).load(prevSong?.coverUrl)
-                        .apply(requestOptions)
-                        .into(binding.imgCoverPrev)
-                }
-
-                if (index < viewModel.playlist.value!!.size - 1) {
-                    val nextSong = viewModel.playlist.value?.get(viewModel.currentIndex.value!! + 1)
-                    Glide.with(this@MusicPlayerActivity).load(nextSong?.coverUrl)
-                        .apply(requestOptions).into(binding.imgCoverNext)
-                }
-                isAnimating = false // 标记动画结束
-            }
-
-        }
-        tempAnimator?.start()
-    }
-
-
-    /**
-     * 下一首歌换CD的属性动画
-     * prevCd 是换进来的CD
-     * currentCd 是原来播放的那张CD
-     */
-    private fun animateToPrevCD() {
-        if (isAnimating) return // 动画正在执行，直接返回
-        tempAnimator?.cancel() // 取消可能存在的旧动画
-        isAnimating = true // 标记动画开始
-        val prevCd = binding.imgCdPrev
-        val prevCover = binding.imgCoverPrev
-        val currentCd = binding.imgCdCurrent
+    private fun cdChangeAnimator(oldIndex: Int, newIndex: Int, playerlist: List<Song>) {
+        if (isAnimating) return // 如果在播放动画则直接return
+        tempAnimator?.cancel() // 取消可能存在的动画
+        isAnimating = true
+        if (oldIndex !in playerlist.indices || newIndex !in playerlist.indices) return
         val currentCover = binding.imgCoverCurrent
-        //获取屏幕宽度
+        val currentCd = binding.imgCdCurrent
+        val toolCover = binding.imgCoverTool
+        val toolCd = binding.imgCdTool
         val screenWidth = Resources.getSystem().displayMetrics.widthPixels.toFloat()
 
-        //持续时间
-        val durationTime = 500L
 
-        //初始化位置
-        prevCd.visibility = View.VISIBLE
-        prevCover.visibility = View.VISIBLE
-        prevCd.translationX = -screenWidth //移除屏幕外
-        prevCover.translationX = -screenWidth
+        loadCover(toolCover, playerlist[oldIndex].coverUrl, requestOptions)
+        loadCover(currentCover, playerlist[newIndex].coverUrl, requestOptions)
 
+        //初始化动画
+        toolCover.visibility = View.VISIBLE
+        toolCd.visibility = View.VISIBLE
+
+        //动画开始前加载图片
+        if (oldIndex > newIndex) {
+            currentCover.translationX = -screenWidth
+            currentCd.translationX = -screenWidth
+            stylusUpAnimtor()
+            //新的Index < 旧的Index，说明是前面的歌曲,current需要从左边进来，tool需要从右边出去
+            tempAnimator = ValueAnimator.ofFloat(0f, 1f).apply {
+                interpolator = DecelerateInterpolator()
+                duration = 500L
+                addUpdateListener {
+                    val fraction = it.animatedFraction
+
+                    //currentCd从左边回到中心
+                    currentCover.translationX = -screenWidth * (1 - fraction)
+                    currentCd.translationX = -screenWidth * (1 - fraction)
+
+                    //toolCover从中心往右离开屏幕
+                    toolCover.translationX = screenWidth * fraction
+                    toolCd.translationX = screenWidth * fraction
+                }
+
+                doOnEnd {
+                    //隐藏工具Cd，并且归位
+                    toolCd.visibility = View.INVISIBLE
+                    toolCover.visibility = View.INVISIBLE
+                    toolCover.translationX = 0f
+                    toolCd.translationX = 0f
+                }
+            }
+        } else {
+            currentCd.translationX = screenWidth
+            currentCover.translationX = screenWidth
+            stylusUpAnimtor()
+            //与上面情况相反
+            tempAnimator = ValueAnimator.ofFloat(0f, 1f).apply {
+                interpolator = DecelerateInterpolator()
+                duration = 500L
+                addUpdateListener {
+                    //current需要从右边进来， tool需要从中间往左边离开
+                    val fraction = it.animatedFraction
+                    currentCd.translationX = screenWidth * (1 - fraction)
+                    currentCover.translationX = screenWidth * (1 - fraction)
+
+                    toolCover.translationX = -screenWidth * fraction
+                    toolCd.translationX = -screenWidth * fraction
+                }
+                doOnEnd {
+                    //隐藏工具Cd，并且归位
+                    toolCd.visibility = View.INVISIBLE
+                    toolCover.visibility = View.INVISIBLE
+                    toolCover.translationX = 0f
+                    toolCd.translationX = 0f
+                }
+            }
+        }
+        tempAnimator?.start()
+        isAnimating = false
+    }
+
+    /**
+     * 加载封面的函数，
+     * @param coverView 需要加载图片的View
+     * @param picUrl 图片URL
+     */
+    fun loadCover(coverView: ImageView, picUrl: String, requestOptions: RequestOptions) {
+        Glide.with(this).load(picUrl).apply(requestOptions).into(coverView)
+    }
+
+    /**
+     * 唱针抬起的动画
+     */
+    fun stylusUpAnimtor() {
         //播放CD抬杠,放杆动画
         binding.imgStylus.animate()
             .rotation(10f)
-            .setDuration(250) // 第一阶段时长
+            .setDuration(250)
             .withEndAction {
-                // 第一阶段结束后
                 val rotation = if (viewModel.isPlaying.value!!) 23f else 0f
-
                 binding.imgStylus.animate()
                     .rotation(rotation)
                     .setDuration(250) // 第二阶段时长
                     .start()
             }
             .start()
-
-        tempAnimator = ValueAnimator.ofFloat(0f, 1f).apply {
-            duration = durationTime
-            addUpdateListener {
-                val fraction = it.animatedFraction
-                currentCd.translationX = screenWidth * fraction
-                currentCover.translationX = screenWidth * fraction
-                prevCd.translationX = -screenWidth * (1 - fraction)
-                prevCover.translationX = -screenWidth * (1 - fraction)
-            }
-
-            doOnEnd {
-                //重新归位中间
-                currentCd.translationX = 0f
-                currentCover.translationX = 0f
-                prevCd.translationX = 0f
-                prevCover.translationX = 0f
-                prevCd.visibility = View.INVISIBLE //把上一张隐藏
-                prevCover.visibility = View.INVISIBLE
-
-
-                val requestOptions: RequestOptions =
-                    RequestOptions().placeholder(R.drawable.loading)
-                        .fallback(R.drawable.loading)
-                val index = viewModel.currentIndex.value!!
-                if (index !in viewModel.playlist.value?.indices!!) {
-                    showEmptyPlaylistState()
-                    return@doOnEnd
-                }
-
-                //因为这个动画的调用意味着已经完成了viewModel的playIndex更新，所以此时的playIndex已经是更新后的了
-                val currentSong = viewModel.playlist.value?.get(index)
-                Glide.with(this@MusicPlayerActivity).load(currentSong?.coverUrl)
-                    .apply(requestOptions).into(binding.imgCoverCurrent)
-
-                if (index > 0) {
-                    val prevSong = viewModel.playlist.value?.get(index - 1)
-                    Glide.with(this@MusicPlayerActivity).load(prevSong?.coverUrl)
-                        .apply(requestOptions).into(binding.imgCoverPrev)
-                }
-
-                if (index < viewModel.playlist.value!!.size - 1) {
-                    val nextSong = viewModel.playlist.value?.get(viewModel.currentIndex.value!! + 1)
-                    Glide.with(this@MusicPlayerActivity).load(nextSong?.coverUrl)
-                        .apply(requestOptions).into(binding.imgCoverNext)
-                }
-                isAnimating = false // 标记动画结束
-            }
-
-        }
-        tempAnimator?.start()
     }
 
     //格式时长

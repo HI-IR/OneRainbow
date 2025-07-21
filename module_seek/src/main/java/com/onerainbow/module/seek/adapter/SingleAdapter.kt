@@ -8,6 +8,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.onerainbow.lib.base.utils.ToastUtils
 import com.onerainbow.module.seek.R
 import com.onerainbow.module.seek.data.Songi
 import com.onerainbow.module.seek.databinding.ItemSingleBinding
@@ -113,11 +114,12 @@ class SingleAdapter(private val getImgUrl: GetImgUrl) : ListAdapter<Songi, Singl
                         coverUrl = imgUrl
                     )
                     Log.d("SingleAdapter", "Song added: $song")
-                    if (MusicManager.getPlaylist().isEmpty()){
-                        MusicManager.play(song)
+                    if (MusicManager.addToPlayerList(song)){
+                        ToastUtils.makeText("添加成功")
                     }else{
-                        MusicManager.addSong(song)
+                        ToastUtils.makeText("添加失败")
                     }
+
 
                 }
             }

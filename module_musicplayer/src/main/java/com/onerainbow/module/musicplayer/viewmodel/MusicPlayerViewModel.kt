@@ -47,11 +47,14 @@ class MusicPlayerViewModel() : ViewModel() {
 
         override fun onPlayIndexChanged(index: Int) {
             _currentIndex.postValue(index)
-            _playlist.postValue(MusicManager.getPlaylist())//索引发生变化，同步更新歌单
         }
 
         override fun onPlayError(error: Boolean) {
             _error.postValue(error)
+        }
+
+        override fun onPlayerListChanged(playerList: List<Song>) {
+            _playlist.postValue(playerList)
         }
     }
 
@@ -66,17 +69,17 @@ class MusicPlayerViewModel() : ViewModel() {
         _isPlayInSingle.postValue(StoreUtils.getBoolean(StoreUtils.PLAYER_DATA,StoreUtils.KEY_PLAYER_MODE))
     }
 
+    fun getCurrentUrl():String = MusicManager.getCurrentUrl()
 
 
-
-    // 播放下一首（修正后）
+    // 播放下一首
     fun playNext() {
         if (!MusicManager.playNext()) {
             ToastUtils.makeText("已经是最后一首了")
         }
     }
 
-    // 播放上一首（修正后）
+    // 播放上一首
     fun playPrev() {
         if (!MusicManager.playPrev()) {
             ToastUtils.makeText("已经是第一首了")

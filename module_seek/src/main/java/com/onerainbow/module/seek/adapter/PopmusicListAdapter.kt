@@ -52,7 +52,7 @@ class PopmusicListAdapter(private val context: Context) :
                 .navigation()
         }
         recycleview.layoutManager=LinearLayoutManager(context)
-        LinearLayoutManager(context).isSmoothScrollbarEnabled = false // 关闭平滑滚动效果（可选）
+        LinearLayoutManager(context).isSmoothScrollbarEnabled = false
         recycleview.adapter=adapter
         adapter.submitList(limitedTracks)
     }

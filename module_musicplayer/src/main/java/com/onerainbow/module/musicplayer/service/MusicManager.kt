@@ -6,7 +6,6 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.os.IBinder
 import com.onerainbow.module.musicplayer.model.Song
-import org.intellij.lang.annotations.JdkConstants.TitledBorderTitlePosition
 
 /**
  * description ： 音乐管理类，用于往服务中添加音乐
@@ -52,6 +51,10 @@ object MusicManager {
         listenerList.forEach { it.onPlayError(error) }
     }
 
+    fun notifyPlayerList(list: List<Song>){
+        listenerList.forEach { it.onPlayerListChanged(list) }
+    }
+
     // 服务连接回调
     private val serviceConnection = object : ServiceConnection {
         override fun onServiceConnected(className: ComponentName, service: IBinder) {
@@ -91,9 +94,26 @@ object MusicManager {
 
 
     //播放列表相关
+    //使用这个
+    fun addToPlayerList(vararg song: Song):Boolean{
+        return if (isServiceConnected){
+            musicBinder?.addToPlayerList(song.toList())
+            true
+        }else false
+    }
+
+    //使用这个
+    fun addToPlayerList(songs: List<Song>):Boolean{
+        return if (isServiceConnected){
+            musicBinder?.addToPlayerList(songs)
+            true
+        }else false
+    }
+
 
     /**
      * 添加歌单到播放列表
+     * 废弃
      */
     fun addSongs(songs: List<Song>): Boolean {
         return if (isServiceConnected) {
@@ -107,6 +127,7 @@ object MusicManager {
 
     /**
      * 添加歌曲到播放列表
+     * 废弃
      */
     fun addSong(song:Song):Boolean{
         return if (isServiceConnected){
@@ -118,10 +139,11 @@ object MusicManager {
     }
 
 
+    fun getCurrentUrl():String = musicBinder?.getCurrentUrl()?:""
 
 
     //播放相关控制
-    /** 播放单首歌曲 */
+    /** 播放单首歌曲  废弃*/
     fun play(song: Song): Boolean =
         if (isServiceConnected) {
             musicBinder?.play(song)
@@ -129,7 +151,7 @@ object MusicManager {
         } else false
 
 
-    /** 播放整个歌单，从 startIndex 开始 */
+    /** 播放整个歌单，从 startIndex 开始  */
     fun play(songs: List<Song>, startIndex: Int = 0): Boolean =
         if (isServiceConnected) {
             musicBinder?.addSongs(songs, startIndex)
@@ -151,7 +173,7 @@ object MusicManager {
         }else false
     }
 
-    /** 暂停播放 */
+    // 暂停播放
     fun pause(): Boolean =
         if (isServiceConnected) {
             musicBinder?.pause()
@@ -202,7 +224,7 @@ object MusicManager {
     fun getPlaylist(): List<Song> =
         musicBinder?.getSongPlaylist() ?: emptyList()
 
-    /** 是否正在播放 */
+    //是否正在播放
     fun isPlaying(): Boolean =
         musicBinder?.isPlaying() == true
 
@@ -230,4 +252,5 @@ interface PlaybackStateListener {
     fun onPlayStateChanged(isPlaying: Boolean)
     fun onPlayIndexChanged(index: Int)
     fun onPlayError(error: Boolean)//出现错误时回调
+    fun onPlayerListChanged(playerList:List<Song>)//歌曲变化后的回调
 }

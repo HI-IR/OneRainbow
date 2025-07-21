@@ -123,7 +123,6 @@ class SeekActivity : BaseActivity<ActivitySeekBinding>() {
         viewpager2Adapter = PopmusicListAdapter(this)
         binding.viewpager2Popmusic.adapter = viewpager2Adapter
 
-        // 可选：设置初始页面
         binding.viewpager2Popmusic.setCurrentItem(0, false)
         binding.viewpager2Popmusic.apply {
             binding.viewpager2Popmusic.adapter = viewpager2Adapter

@@ -32,7 +32,7 @@
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_gravity="center"
-            android:src="@drawable/share" />
+            android:src="@drawable/share_item" />
     </LinearLayout>
 
     <androidx.constraintlayout.widget.Guideline
@@ -80,29 +80,10 @@
             android:src="@drawable/img_example"
             app:shapeAppearanceOverlay="@style/circleImageStyle" />
 
-    <!--换CD动画 next-->
-        <ImageView
-            android:visibility="invisible"
-            android:id="@+id/img_cd_next"
-            android:layout_width="255dp"
-            android:layout_height="255dp"
-            android:layout_gravity="center"
-            android:scaleType="centerInside"
-            android:src="@drawable/cd_item" />
 
-        <com.google.android.material.imageview.ShapeableImageView
-            android:visibility="invisible"
-            android:id="@+id/img_cover_next"
-            android:layout_width="175dp"
-            android:layout_height="175dp"
-            android:layout_gravity="center"
-            android:scaleType="centerCrop"
-            android:src="@drawable/img_example"
-            app:shapeAppearanceOverlay="@style/circleImageStyle" />
-
-    <!--换Cd动画 前一张prev-->
+    <!--下面这2个是工具Cd，用来做动画的-->
         <ImageView
-            android:id="@+id/img_cd_prev"
+            android:id="@+id/img_cd_tool"
             android:visibility="invisible"
             android:layout_width="255dp"
             android:layout_height="255dp"
@@ -111,7 +92,7 @@
             android:src="@drawable/cd_item" />
 
         <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/img_cover_prev"
+            android:id="@+id/img_cover_tool"
             android:visibility="invisible"
             android:layout_width="175dp"
             android:layout_height="175dp"

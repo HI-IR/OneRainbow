@@ -82,7 +82,7 @@ class RecommendFragment : BaseFragment<FragmentRecommendBinding>() {
                     parent: RecyclerView,
                     state: RecyclerView.State
                 ) {
-                    outRect.bottom =40 //给下面一点间距
+                    outRect.bottom =30 //给下面一点间距
                 }
             })
         }

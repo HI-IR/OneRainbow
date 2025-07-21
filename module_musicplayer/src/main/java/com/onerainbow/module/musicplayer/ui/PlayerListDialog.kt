@@ -69,7 +69,6 @@ class PlayerListDialog(
             val screenHeight = displayMetrics.heightPixels
             val screenWidth = displayMetrics.widthPixels
             val height = screenHeight / 1.5
-            // 设置 BottomSheet 最小高度
             sheet.minimumHeight = height.toInt()
             sheet.minimumWidth = screenWidth
             sheet.setBackgroundResource(R.drawable.background_playerlist)
@@ -87,5 +86,10 @@ class PlayerListDialog(
         playerListAdapter.submitList(songs)
     }
 
+
+    fun setSelectedPosition(position: Int) {
+        playerListAdapter.selectionPosition = position
+        playerListAdapter.notifyDataSetChanged()
+    }
 
 }

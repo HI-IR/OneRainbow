@@ -5,6 +5,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.onerainbow.lib.base.BaseActivity
+import com.onerainbow.lib.base.utils.ToastUtils
 import com.onerainbow.lib.route.RoutePath
 import com.onerainbow.module.musicplayer.model.Song
 import com.onerainbow.module.musicplayer.service.MusicManager
@@ -80,11 +81,12 @@ class PlaylistActivity : BaseActivity<ActivityPlaylistBinding>() {
                 }
                 binding.playAllContainer.setOnClickListener {
                     if (songs != null) {
-                        if (MusicManager.getPlaylist().isEmpty()) {
-                            MusicManager.play(songs)
-                        } else {
-                            MusicManager.addSongs(songs)
+                        if (MusicManager.addToPlayerList(songs)){
+                            ToastUtils.makeText("添加成功")
+                        }else{
+                            ToastUtils.makeText("添加失败")
                         }
+
                     }
 
                 }
@@ -128,11 +130,12 @@ class PlaylistActivity : BaseActivity<ActivityPlaylistBinding>() {
                 }
                 binding.playAllContainer.setOnClickListener {
                     if (songs != null) {
-                        if (MusicManager.getPlaylist().isEmpty()) {
-                            MusicManager.play(songs)
-                        } else {
-                            MusicManager.addSongs(songs)
+                        if (MusicManager.addToPlayerList(songs)){
+                            ToastUtils.makeText("添加成功")
+                        }else{
+                            ToastUtils.makeText("添加失败")
                         }
+
                     }
 
                 }

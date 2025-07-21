@@ -18,7 +18,7 @@ import androidx.media3.exoplayer.ExoPlayer
 import com.onerainbow.module.musicplayer.R
 import com.onerainbow.module.musicplayer.model.Song
 import com.onerainbow.module.musicplayer.model.toMediaMetadata
-import com.onerainbow.module.musicplayer.repository.SongModel
+import com.onerainbow.module.musicplayer.model.SongModel
 import com.onerainbow.module.musicplayer.ui.MusicPlayerActivity
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.disposables.Disposable
@@ -39,6 +39,7 @@ class NewMusicService : Service() {
 
 
     //记录当前播放的 playlist 索引
+    private var currentUrl = ""
     private var currentIndex = -1
     private var playMode = PlayMode.SEQUENTIAL
     private val playlist: MutableList<Song> = mutableListOf()  // 保留原有媒体数据（非URL部分）
@@ -121,28 +122,27 @@ class NewMusicService : Service() {
      * 给了根据ID重新查询Url播放，避免Url刷新
      */
     private fun playWithFreshUrl(song: Song) {
-        // 取消当前正在进行的URL请求（避免重复请求）
-        currentUrlRequest?.dispose()  // 取消请求
-        currentUrlRequest = null  // 置空引用
+        currentUrlRequest?.dispose()
+        currentUrlRequest = null
 
         // 更新状态：正在获取资源
         updateNotification("正在获取歌曲资源：${song.name}")
         MusicManager.notifyPlayState(false)
         MusicManager.notifyPlayError(false)
 
-        // 发起URL请求（使用SongModel的网络接口）
+        // 发起URL请求
         currentUrlRequest = SongModel.getSongById(song.id)
             .subscribe(
-                { result ->  // 请求成功回调
+                { result ->
                     if (result.startsWith("发生错误")) {
                         // URL请求失败（如网络错误、数据为空）
                         handleUrlError(song, result)
                     } else {
-                        // URL请求成功：使用最新URL播放
+                        currentUrl = result
                         handleUrlSuccess(song, result)
                     }
                 },
-                { error ->  // 请求异常（如RxJava订阅错误）
+                { error ->
                     handleUrlError(song, "网络请求异常：${error.message}")
                 }
             )
@@ -239,19 +239,47 @@ class NewMusicService : Service() {
 
     // Binder类：对外提供的播放控制接口
     inner class MusicBinder : Binder() {
+
         // 播放单首歌曲（强制请求最新URL）
         fun play(song: Song) {
             playlist.clear()
             playlist.add(song)
             currentIndex = 0 // 重置索引为 0
+            MusicManager.notifyPlayerList(playlist)
             playWithFreshUrl(song)  // 强制请求URL后播放
         }
 
+        /**
+         * 直接调用这个方法即可加入歌单，并且自动播放
+         */
+        fun addToPlayerList(songs: List<Song>) {
+            val isEmpty = playlist.isEmpty()
+            // 去重后添加
+            val newSongs = songs.filterNot { playlist.contains(it) }
+            if (newSongs.isNotEmpty()) {
+                playlist.addAll(newSongs)
+                MusicManager.notifyPlayerList(playlist)
+            }
+
+            // 如果之前是空列表，则自动播放第一首
+            if (isEmpty) {
+                currentIndex = 0
+
+                playAt(0)
+            }
+        }
+
+        fun getCurrentUrl() = currentUrl
+
         // 添加歌单并从指定索引播放（强制请求该索引歌曲的URL）
+        /**
+         *废弃，使用这个需要手动先判度目前维护的播放列表是否为空
+         */
         fun addSongs(songs: List<Song>, startIndex: Int = 0) {
             val newSongs = songs.filterNot { playlist.contains(it) }
             if (newSongs.isNotEmpty()) {
                 playlist.addAll(newSongs)
+                MusicManager.notifyPlayerList(playlist)
                 if (startIndex in songs.indices) {
                     playAt(startIndex)
                 }
@@ -294,8 +322,12 @@ class NewMusicService : Service() {
             MusicManager.notifyPlayState(false)
         }
 
-        // 继续播放（无需重新请求URL，直接恢复播放）
+        // 继续播放
         fun resume() {
+            if (player.playbackState == Player.STATE_ENDED) {
+                playAt(currentIndex)
+                return
+            }
             player.play()
             updateNotification("继续播放：${player.mediaMetadata.title}")
             MusicManager.notifyPlayState(true)
@@ -314,15 +346,14 @@ class NewMusicService : Service() {
             }
         }
 
-        // 其他原有方法（
         fun addSong(song: Song) {
             // 检查列表中是否已存在相同id的歌曲（基于Song的equals判断）
             if (!playlist.contains(song)) {
                 playlist.add(song)
-                // 可选：通知UI列表更新
+
+                MusicManager.notifyPlayerList(playlist)
                 MusicManager.notifyPlayIndex(currentIndex)
             }
-
         }
 
         fun removeSongAt(index: Int) {
@@ -345,6 +376,7 @@ class NewMusicService : Service() {
                     }
                 }
                 MusicManager.notifyPlayIndex(currentIndex) // 通知UI更新
+                MusicManager.notifyPlayerList(playlist)
 
             }
         }
@@ -355,6 +387,7 @@ class NewMusicService : Service() {
             player.clearMediaItems()
             currentIndex = -1 // 重置索引为-1，表示无当前歌曲
             MusicManager.notifyPlayIndex(currentIndex) // 通知UI更新
+            MusicManager.notifyPlayerList(playlist)
             MusicManager.notifyPlayState(false)
         }
 

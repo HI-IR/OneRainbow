@@ -1,0 +1,61 @@
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/coordinatorLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- SwipeRefreshLayout 包裹 NestedScrollView，支持下拉刷新 -->
+    <com.onerainbow.lib.base.customview.MySwipeRefreshLayout
+        android:id="@+id/swipeRefresh"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/nestedScrollView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true"
+            android:background="@color/background"
+            android:padding="10dp"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="官方榜"
+                    android:textStyle="bold"
+                    android:textColor="@color/text_first"
+                    android:textSize="18sp" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/detail_rv_front"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:nestedScrollingEnabled="false"
+                    android:padding="10dp"
+                    android:background="@color/background" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="精选榜"
+                    android:layout_marginTop="-10dp"
+                    android:textStyle="bold"
+                    android:textColor="@color/text_first"
+                    android:textSize="18sp" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/detail_rv_rank"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:nestedScrollingEnabled="false"
+                    android:padding="10dp"
+                    android:background="@color/background" />
+
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+    </com.onerainbow.lib.base.customview.MySwipeRefreshLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
