@@ -26,7 +26,7 @@ class TopFragment : BaseFragment<FragmentTopBinding>(){
     }
 
     private fun initView() {
-        binding.topVp2.adapter = TopVp2Adapter(requireActivity(),fragments)
+        binding.topVp2.adapter = TopVp2Adapter(this,fragments)
         //tab的设置
         binding.apply {
             TabLayoutMediator(topTablayout,topVp2,object : TabLayoutMediator.TabConfigurationStrategy{
