@@ -99,9 +99,7 @@ object MusicManager {
         return if (isServiceConnected){
             musicBinder?.addToPlayerList(song.toList())
             true
-        }else{
-            false
-        }
+        }else false
     }
 
     //使用这个
@@ -109,9 +107,7 @@ object MusicManager {
         return if (isServiceConnected){
             musicBinder?.addToPlayerList(songs)
             true
-        }else{
-            false
-        }
+        }else false
     }
 
 
@@ -143,6 +139,7 @@ object MusicManager {
     }
 
 
+    fun getCurrentUrl():String = musicBinder?.getCurrentUrl()?:""
 
 
     //播放相关控制
@@ -176,7 +173,7 @@ object MusicManager {
         }else false
     }
 
-    /** 暂停播放 */
+    // 暂停播放
     fun pause(): Boolean =
         if (isServiceConnected) {
             musicBinder?.pause()
@@ -227,7 +224,7 @@ object MusicManager {
     fun getPlaylist(): List<Song> =
         musicBinder?.getSongPlaylist() ?: emptyList()
 
-    /** 是否正在播放 */
+    //是否正在播放
     fun isPlaying(): Boolean =
         musicBinder?.isPlaying() == true
 

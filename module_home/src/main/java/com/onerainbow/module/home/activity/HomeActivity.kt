@@ -162,6 +162,8 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>() {
                         tvTitle.text = currentSong.name
                         tvCreator.text = currentSong.artists.joinToString("/") { it.name }
                     }
+                    playerList.setSelectedPosition(it)
+
                 }
             }
 

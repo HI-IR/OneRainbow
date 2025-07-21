@@ -39,6 +39,7 @@ class NewMusicService : Service() {
 
 
     //记录当前播放的 playlist 索引
+    private var currentUrl = ""
     private var currentIndex = -1
     private var playMode = PlayMode.SEQUENTIAL
     private val playlist: MutableList<Song> = mutableListOf()  // 保留原有媒体数据（非URL部分）
@@ -121,28 +122,27 @@ class NewMusicService : Service() {
      * 给了根据ID重新查询Url播放，避免Url刷新
      */
     private fun playWithFreshUrl(song: Song) {
-        // 取消当前正在进行的URL请求（避免重复请求）
-        currentUrlRequest?.dispose()  // 取消请求
-        currentUrlRequest = null  // 置空引用
+        currentUrlRequest?.dispose()
+        currentUrlRequest = null
 
         // 更新状态：正在获取资源
         updateNotification("正在获取歌曲资源：${song.name}")
         MusicManager.notifyPlayState(false)
         MusicManager.notifyPlayError(false)
 
-        // 发起URL请求（使用SongModel的网络接口）
+        // 发起URL请求
         currentUrlRequest = SongModel.getSongById(song.id)
             .subscribe(
-                { result ->  // 请求成功回调
+                { result ->
                     if (result.startsWith("发生错误")) {
                         // URL请求失败（如网络错误、数据为空）
                         handleUrlError(song, result)
                     } else {
-                        // URL请求成功：使用最新URL播放
+                        currentUrl = result
                         handleUrlSuccess(song, result)
                     }
                 },
-                { error ->  // 请求异常（如RxJava订阅错误）
+                { error ->
                     handleUrlError(song, "网络请求异常：${error.message}")
                 }
             )
@@ -240,10 +240,6 @@ class NewMusicService : Service() {
     // Binder类：对外提供的播放控制接口
     inner class MusicBinder : Binder() {
 
-        @Deprecated(
-            message = "请使用 addToPlayerList 替代，支持自动播放",
-            replaceWith = ReplaceWith("addToPlayerList(songs)")
-        )
         // 播放单首歌曲（强制请求最新URL）
         fun play(song: Song) {
             playlist.clear()
@@ -273,15 +269,12 @@ class NewMusicService : Service() {
             }
         }
 
+        fun getCurrentUrl() = currentUrl
 
         // 添加歌单并从指定索引播放（强制请求该索引歌曲的URL）
         /**
          *废弃，使用这个需要手动先判度目前维护的播放列表是否为空
          */
-        @Deprecated(
-            message = "请使用 addToPlayerList 替代，支持自动播放",
-            replaceWith = ReplaceWith("addToPlayerList(songs)")
-        )
         fun addSongs(songs: List<Song>, startIndex: Int = 0) {
             val newSongs = songs.filterNot { playlist.contains(it) }
             if (newSongs.isNotEmpty()) {
@@ -353,15 +346,11 @@ class NewMusicService : Service() {
             }
         }
 
-        @Deprecated(
-            message = "请使用 addToPlayerList 替代，支持自动播放",
-            replaceWith = ReplaceWith("addToPlayerList(songs)")
-        )
         fun addSong(song: Song) {
             // 检查列表中是否已存在相同id的歌曲（基于Song的equals判断）
             if (!playlist.contains(song)) {
                 playlist.add(song)
-                // 可选：通知UI列表更新
+
                 MusicManager.notifyPlayerList(playlist)
                 MusicManager.notifyPlayIndex(currentIndex)
             }

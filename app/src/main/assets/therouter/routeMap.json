@@ -35,6 +35,13 @@
     "params": {}
   },
   {
+    "path": "/musicplayer/test",
+    "className": "com.onerainbow.module.musicplayer.ui.NewMusicPlayerActivity",
+    "action": "",
+    "description": "",
+    "params": {}
+  },
+  {
     "path": "/player/music",
     "className": "com.onerainbow.module.musicplayer.ui.MusicPlayerActivity",
     "action": "",
