@@ -9,7 +9,6 @@ import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.onerainbow.lib.base.BaseActivity
 import com.onerainbow.lib.route.RoutePath
-import com.onerainbow.module.musicplayer.R
 import com.onerainbow.module.musicplayer.adapter.CommentAdapter
 import com.onerainbow.module.musicplayer.databinding.ActivityCommentBinding
 import com.onerainbow.module.musicplayer.viewmodel.CommentViewModel
@@ -23,11 +22,14 @@ class CommentActivity : BaseActivity<ActivityCommentBinding>() {
     var musicId: Long? = null
 
 
-    override fun getViewBinding(): ActivityCommentBinding = ActivityCommentBinding.inflate(layoutInflater)
+    override fun getViewBinding(): ActivityCommentBinding =
+        ActivityCommentBinding.inflate(layoutInflater)
+
     private val commentAdapter by lazy { CommentAdapter(this) }
     private val viewModel by lazy {
         ViewModelProvider(this)[CommentViewModel::class.java]
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -52,13 +54,16 @@ class CommentActivity : BaseActivity<ActivityCommentBinding>() {
                 is LoadState.NotLoading -> {
                     binding.progressBar.visibility = View.INVISIBLE
                 }
+
                 is LoadState.Loading -> {
                     binding.progressBar.visibility = View.VISIBLE
                 }
+
                 is LoadState.Error -> {
                     val state = it.refresh as LoadState.Error
                     binding.progressBar.visibility = View.INVISIBLE
-                    Toast.makeText(this, "Load Error: ${state.error.message}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Load Error: ${state.error.message}", Toast.LENGTH_SHORT)
+                        .show()
                 }
             }
         }

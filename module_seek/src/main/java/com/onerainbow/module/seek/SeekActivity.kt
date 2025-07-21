@@ -76,10 +76,12 @@ class SeekActivity : BaseActivity<ActivitySeekBinding>() {
         binding.tvSeek.setOnClickListener {
 
             Log.d("keywordone", binding.etSeek.text.toString())
+            val keyword = binding.etSeek.text?.toString()?.trim()?.ifBlank { "冬眠" }
             TheRouter.build(RoutePath.FINISHSEEK)
-                .withString("keyword", binding.etSeek.text?.toString()?.trim() ?: "冬眠")
+                .withString("keyword", keyword)
                 .navigation()
-            addTag(binding.etSeek.text.toString())
+            addTag(keyword!!)
+
             setHistory()
 
         }
@@ -122,6 +124,9 @@ class SeekActivity : BaseActivity<ActivitySeekBinding>() {
     fun setViewPager2() {
         viewpager2Adapter = PopmusicListAdapter(this)
         binding.viewpager2Popmusic.adapter = viewpager2Adapter
+        binding.btnOpenDrawer.setOnClickListener{
+            finish()
+        }
 
         // 可选：设置初始页面
         binding.viewpager2Popmusic.setCurrentItem(0, false)

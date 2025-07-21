@@ -7,7 +7,6 @@ import android.util.TypedValue
 import android.view.View
 import android.view.animation.LinearInterpolator
 import android.widget.Toast
-import androidx.core.util.TypedValueCompat.dpToPx
 import androidx.core.view.GravityCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.widget.ViewPager2
@@ -24,10 +23,10 @@ import com.onerainbow.module.musicplayer.model.Artist
 import com.onerainbow.module.musicplayer.model.Song
 import com.onerainbow.module.musicplayer.service.MusicManager
 import com.onerainbow.module.musicplayer.ui.PlayerListDialog
+import com.onerainbow.module.mv.MvFragment
 import com.onerainbow.module.recommend.ui.RecommendFragment
 import com.onerainbow.module.top.TopFragment
 import com.onerainbow.module.user.UserFragment
-import com.onerainbow.module_mv.MvFragment
 import com.therouter.TheRouter
 import com.therouter.router.Route
 

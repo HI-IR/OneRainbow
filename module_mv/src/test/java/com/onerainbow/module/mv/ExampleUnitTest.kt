@@ -1,4 +1,4 @@
-package com.onerainbow.module_mv
+package com.onerainbow.module.mv
 
 import org.junit.Test
 

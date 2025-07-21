@@ -16,10 +16,7 @@ import retrofit2.http.Query
  */
 interface PlaylistAllService {
     @GET("playlist/track/all")
-    fun getPlaylistAll(
-        @Query("id") id: Long,
-        @Query("limit") limit: Int
-    ): Observable<GetPlaylistData>
+    fun getPlaylistAll(@Query("id") id: Long, ): Observable<GetPlaylistData>
 
     @GET("artists")
     fun getSongerData(@Query("id") id: Long): Observable<SongersData>
