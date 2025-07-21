@@ -20,7 +20,7 @@ class PlaylistRepository {
     private val playlistRepository = RetrofitClient.create(PlaylistAllService::class.java)
 
     fun getPlaylistData(id: Long): Observable<GetPlaylistData> {
-        return playlistRepository.getPlaylistAll(id, 50)
+        return playlistRepository.getPlaylistAll(id)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
     }

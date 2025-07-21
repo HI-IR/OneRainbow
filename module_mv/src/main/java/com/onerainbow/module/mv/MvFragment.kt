@@ -1,7 +1,8 @@
-package com.onerainbow.module_mv
+package com.onerainbow.module.mv
 
 import com.onerainbow.lib.base.BaseFragment
-import com.onerainbow.module_mv.databinding.FragmentMvBinding
+import com.onerainbow.module.mv.databinding.FragmentMvBinding
+
 
 /**
  * description ： MV的Fragment

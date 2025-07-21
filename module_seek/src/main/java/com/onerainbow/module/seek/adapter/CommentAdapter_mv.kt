@@ -1,4 +1,4 @@
-package com.onerainbow.module.musicplayer.adapter
+package com.onerainbow.module.seek.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -12,7 +12,9 @@ import com.bumptech.glide.request.RequestOptions
 import com.onerainbow.module.musicplayer.R
 import com.onerainbow.module.musicplayer.databinding.ActivityCommentBinding
 import com.onerainbow.module.musicplayer.databinding.ItemCommentBinding
-import com.onerainbow.module.musicplayer.model.Comment
+import com.onerainbow.module.seek.data.Comment
+import com.onerainbow.module.seek.databinding.ItemCommentsBinding
+
 
 /**
  * description ： 评论的Adapter
@@ -20,7 +22,7 @@ import com.onerainbow.module.musicplayer.model.Comment
  * email : qq2420226433@outlook.com
  * date : 2025/7/19 11:58
  */
-class CommentAdapter(private val context: Context) : PagingDataAdapter<Comment, CommentAdapter.ViewHolder>(
+class CommentAdapter_mv(private val context: Context) : PagingDataAdapter<Comment, CommentAdapter_mv.ViewHolder>(
     object : DiffUtil.ItemCallback<Comment>(){
         override fun areItemsTheSame(oldItem: Comment, newItem: Comment): Boolean {
             return oldItem.id == newItem.id
@@ -35,7 +37,7 @@ class CommentAdapter(private val context: Context) : PagingDataAdapter<Comment, 
     //加载图片
     val requestOptions: RequestOptions = RequestOptions().placeholder(R.drawable.empty)
         .fallback(R.drawable.empty)
-    inner class ViewHolder(val binding:ItemCommentBinding):RecyclerView.ViewHolder(binding.root){
+    inner class ViewHolder(val binding: ItemCommentsBinding):RecyclerView.ViewHolder(binding.root){
         private var currentData: Comment? = null
 
 
@@ -57,16 +59,15 @@ class CommentAdapter(private val context: Context) : PagingDataAdapter<Comment, 
                 }
                 tvTimestr.text = data.timeStr
                 tvContent.text = data.content
-                tvLikeCount.text = data.likeCount.toString()
+                tvLikeCount.text = data.likedCount.toString()
                 tvNickname.text = data.user.nickname
-                tvLikeCount.text = data.likeCount.toString()
             }
 
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(ItemCommentBinding.inflate(LayoutInflater.from(parent.context),parent,false))
+        return ViewHolder(ItemCommentsBinding.inflate(LayoutInflater.from(parent.context),parent,false))
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {

@@ -1,17 +1,18 @@
-package com.example.module.seek.adapter
-
+package com.onerainbow.module.seek.adapter
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
+
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import com.onerainbow.module.seek.data.GetMvData
+import com.onerainbow.lib.route.RoutePath
 import com.onerainbow.module.seek.data.Mv
 import com.onerainbow.module.seek.databinding.ItemMvBinding
+import com.therouter.TheRouter
 
 /**
  * description ： TODO:类的作用
@@ -50,7 +51,10 @@ class GetMvDataAdapter : ListAdapter<Mv, GetMvDataAdapter.ViewHolder>(DiffCallba
                 flexSingers.addView(tv)
             }
             binding.root.setOnClickListener{
-                TheRouter.build(RoutePath.MV).withLong("id",item.id.toLong()).navigation()
+                TheRouter.build(RoutePath.MVS)
+                    .withLong("id",item.id.toLong())
+                    .withString("name",item.name)
+                    .navigation()
             }
 
 

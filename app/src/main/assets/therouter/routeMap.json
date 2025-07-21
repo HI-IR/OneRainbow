@@ -7,6 +7,20 @@
     "params": {}
   },
   {
+    "path": "/seek/videos",
+    "className": "com.onerainbow.module.seek.VideosActivity",
+    "action": "",
+    "description": "",
+    "params": {}
+  },
+  {
+    "path": "/seek/video",
+    "className": "com.onerainbow.module.seek.VideoActivity",
+    "action": "",
+    "description": "",
+    "params": {}
+  },
+  {
     "path": "/seek",
     "className": "com.onerainbow.module.seek.SeekActivity",
     "action": "",

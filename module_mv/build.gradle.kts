@@ -2,10 +2,11 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     id("com.google.devtools.ksp")
+
 }
 
 android {
-    namespace = "com.onerainbow.module_mv"
+    namespace = "com.onerainbow.module.mv"
     compileSdk = 35
 
     defaultConfig {
@@ -32,11 +33,14 @@ android {
         jvmTarget = "1.8"
     }
     buildFeatures{
-        viewBinding =true
+        viewBinding = true
     }
 }
 
 dependencies {
+    implementation(project(":lib_net"))
+    implementation(project(":lib_route"))
+
     implementation(project(":lib_base"))
     ksp("cn.therouter:apt:1.2.4")
     implementation ("cn.therouter:router:1.2.4")

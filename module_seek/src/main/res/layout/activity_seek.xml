@@ -53,6 +53,8 @@
                 android:layout_marginStart="10dp"
                 android:background="@drawable/shape_searchbar"
                 android:hint="搜索歌曲"
+                android:singleLine="true"
+                android:inputType="text"
                 android:textColor="@color/text_second"
                 android:textSize="15sp" />
         </LinearLayout>

@@ -3,11 +3,10 @@ package com.onerainbow.module.seek.Fragment
 import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.onerainbow.lib.base.BaseFragment
 import com.onerainbow.module.seek.adapter.GetMvDataAdapter
-import com.onerainbow.module.seek.adapter.UserDataAdapter
 import com.onerainbow.module.seek.databinding.FragmentVideoBinding
 import com.onerainbow.module.seek.viewmodel.FinishSeekViewModel
-import com.onerainbow.lib.base.BaseFragment
 
 /**
  * description ： TODO:类的作用

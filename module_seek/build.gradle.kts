@@ -36,15 +36,19 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+
 }
 
 dependencies {
-    implementation ("com.github.CarGuo.GSYVideoPlayer:GSYVideoPlayer:v8.4.0-release-jitpack")
+    implementation ("androidx.media3:media3-exoplayer:1.7.1")
+    implementation ("androidx.media3:media3-ui:1.7.1")
     implementation(project(":module_musicplayer"))
     implementation(project(":lib_net"))
     implementation(project(":lib_route"))
     implementation(project(":lib_base"))
+    implementation(libs.androidx.paging.runtime)
     implementation ("com.github.bumptech.glide:glide:4.16.0")
+    implementation(libs.androidx.paging.common.android)
     ksp ("com.github.bumptech.glide:compiler:4.16.0")
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
