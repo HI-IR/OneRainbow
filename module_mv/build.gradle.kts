@@ -40,7 +40,7 @@ android {
 dependencies {
     implementation(project(":lib_net"))
     implementation(project(":lib_route"))
-
+    implementation(project(":module_seek"))
     implementation(project(":lib_base"))
     ksp("cn.therouter:apt:1.2.4")
     implementation ("cn.therouter:router:1.2.4")

@@ -12,6 +12,7 @@ import com.onerainbow.lib.base.BaseActivity
 import com.onerainbow.lib.base.utils.CookieUtils
 import com.onerainbow.lib.route.RoutePath
 import com.onerainbow.module.account.viewmodel.LoginViewModel
+import com.therouter.TheRouter
 import com.therouter.router.Route
 import java.util.Base64
 
@@ -44,7 +45,7 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>() {
                 when (stateData.code) {
                     803 -> {
                         Toast.makeText(this, "登录成功", Toast.LENGTH_SHORT).show()
-                        CookieUtils.saveCookie(stateData.cookie)
+                        Log.d("cookiestring", stateData.cookie)
                         finish()
                     }
 

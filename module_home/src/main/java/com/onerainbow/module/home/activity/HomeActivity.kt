@@ -23,7 +23,7 @@ import com.onerainbow.module.musicplayer.model.Artist
 import com.onerainbow.module.musicplayer.model.Song
 import com.onerainbow.module.musicplayer.service.MusicManager
 import com.onerainbow.module.musicplayer.ui.PlayerListDialog
-import com.onerainbow.module.mv.MvFragment
+import com.onerainbow.module.mv.fragment.MvFragment
 import com.onerainbow.module.recommend.ui.RecommendFragment
 import com.onerainbow.module.top.view.TopFragment
 import com.onerainbow.module.user.UserFragment

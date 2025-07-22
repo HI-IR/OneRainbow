@@ -1,5 +1,6 @@
 package com.onerainbow.lib.net.interceptor
 
+import android.util.Log
 import com.onerainbow.lib.base.utils.CookieUtils
 import okhttp3.Interceptor
 import okhttp3.Response
@@ -23,6 +24,7 @@ class CookieInterceptor : Interceptor {
         if (url !in targetUrl){
             return chain.proceed(request)
         }
+
 
 
         // 读取本地Cookie

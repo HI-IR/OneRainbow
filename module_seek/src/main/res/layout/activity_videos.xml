@@ -82,6 +82,7 @@
         android:orientation="horizontal"
         android:padding="8dp"
         android:visibility="gone"
+        android:layout_marginBottom="10dp"
         app:layout_constraintBottom_toBottomOf="parent">
 
         <ImageView
