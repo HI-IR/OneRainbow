@@ -1,5 +1,7 @@
 package com.onerainbow.lib.base.anim
 
+import android.annotation.SuppressLint
+import android.view.MotionEvent
 import android.view.View
 
 /**
@@ -11,16 +13,25 @@ import android.view.View
 /**
  * Item点击后缩放的动画
  */
-fun View.scale(){
-    this.animate()
-        .scaleX(1.05f)
-        .scaleY(1.05f)
-        .setDuration(100)
-        .withEndAction{
-            this.animate()
-                .scaleX(1f)
-                .scaleY(1f)
-                .setDuration(100)
-                .start()
-        }.start()
+@SuppressLint("ClickableViewAccessibility")
+fun View.scaleAnim(){
+
+    setOnTouchListener { v, event ->
+        when(event.actionMasked){
+            MotionEvent.ACTION_DOWN ->{
+                animate().scaleX(1.05f).scaleY(1.05f).setDuration(100).start()
+            }
+            MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
+                animate().scaleX(1f).scaleY(1f).setDuration(100).start()
+            }
+        }
+        false
+    }
+
+    addOnAttachStateChangeListener(object : View.OnAttachStateChangeListener {
+        override fun onViewAttachedToWindow(v: View) = Unit
+        override fun onViewDetachedFromWindow(v: View) {
+            v.setOnTouchListener(null)
+        }
+    })
 }

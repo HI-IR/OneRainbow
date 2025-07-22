@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.onerainbow.lib.base.anim.scaleAnim
 import com.onerainbow.lib.route.RoutePath
 import com.onerainbow.module.recommend.R
 import com.onerainbow.module.recommend.bean.Creator
@@ -68,6 +69,7 @@ class TopListAdapter(private val context: Context) :
                     Toast.makeText(context, "数据异常", Toast.LENGTH_SHORT).show()
                 }
             }
+            item.scaleAnim()
         }
 
         fun bind(data: Playlist) {

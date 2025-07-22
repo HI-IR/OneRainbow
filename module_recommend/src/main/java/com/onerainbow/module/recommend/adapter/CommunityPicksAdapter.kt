@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.onerainbow.lib.base.anim.scaleAnim
 import com.onerainbow.lib.route.RoutePath
 import com.onerainbow.module.recommend.R
 import com.onerainbow.module.recommend.bean.Creator
@@ -97,8 +98,8 @@ class CommunityPicksAdapter(private val context: Context) :ListAdapter<List<Play
                             .navigation()
 
                     }
-
                 }
+                item.scaleAnim()
                 plays.forEachIndexed { index, play ->
                     play.setOnClickListener {
                         val playlist = currentData?.getOrNull(index)
