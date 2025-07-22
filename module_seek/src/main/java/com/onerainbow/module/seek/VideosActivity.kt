@@ -10,15 +10,12 @@ import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import android.view.WindowInsets
 import android.view.WindowInsetsController
-import android.widget.Toast
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
-import androidx.paging.LoadState
-import androidx.paging.PagingData
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.onerainbow.lib.base.BaseActivity
@@ -148,7 +145,7 @@ class VideosActivity : BaseActivity<ActivityVideosBinding>() {
         binding.playerView.player = player
     }
 
-    override fun initViewModel() {
+    override fun observeData() {
         id?.let {
             videoViewModel.getUrl(it)
         }

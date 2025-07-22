@@ -59,7 +59,7 @@ class SeekActivity : BaseActivity<ActivitySeekBinding>() {
     }
 
 
-    override fun initViewModel() {
+    override fun observeData() {
         seekViewModel.PopmusicDataLiveData.observe(this) { result ->
             val playlists: List<Playlist> = result.map { it.playlist }
             viewpager2Adapter.submitList(playlists)

@@ -40,7 +40,7 @@ class TopFragment : BaseFragment<FragmentTopBinding>(){
 
     }
 
-    override fun initViewModel() {
+    override fun observeData() {
 
     }
 }

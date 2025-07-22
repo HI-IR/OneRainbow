@@ -38,7 +38,7 @@ class PlaylistFragment :BaseFragment<FragmentPalylistBinding>() {
 
 
     }
-    override fun initViewModel() {
+    override fun observeData() {
         finishSeekViewmodel.playlistDataLiveData.observe(viewLifecycleOwner){
             result ->
             playlistAdapter.submitList(result.result.playlists)

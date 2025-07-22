@@ -19,7 +19,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
 
     }
 
-    override fun initViewModel() {
+    override fun observeData() {
     }
 
     override fun initEvent() {

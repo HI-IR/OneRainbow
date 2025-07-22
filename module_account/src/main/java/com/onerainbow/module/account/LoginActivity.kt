@@ -33,7 +33,7 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>() {
 
 
     @RequiresApi(Build.VERSION_CODES.O)
-    override fun initViewModel() {
+    override fun observeData() {
         loginviewmodle.qrDataLiveData.observe(this) { QR ->
             Log.d("ErrorQR", QR.toString())
             val bitmap = base64ToBitmap(QR.data.qrimg)

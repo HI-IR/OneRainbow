@@ -42,7 +42,7 @@ class ArtistsFragment : BaseFragment<FragmentArtistsBinding>(){
 
     }
 
-    override fun initViewModel() {
+    override fun observeData() {
         viewModel.apply {
             isLoading.observe(this@ArtistsFragment){
                 if (it) binding.artistsLoading.visibility = View.VISIBLE

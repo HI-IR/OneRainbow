@@ -34,7 +34,7 @@ class CommentActivity : BaseActivity<ActivityCommentBinding>() {
         super.onCreate(savedInstanceState)
     }
 
-    override fun initViewModel() {
+    override fun observeData() {
 
     }
 

@@ -9,7 +9,7 @@ import com.onerainbow.module.seek.databinding.FragmentVideoBinding
 import com.onerainbow.module.seek.viewmodel.FinishSeekViewModel
 
 /**
- * description ： TODO:类的作用
+ * description ： 视频搜索
  * author : summer_palace2
  * email : 2992203079qq.com
  * date : 2025/7/17 11:17
@@ -19,13 +19,24 @@ class VideoFragment : BaseFragment<FragmentVideoBinding>() {
     private val finishSeekViewmodel: FinishSeekViewModel by lazy {
         ViewModelProvider(requireActivity())[FinishSeekViewModel::class.java]
     }
-    private lateinit var getMvDataAdapter: GetMvDataAdapter
+    private val getMvDataAdapter: GetMvDataAdapter by lazy {
+        GetMvDataAdapter()
+    }
     override fun getViewBinding(): FragmentVideoBinding =
         FragmentVideoBinding.inflate(layoutInflater)
 
     override fun initEvent() {
-        finishSeekViewmodel.getMvDataLiveData.observe(viewLifecycleOwner) { result ->
-            getMvDataAdapter.submitList(result.result.mvs)
+        initView()
+
+        keyword?.let {
+            finishSeekViewmodel.getGetMv(it)
+        }
+    }
+
+    private fun initView() {
+        binding.mvRecycleview.apply {
+            adapter = getMvDataAdapter
+            layoutManager = LinearLayoutManager(context)
         }
     }
 
@@ -36,14 +47,11 @@ class VideoFragment : BaseFragment<FragmentVideoBinding>() {
 
     }
 
-    override fun initViewModel() {
-        getMvDataAdapter = GetMvDataAdapter()
-        binding.mvRecycleview.adapter = getMvDataAdapter
-        binding.mvRecycleview.layoutManager = LinearLayoutManager(context)
-        keyword?.let {
-            finishSeekViewmodel.getGetMv(it)
-        }
+    override fun observeData() {
 
+        finishSeekViewmodel.getMvDataLiveData.observe(viewLifecycleOwner) { result ->
+            getMvDataAdapter.submitList(result.result.mvs)
+        }
     }
 
     companion object {

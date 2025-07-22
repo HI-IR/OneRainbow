@@ -98,7 +98,7 @@ class MusicPlayerActivity : BaseActivity<ActivityMusicPlayerBinding>() {
         progressHandler.post(progressRunnable)
     }
 
-    override fun initViewModel() {
+    override fun observeData() {
         viewModel.apply {
             isPlaying.observe(this@MusicPlayerActivity) {
                 //图标变化
@@ -473,6 +473,12 @@ class MusicPlayerActivity : BaseActivity<ActivityMusicPlayerBinding>() {
                     .start()
             }
             .start()
+    }
+
+    @Deprecated("Deprecated in Java")
+    override fun onBackPressed() {
+        super.onBackPressed()
+        overridePendingTransition(0, R.anim.slide_out_bottom)
     }
 
     //格式时长

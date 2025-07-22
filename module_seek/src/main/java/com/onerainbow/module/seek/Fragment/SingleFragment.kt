@@ -55,7 +55,7 @@ class SingleFragment :BaseFragment<FragmentSingleBinding>(),GetImgUrl {
        }
     }
 
-    override fun initViewModel() {
+    override fun observeData() {
         finishSeekViewmodel.singleDataLiveData.observe(viewLifecycleOwner){
                 result ->
 

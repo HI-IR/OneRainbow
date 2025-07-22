@@ -9,22 +9,20 @@
     android:fitsSystemWindows="true"
     tools:context=".PlaylistActivity">
 
-    <!-- 顶部滚动区域 -->
+
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fitsSystemWindows="true"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
-        <!-- 支持折叠动画 -->
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:layout_width="match_parent"
-            android:layout_height="180dp"
+            android:layout_height="150dp"
             android:fitsSystemWindows="true"
             app:contentScrim="@color/background"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
-            <!-- 你原来的封面 + 标题 + 作者布局 -->
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -33,15 +31,16 @@
                 android:paddingTop="40dp"
                 app:layout_collapseMode="parallax">
 
-                <ImageView
+                <com.google.android.material.imageview.ShapeableImageView
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
                     android:id="@+id/playlist_img"
                     android:layout_width="100dp"
                     android:layout_height="120dp"
+                    android:layout_gravity="center"
                     android:layout_marginStart="15dp"
-                    android:layout_marginTop="20dp"
                     android:scaleType="centerCrop"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:shapeAppearanceOverlay="@style/PlayListImgCorners" />
 
                 <TextView
                     android:id="@+id/tv_playlist_title"
@@ -97,18 +96,8 @@
                     app:layout_constraintTop_toBottomOf="@id/tv_playlist_author" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <!-- 吸顶的 Toolbar 标题（可隐藏） -->
-            <androidx.appcompat.widget.Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:background="@android:color/transparent"
-                app:layout_collapseMode="pin"
-                app:title="歌单详情"
-                app:titleTextColor="@android:color/white" />
         </com.google.android.material.appbar.CollapsingToolbarLayout>
 
-        <!-- 播放全部栏吸顶 -->
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/play_all_container"
             android:layout_width="match_parent"
@@ -133,7 +122,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:text="播放全部"
-                android:textColor="@color/black"
+                android:textColor="@color/text_first"
                 android:textSize="16sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@id/play_music"

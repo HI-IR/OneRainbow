@@ -40,7 +40,7 @@ class UsersFragment :BaseFragment<FragmentUsersBinding>() {
 
 
     }
-    override fun initViewModel() {
+    override fun observeData() {
         finishSeekViewmodel.userDataLiveData.observe(viewLifecycleOwner){
             result ->
             userDataAdapter.submitList(result.result.artists)

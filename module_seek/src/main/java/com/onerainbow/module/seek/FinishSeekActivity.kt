@@ -31,14 +31,14 @@ class FinishSeekActivity : BaseActivity<ActivityFinishSeekBinding>() {
 
     }
 
-    override fun initViewModel() {
-        binding.etSeek.setText(keyword)
+    override fun observeData() {
 
 
     }
 
     override fun initEvent() {
 
+        binding.etSeek.setText(keyword)
 
         initVp2()
         binding.btnOpenDrawer.setOnClickListener{

@@ -35,7 +35,7 @@ class PlaylistActivity : BaseActivity<ActivityPlaylistBinding>() {
 
     }
 
-    override fun initViewModel() {
+    override fun observeData() {
         if (this::playlists.isInitialized) {
             playlistViewModel.getPlaylistData(playlists.id)
         }

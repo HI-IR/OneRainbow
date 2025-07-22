@@ -72,7 +72,7 @@ class DetailFragment: BaseFragment<FragmentDetailBinding>() {
         viewModel.getDetailData()
     }
 
-    override fun initViewModel() {
+    override fun observeData() {
         viewModel.apply {
             frontData.observe(this@DetailFragment){
                 frontAdapter.submitList(it)

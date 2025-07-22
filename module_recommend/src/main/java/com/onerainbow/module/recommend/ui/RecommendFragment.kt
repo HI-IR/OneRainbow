@@ -103,7 +103,7 @@ class RecommendFragment : BaseFragment<FragmentRecommendBinding>() {
         viewModel.getCommunityPicks()
     }
 
-    override fun initViewModel() {
+    override fun observeData() {
         viewModel.apply {
 
             //关于轮播图的信息

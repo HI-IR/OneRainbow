@@ -9,13 +9,10 @@ import com.onerainbow.module.mv.MvData
 import com.onerainbow.module.mv.MvViewModel
 import com.onerainbow.module.mv.MvsData
 import com.onerainbow.module.mv.databinding.FragmentMvforeignBinding
-import com.onerainbow.module.mv.databinding.FragmentMvinlandBinding
 import com.onerainbow.module.seek.adapter.GetMvDataAdapter
 import com.onerainbow.module.seek.data.ArtistX
 import com.onerainbow.module.seek.data.Mv
 import com.onerainbow.module.seek.data.ResultGetMv
-import com.onerainbow.module.seek.viewmodel.FinishSeekViewModel
-import com.therouter.getApplicationContext
 
 /**
  * description ： 外地视频
@@ -25,23 +22,38 @@ import com.therouter.getApplicationContext
  */
 class MvForeignFragment :BaseFragment<FragmentMvforeignBinding>() {
     private val mvViewModel : MvViewModel by lazy {  ViewModelProvider(requireActivity())[MvViewModel::class.java] }
-    private lateinit var getMvDataAdapter : GetMvDataAdapter
+    private val getMvDataAdapter : GetMvDataAdapter  by lazy {
+        GetMvDataAdapter()
+    }
     override fun getViewBinding(): FragmentMvforeignBinding = FragmentMvforeignBinding.inflate(layoutInflater)
 
     override fun initEvent() {
-        getMvDataAdapter = GetMvDataAdapter()
-        binding.mvForeignRecycleview.adapter = getMvDataAdapter
-        binding.mvForeignRecycleview.layoutManager = LinearLayoutManager(requireContext())
+        initView()
+        initData()
+
+
+    }
+
+    private fun initData() {
+        mvViewModel.getmvForeign()
+
+    }
+
+    private fun initView() {
+        binding.mvForeignRecycleview.apply {
+            adapter = getMvDataAdapter
+            layoutManager = LinearLayoutManager(requireContext())
+        }
+    }
+
+    override fun observeData() {
         mvViewModel.mvforeignLiveData.observe(viewLifecycleOwner){
                 result ->
             Log.d("resultData",result.toResultGetMv().mvs.toString())
             getMvDataAdapter.submitList(result.toResultGetMv().mvs)
         }
 
-    }
 
-    override fun initViewModel() {
-        mvViewModel.getmvForeign()
     }
     fun MvsData.toResultGetMv(): ResultGetMv {
         return ResultGetMv(

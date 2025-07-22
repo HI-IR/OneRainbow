@@ -36,7 +36,7 @@ abstract class BaseActivity<VB : ViewBinding>: AppCompatActivity() {
         doTransparentTaskbar()
 
         TheRouter.inject(this)
-        initViewModel()
+        observeData()
         initEvent()
 
         if (!isInternetAvailable(this)){
@@ -60,7 +60,7 @@ abstract class BaseActivity<VB : ViewBinding>: AppCompatActivity() {
     /**
      * 注册ViewModel的事件监听
      */
-    abstract fun initViewModel()
+    abstract fun observeData()
 
     /**
      * 注册点击事件

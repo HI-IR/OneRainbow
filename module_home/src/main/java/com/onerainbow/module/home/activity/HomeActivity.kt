@@ -128,7 +128,7 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>() {
     }
 
 
-    override fun initViewModel() {
+    override fun observeData() {
         //注册ViewModel的监听
         viewModel.apply {
             isPlaying.observe(this@HomeActivity){

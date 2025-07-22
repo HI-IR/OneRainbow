@@ -1,13 +1,16 @@
 package com.onerainbow.module.recommend.adapter
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.onerainbow.lib.base.anim.scale
 import com.onerainbow.lib.route.RoutePath
 import com.onerainbow.module.recommend.R
 import com.onerainbow.module.recommend.bean.Banner
@@ -34,23 +37,37 @@ class BannerAdapter(private val context: Context): ListAdapter<Banner,BannerAdap
         private val imageBanner = binding.imgBanner
         private val itemBanner = binding.itemBanner
         private val textBanner = binding.tvBanner
-
+        private var currentData: Banner? = null
         init {
             initClick()
         }
 
+        @SuppressLint("ClickableViewAccessibility")
         private fun initClick() {
-            itemBanner.setOnClickListener{
-                val item = getItem(adapterPosition)
-                if (!item.url.isNullOrBlank()) {
-                    TheRouter.build(RoutePath.WEB)
-                        .withString("url", item.url)
-                        .navigation()
+            itemBanner.setOnClickListener{ view ->
+                currentData?.url?.let {
+                    if (it.isNotBlank()){
+                        TheRouter.build(RoutePath.WEB)
+                            .withString("url", it)
+                            .navigation()
+                    }
                 }
+            }
+            itemBanner.setOnTouchListener { v, event ->
+                when(event.actionMasked){
+                    MotionEvent.ACTION_DOWN ->{
+                        v.animate().scaleX(1.05f).scaleY(1.05f).setDuration(100).start()
+                    }
+                    MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
+                        v.animate().scaleX(1f).scaleY(1f).setDuration(100).start()
+                    }
+                }
+                false
             }
         }
 
         fun bind(data: Banner){
+            currentData = data
             //加载网络图片
             val requestOptions: RequestOptions = RequestOptions().placeholder(R.drawable.banner_example)
                 .fallback(R.drawable.banner_example)

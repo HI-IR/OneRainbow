@@ -7,13 +7,11 @@ import com.onerainbow.module.mv.Artist
 import com.onerainbow.module.mv.MvData
 import com.onerainbow.module.mv.MvViewModel
 import com.onerainbow.module.mv.MvsData
-import com.onerainbow.module.mv.databinding.FragmentMvBinding
 import com.onerainbow.module.mv.databinding.FragmentMvinlandBinding
 import com.onerainbow.module.seek.adapter.GetMvDataAdapter
 import com.onerainbow.module.seek.data.ArtistX
 import com.onerainbow.module.seek.data.Mv
 import com.onerainbow.module.seek.data.ResultGetMv
-import com.therouter.getApplicationContext
 
 /**
  * description ： 内地视频
@@ -23,22 +21,33 @@ import com.therouter.getApplicationContext
  */
 class MvInlandFragment :BaseFragment<FragmentMvinlandBinding>() {
     private val mvViewModel : MvViewModel by lazy {  ViewModelProvider(requireActivity())[MvViewModel::class.java] }
-    private lateinit var getMvDataAdapter :GetMvDataAdapter
+    private val getMvDataAdapter :GetMvDataAdapter by lazy {
+        GetMvDataAdapter()
+    }
     override fun getViewBinding(): FragmentMvinlandBinding=FragmentMvinlandBinding.inflate(layoutInflater)
 
     override fun initEvent() {
-        getMvDataAdapter = GetMvDataAdapter()
-        binding.mvInlandRecycleview.adapter = getMvDataAdapter
-        binding.mvInlandRecycleview.layoutManager = LinearLayoutManager(requireContext())
+        initView()
+        initData()
+    }
+
+    private fun initData() {
+        mvViewModel.getmvinland()
+
+    }
+
+    private fun initView() {
+        binding.mvInlandRecycleview.apply {
+            adapter = getMvDataAdapter
+            layoutManager = LinearLayoutManager(requireContext())
+        }
+    }
+
+    override fun observeData() {
         mvViewModel.mvinlandLiveData.observe(viewLifecycleOwner){
                 result ->
             getMvDataAdapter.submitList(result.toResultGetMv().mvs)
         }
-
-    }
-
-    override fun initViewModel() {
-        mvViewModel.getmvinland()
     }
     fun MvsData.toResultGetMv(): ResultGetMv {
         return ResultGetMv(

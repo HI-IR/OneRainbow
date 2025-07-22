@@ -23,7 +23,7 @@ class MvFragment : BaseFragment<FragmentMvBinding>(){
         initVp2()
     }
 
-    override fun initViewModel() {
+    override fun observeData() {
     }
     private fun initVp2() {
         binding.mvVp2.adapter = MvVp2Adapter(this@MvFragment)
