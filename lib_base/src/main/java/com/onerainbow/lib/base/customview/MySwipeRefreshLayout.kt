@@ -5,7 +5,6 @@ import android.util.AttributeSet
 import android.util.Log
 import android.view.MotionEvent
 import android.view.ViewConfiguration
-import android.widget.ScrollView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import kotlin.math.abs
 
@@ -29,11 +28,12 @@ class MySwipeRefreshLayout @JvmOverloads constructor(
             MotionEvent.ACTION_DOWN ->{
                 startX = ev.x
                 startY = ev.y
+                return super.onInterceptTouchEvent(ev)
             }
             MotionEvent.ACTION_MOVE ->{
                 val dx = ev.x - startX
                 val dy = ev.y - startY
-                if (abs(dx) > abs(dy) * 0.75 && abs(dx) >= touchSlop){
+                if (abs(dx) > abs(dy) * 0.5 && abs(dx) >= touchSlop){
                     //水平滑动
                     Log.d("conflict", "dx -> ${dx},dy -> ${dy}")
                     return false
@@ -44,10 +44,7 @@ class MySwipeRefreshLayout @JvmOverloads constructor(
                   startX = 0f
                   startY = 0f
             }
-
         }
-
         return super.onInterceptTouchEvent(ev)
     }
-
 }

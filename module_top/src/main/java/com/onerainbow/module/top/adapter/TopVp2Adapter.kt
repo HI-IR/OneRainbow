@@ -11,9 +11,9 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
  * date : 2025/7/20 12:28
  */
 class TopVp2Adapter(
-    fragmentActivity: FragmentActivity,
+    fragment: Fragment,
     private val fragments: List<Fragment>
-) : FragmentStateAdapter(fragmentActivity) {
+) : FragmentStateAdapter(fragment) {
     override fun getItemCount(): Int = fragments.size
 
     override fun createFragment(position: Int): Fragment = fragments[position]

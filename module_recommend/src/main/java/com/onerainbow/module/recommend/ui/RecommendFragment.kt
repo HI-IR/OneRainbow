@@ -2,6 +2,8 @@ package com.onerainbow.module.recommend.ui
 
 import android.graphics.Rect
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.View
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
@@ -139,27 +141,27 @@ class RecommendFragment : BaseFragment<FragmentRecommendBinding>() {
 
         }
     }
-
-
+    private val handler = Handler(Looper.getMainLooper())
     private val autoScroll = object : Runnable {
         override fun run() {
+            if (!isAdded || binding == null)
+                return
+
             val listSize = bannerAdapter.currentList.size
-            if (listSize > 0) {
+            if (listSize > 0){
                 val current = binding.vp2Banner.currentItem
-                val next = (current + 1) % Int.MAX_VALUE
-                binding.vp2Banner.setCurrentItem(next, true)
-                binding.vp2Banner.postDelayed(this, 5000) // 每5秒切换
+                val nextPage = (current + 1) % listSize
+                binding.vp2Banner.setCurrentItem(nextPage,true)
+                handler.postDelayed(this, 5000)
             }
         }
     }
 
-    private fun startAutoScroll() {
-        binding.vp2Banner.removeCallbacks(autoScroll)
-        binding.vp2Banner.postDelayed(autoScroll, 7000)
-    }
 
-    private fun stopAutoScroll() {
-        binding.vp2Banner.removeCallbacks(autoScroll)
+    private fun startAutoScroll() {
+        handler.removeCallbacks(autoScroll)
+        handler.postDelayed(autoScroll, 5000)
+
     }
 
     override fun onResume() {
@@ -169,7 +171,12 @@ class RecommendFragment : BaseFragment<FragmentRecommendBinding>() {
 
     override fun onPause() {
         super.onPause()
-        stopAutoScroll()
+        handler.removeCallbacks(autoScroll)
+    }
+
+    override fun onDestroyView() {
+        handler.removeCallbacks(autoScroll)
+        super.onDestroyView()
     }
 
 
