@@ -141,18 +141,11 @@ class VideosActivity : BaseActivity<ActivityVideosBinding>() {
         }
         // 注册全局布局监听
         binding.root.viewTreeObserver.addOnGlobalLayoutListener(layoutListener)
-        player = ExoPlayer.Builder(applicationContext).build()
+        player = ExoPlayer.Builder(applicationContext).build()//先初始化后面再传入url
         binding.playerView.player = player
     }
 
     override fun observeData() {
-        id?.let {
-            videoViewModel.getUrl(it)
-        }
-
-    }
-
-    override fun initEvent() {
         videoViewModel.getUrlLiveData.observe(this) { result ->
             initPlayer(result.data.url)
             initUI()
@@ -163,6 +156,17 @@ class VideosActivity : BaseActivity<ActivityVideosBinding>() {
             binding.mvCommentTv.text = result.commentCount.toString()
             binding.mvShareTv.text = result.shareCount.toString()
 
+        }
+
+    }
+
+    override fun initEvent() {
+        binding.videoName.text = name
+        binding.videoBack.setOnClickListener {
+            finish()
+        }
+        id?.let {
+            videoViewModel.getUrl(it)
         }
         binding.mvCommentImg.setOnClickListener {
             showCommentsBottomSheet()
@@ -182,6 +186,7 @@ class VideosActivity : BaseActivity<ActivityVideosBinding>() {
 
     }
 
+    //显示底部弹窗->这里面使用了reycleview
     private fun showCommentsBottomSheet() {
         if (::bottomSheetDialog.isInitialized && bottomSheetDialog.isShowing) {
             bottomSheetDialog.dismiss()
@@ -220,7 +225,6 @@ class VideosActivity : BaseActivity<ActivityVideosBinding>() {
         player.setMediaItem(mediaItem)
         player.prepare()
         player.playWhenReady = true
-
         // 注册监听器
         player.addListener(playerListener)
         player.addListener(playStateListener)
@@ -334,6 +338,8 @@ class VideosActivity : BaseActivity<ActivityVideosBinding>() {
             height = ViewGroup.LayoutParams.MATCH_PARENT
             width = ViewGroup.LayoutParams.MATCH_PARENT
         }
+        binding.videoBack.visibility = View.GONE
+        binding.videoName.visibility = View.GONE
         binding.mvLikeImg.visibility = View.GONE
         binding.mvCommentImg.visibility = View.GONE
         binding.mvShareImg.visibility = View.GONE
@@ -374,6 +380,8 @@ class VideosActivity : BaseActivity<ActivityVideosBinding>() {
             height = heightInPx
             width = ViewGroup.LayoutParams.MATCH_PARENT
         }
+        binding.videoBack.visibility = View.VISIBLE
+        binding.videoName.visibility = View.VISIBLE
         binding.mvLikeImg.visibility = View.VISIBLE
         binding.mvCommentImg.visibility = View.VISIBLE
         binding.mvShareImg.visibility = View.VISIBLE
@@ -432,7 +440,5 @@ class VideosActivity : BaseActivity<ActivityVideosBinding>() {
         commentsJob?.cancel()
         super.onDestroy()
     }
-
-
 
 }

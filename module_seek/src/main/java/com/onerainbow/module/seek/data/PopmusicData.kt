@@ -3,7 +3,7 @@ package com.onerainbow.module.seek.data
 import android.provider.MediaStore.Audio.Playlists
 
 /**
- * description ： TODO:类的作用
+ * description ： 获取排行榜信息
  * author : summer_palace2
  * email : 2992203079qq.com
  * date : 2025/7/15 21:03

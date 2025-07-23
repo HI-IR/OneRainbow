@@ -31,7 +31,11 @@ class UserDataAdapter : ListAdapter<ArtistUser, UserDataAdapter.ViewHodler>(Diff
                 .into(binding.userImg)
 
             binding.root.setOnClickListener {
-                TheRouter.build(RoutePath.PLAYLIST).withLong("id", item.id).navigation()
+                TheRouter.build(RoutePath.SINGER)
+                    .withLong("id", item.id)
+                    .withString("url",item.picUrl)
+                    .withString("name",item.name)
+                    .navigation()
 
             }
         }

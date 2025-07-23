@@ -1,7 +1,6 @@
 package com.onerainbow.module.seek.adapter
 
 import android.graphics.Color
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.TextView
@@ -9,17 +8,15 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.onerainbow.lib.base.utils.ToastUtils
-import com.onerainbow.module.seek.R
-import com.onerainbow.module.seek.data.LyricData
-import com.onerainbow.module.seek.data.SongLyric
-import com.onerainbow.module.seek.databinding.FragmentLyricBinding
-import com.onerainbow.module.seek.databinding.ItemLyricBinding
-import com.onerainbow.module.seek.interfaces.GetImgUrl
 import com.onerainbow.module.musicplayer.model.Song
 import com.onerainbow.module.musicplayer.service.MusicManager
+import com.onerainbow.module.seek.R
+import com.onerainbow.module.seek.data.SongLyric
+import com.onerainbow.module.seek.databinding.ItemLyricBinding
+import com.onerainbow.module.seek.interfaces.GetImgUrl
 
 /**
- * description ： TODO:类的作用
+ * description ： 获取歌词
  * author : summer_palace2
  * email : 2992203079qq.com
  * date : 2025/7/18 14:02

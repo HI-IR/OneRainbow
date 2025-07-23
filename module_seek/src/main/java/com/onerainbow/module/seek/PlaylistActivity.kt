@@ -22,125 +22,62 @@ class PlaylistActivity : BaseActivity<ActivityPlaylistBinding>() {
     @Autowired(name = "playlists")
     lateinit var playlists: Playlists
 
-    @Autowired(name = "id")
-    var id: Long? = null
     private val playlistViewModel: PlaylistViewModel by lazy { PlaylistViewModel() }
     private lateinit var songListDetailAdapter: SongListDetailAdapter
-    private lateinit var songerAdapter: SongerAdapter
     override fun getViewBinding(): ActivityPlaylistBinding =
         ActivityPlaylistBinding.inflate(layoutInflater)
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-    }
 
     override fun observeData() {
-        if (this::playlists.isInitialized) {
-            playlistViewModel.getPlaylistData(playlists.id)
-        }
-        if (id != null && !this::playlists.isInitialized) {
-            playlistViewModel.getSongerData(id!!)
-            playlistViewModel.getSongsData(id!!)
+        playlistViewModel.playListLiveData.observe(this) { result ->
+            songListDetailAdapter.submitList(result.songs)
+            fun com.onerainbow.module.seek.data.Artist.toModelArtist(): com.onerainbow.module.musicplayer.model.Artist {
+                return com.onerainbow.module.musicplayer.model.Artist(
+                    id = this.id,
+                    name = this.name
+                )
+            }
 
+            val songs: List<Song> = result.songs.map { songGetPlay ->
+                Song(
+                    id = songGetPlay.id,
+                    name = songGetPlay.name,
+                    artists = songGetPlay.ar.map { it.toModelArtist() }, // 直接用原来的 Artist 列表
+                    coverUrl = songGetPlay.al.picUrl // 从 al 取封面
+                )
+
+            }
+            binding.playAllContainer.setOnClickListener {
+                if (songs != null) {
+                    if (MusicManager.addToPlayerList(songs)) {
+                        ToastUtils.makeText("添加成功")
+                    } else {
+                        ToastUtils.makeText("添加失败")
+                    }
+
+                }
+
+            }
         }
     }
 
     override fun initEvent() {
-        if (this::playlists.isInitialized) {
-            songListDetailAdapter = SongListDetailAdapter()
-            binding.recycleviewPlaylistSong.adapter = songListDetailAdapter
-            binding.recycleviewPlaylistSong.layoutManager = LinearLayoutManager(this)
-            binding.tvPlaylistTitle.text = playlists.name
-            Glide.with(binding.playlistImg.context)
-                .load(playlists.coverImgUrl)
-                .transform(RoundedCorners(20))
-                .into(binding.playlistImg)
-            Glide.with(binding.playlistAuthorImg.context)
-                .load(playlists.creator.avatarUrl)
-                .circleCrop()
-                .into(binding.playlistAuthorImg)
-            binding.tvDescription.text = playlists.description
-            binding.tvPlaylistAuthor.text = playlists.creator.nickname
-            playlistViewModel.playListLiveData.observe(this) { result ->
-                songListDetailAdapter.submitList(result.songs)
-                fun com.onerainbow.module.seek.data.Artist.toModelArtist(): com.onerainbow.module.musicplayer.model.Artist {
-                    return com.onerainbow.module.musicplayer.model.Artist(
-                        id = this.id,
-                        name = this.name
-                    )
-                }
+        songListDetailAdapter = SongListDetailAdapter()
+        binding.recycleviewPlaylistSong.adapter = songListDetailAdapter
+        binding.recycleviewPlaylistSong.layoutManager = LinearLayoutManager(this)
+        binding.tvPlaylistTitle.text = playlists.name
+        binding.tvDescription.text = playlists.description
+        binding.tvPlaylistAuthor.text = playlists.creator.nickname
+        Glide.with(binding.playlistImg.context)
+            .load(playlists.coverImgUrl)
+            .transform(RoundedCorners(20))
+            .into(binding.playlistImg)
+        Glide.with(binding.playlistAuthorImg.context)
+            .load(playlists.creator.avatarUrl)
+            .circleCrop()
+            .into(binding.playlistAuthorImg)
+        playlistViewModel.getPlaylistData(playlists.id)
 
-                val songs: List<Song> = result.songs.map { songGetPlay ->
-                    Song(
-                        id = songGetPlay.id,
-                        name = songGetPlay.name,
-                        artists = songGetPlay.ar.map { it.toModelArtist() }, // 直接用原来的 Artist 列表
-                        coverUrl = songGetPlay.al.picUrl // 从 al 取封面
-                    )
-                }
-                binding.playAllContainer.setOnClickListener {
-                    if (songs != null) {
-                        if (MusicManager.addToPlayerList(songs)){
-                            ToastUtils.makeText("添加成功")
-                        }else{
-                            ToastUtils.makeText("添加失败")
-                        }
-
-                    }
-
-                }
-
-            }
-        }
-        if (id != null && !this::playlists.isInitialized) {
-            songerAdapter = SongerAdapter()
-            binding.recycleviewPlaylistSong.adapter = songerAdapter
-            binding.recycleviewPlaylistSong.layoutManager = LinearLayoutManager(this)
-            playlistViewModel.songerDataLiveData.observe(this) { result ->
-                binding.tvPlaylistTitle.text = result.artist.name
-                binding.tvPlaylistAuthor.text = result.artist.name
-                binding.tvDescription.text = result.artist.briefDesc
-                Glide.with(binding.playlistImg.context)
-                    .load(result.artist.img1v1Url)
-                    .transform(RoundedCorners(20))
-                    .into(binding.playlistImg)
-                Glide.with(binding.playlistAuthorImg.context)
-                    .load(result.artist.img1v1Url)
-                    .circleCrop()
-                    .into(binding.playlistAuthorImg)
-
-            }
-            playlistViewModel.songsDataLiveData.observe(this) { result ->
-                songerAdapter.submitList(result.songs)
-                fun com.onerainbow.module.seek.data.Artist.toModelArtist(): com.onerainbow.module.musicplayer.model.Artist {
-                    return com.onerainbow.module.musicplayer.model.Artist(
-                        id = this.id,
-                        name = this.name
-                    )
-                }
-
-                val songs: List<Song> = result.songs.map { songGetPlay ->
-                    Song(
-                        id = songGetPlay.id,
-                        name = songGetPlay.name,
-                        artists = songGetPlay.ar.map { it.toModelArtist() }, // 直接用原来的 Artist 列表
-                        coverUrl = songGetPlay.al.picUrl // 从 al 取封面
-                    )
-                }
-                binding.playAllContainer.setOnClickListener {
-                    if (songs != null) {
-                        if (MusicManager.addToPlayerList(songs)){
-                            ToastUtils.makeText("添加成功")
-                        }else{
-                            ToastUtils.makeText("添加失败")
-                        }
-
-                    }
-
-                }
-            }
-        }
     }
 
 }

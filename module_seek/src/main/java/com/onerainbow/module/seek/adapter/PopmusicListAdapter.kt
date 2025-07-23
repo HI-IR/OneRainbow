@@ -3,16 +3,13 @@ package com.onerainbow.module.seek.adapter
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
-
-import android.widget.Toast
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.onerainbow.module.seek.data.Playlist
-import com.onerainbow.module.seek.data.PopmusicData
-import com.onerainbow.module.seek.databinding.ItemHotBinding
 import com.onerainbow.lib.route.RoutePath
+import com.onerainbow.module.seek.data.Playlist
+import com.onerainbow.module.seek.databinding.ItemHotBinding
 import com.therouter.TheRouter
 
 /**
@@ -44,7 +41,7 @@ class PopmusicListAdapter(private val context: Context) :
         // 2. 限制 tracks 只取前 20 条
         val limitedTracks = data.tracks.take(20)
 
-        var adapter=PopmusicAdapter{
+        val adapter=PopmusicAdapter{
                 item ->
             // 点击事件逻辑
             TheRouter.build(RoutePath.FINISHSEEK)

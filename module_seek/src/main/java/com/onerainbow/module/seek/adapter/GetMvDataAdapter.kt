@@ -15,7 +15,7 @@ import com.onerainbow.module.seek.databinding.ItemMvBinding
 import com.therouter.TheRouter
 
 /**
- * description ： TODO:类的作用
+ * description ： 获取视频相关信息
  * author : summer_palace2
  * email : 2992203079qq.com
  * date : 2025/7/18 17:07

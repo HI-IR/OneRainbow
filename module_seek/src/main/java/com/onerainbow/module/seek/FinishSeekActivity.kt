@@ -10,14 +10,15 @@ import com.onerainbow.lib.route.RoutePath
 import com.therouter.TheRouter
 import com.therouter.router.Autowired
 import com.therouter.router.Route
+
 object LiveDataBus {
     val keywordResult = MutableLiveData<String>()
 }
 
 @Route(path = RoutePath.FINISHSEEK)
 class FinishSeekActivity : BaseActivity<ActivityFinishSeekBinding>() {
-    @Autowired(name="keyword")
-     var keyword: String? =null
+    @Autowired(name = "keyword")
+    var keyword: String? = null
     private var tabLayoutMediator: TabLayoutMediator? = null
     private val tabTitles = listOf(
         "歌词", "歌单", "单曲", "歌手", "视频"
@@ -37,11 +38,9 @@ class FinishSeekActivity : BaseActivity<ActivityFinishSeekBinding>() {
     }
 
     override fun initEvent() {
-
         binding.etSeek.setText(keyword)
-
         initVp2()
-        binding.btnOpenDrawer.setOnClickListener{
+        binding.btnOpenDrawer.setOnClickListener {
             finish()
         }
         binding.toolbar.setOnClickListener {
@@ -53,13 +52,13 @@ class FinishSeekActivity : BaseActivity<ActivityFinishSeekBinding>() {
     }
 
     private fun initVp2() {
-        binding.finishSeekVp2.adapter = SeekFinishVpAdapter(this@FinishSeekActivity,keyword)
+        binding.finishSeekVp2.adapter = SeekFinishVpAdapter(this@FinishSeekActivity, keyword)
         binding.finishSeekVp2.offscreenPageLimit = 1
 
-        tabLayoutMediator =TabLayoutMediator(binding.finishSeekTabLayout,binding.finishSeekVp2){
-            tab ,position ->
-            tab.text =tabTitles[position]
-        }
+        tabLayoutMediator =
+            TabLayoutMediator(binding.finishSeekTabLayout, binding.finishSeekVp2) { tab, position ->
+                tab.text = tabTitles[position]
+            }
         tabLayoutMediator?.attach()
 
 
@@ -67,7 +66,7 @@ class FinishSeekActivity : BaseActivity<ActivityFinishSeekBinding>() {
 
     override fun onDestroy() {
         super.onDestroy()
-        binding.finishSeekVp2.adapter=null
+        binding.finishSeekVp2.adapter = null
         tabLayoutMediator?.detach()
 
     }

@@ -28,6 +28,13 @@
     "params": {}
   },
   {
+    "path": "/seek/singer",
+    "className": "com.onerainbow.module.seek.SingerActivity",
+    "action": "",
+    "description": "",
+    "params": {}
+  },
+  {
     "path": "/seek",
     "className": "com.onerainbow.module.seek.SeekActivity",
     "action": "",

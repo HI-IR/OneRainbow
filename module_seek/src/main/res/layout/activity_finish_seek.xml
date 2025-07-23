@@ -67,9 +67,10 @@
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/finish_seek_tabLayout"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        app:tabIndicatorColor="@color/red"
-        app:tabRippleColor="@android:color/transparent"
+        android:layout_height="40dp"
+        app:tabIndicatorColor="@color/app_first_color"
+        app:tabIndicatorFullWidth="false"
+        app:tabRippleColor="@null"
         android:background="@android:color/transparent"
         app:tabBackground="@android:color/transparent"
         app:layout_constraintEnd_toEndOf="parent"
