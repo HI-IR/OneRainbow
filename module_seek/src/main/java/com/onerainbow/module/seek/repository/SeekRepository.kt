@@ -18,23 +18,16 @@ class SeekRepository {
     private val popmusicService = RetrofitClient.create(PopmusicService::class.java)
 
     fun getPopmusic(): Observable<List<PopmusicData>> {
-        return Observable.zip(
-            popmusicService.getPopmusic(19723756),
-            popmusicService.getPopmusic(3779629),
-            popmusicService.getPopmusic(2884035),
-            object : Function3<PopmusicData, PopmusicData, PopmusicData, List<PopmusicData>> {
-                override fun invoke(
-                    pop1: PopmusicData,
-                    pop2: PopmusicData,
-                    pop3: PopmusicData
-                ): List<PopmusicData> {
-                    return listOf(
-                        pop1, pop2, pop3
-                    )
-                }
-            }
-        ).subscribeOn(Schedulers.io())
+        return Observable
+            .mergeDelayError(
+                popmusicService.getPopmusic(19723756),
+                popmusicService.getPopmusic(3779629),
+                popmusicService.getPopmusic(2884035)
+            )//mergeDelayError即使有一个返回错误仍然可以返回数据
+            .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
+            .toList() // 把3个结果收集成List<PopmusicData>
+            .toObservable()
             .doOnNext {
                 println("返回数据成功：$it")
             }

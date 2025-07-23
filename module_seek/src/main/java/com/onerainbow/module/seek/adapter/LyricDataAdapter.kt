@@ -1,6 +1,7 @@
 package com.onerainbow.module.seek.adapter
 
 import android.graphics.Color
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.TextView
@@ -8,12 +9,13 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.onerainbow.lib.base.utils.ToastUtils
-import com.onerainbow.module.musicplayer.domain.Artist
 import com.onerainbow.module.seek.R
+import com.onerainbow.module.seek.data.LyricData
 import com.onerainbow.module.seek.data.SongLyric
+import com.onerainbow.module.seek.databinding.FragmentLyricBinding
 import com.onerainbow.module.seek.databinding.ItemLyricBinding
 import com.onerainbow.module.seek.interfaces.GetImgUrl
-import com.onerainbow.module.musicplayer.domain.Song
+import com.onerainbow.module.musicplayer.model.Song
 import com.onerainbow.module.musicplayer.service.MusicManager
 
 /**
@@ -78,7 +80,7 @@ class LyricDataAdapter(private val getImgUrl: GetImgUrl) : ListAdapter<SongLyric
                 flexSingers.addView(tv)
             }
             val convertedArtists = item.artists.map {
-                Artist(
+                com.onerainbow.module.musicplayer.model.Artist(
                     id = it.id,
                     name = it.name
                 )

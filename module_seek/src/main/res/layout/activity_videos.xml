@@ -17,6 +17,17 @@
         app:resize_mode="fill"
         app:use_controller="false"
         tools:layout_editor_absoluteX="16dp" />
+    <TextView
+        android:id="@+id/video_back"
+        android:text="返回"
+        android:textSize="16dp"
+        android:padding="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white"
+        android:layout_marginBottom="80dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/playerView"/>
     <ImageView
         android:id="@+id/mv_like_img"
         android:layout_width="40dp"
@@ -73,6 +84,17 @@
         android:textSize="12sp"
         app:layout_constraintTop_toBottomOf="@id/mv_share_img"
         app:layout_constraintRight_toRightOf="parent"/>
+    <TextView
+        android:id="@+id/video_name"
+        android:text="视频"
+        android:textSize="15dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginBottom="50dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/overlayControls"/>
 
     <LinearLayout
         android:id="@+id/overlayControls"

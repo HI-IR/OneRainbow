@@ -18,4 +18,5 @@ object RoutePath {
     const val PLAYLIST ="/seek/playlist"
     const val COMMENTS ="/comments"
     const val MVS ="/seek/videos"
+    const val SINGER ="/seek/singer"
 }

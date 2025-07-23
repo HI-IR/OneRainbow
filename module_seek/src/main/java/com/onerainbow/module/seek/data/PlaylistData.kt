@@ -5,7 +5,7 @@ import kotlinx.android.parcel.Parcelize
 import kotlinx.android.parcel.RawValue
 
 /**
- * description ： TODO:类的作用
+ * description ： 获取歌单列表
  * author : summer_palace2
  * email : 2992203079qq.com
  * date : 2025/7/17 19:44

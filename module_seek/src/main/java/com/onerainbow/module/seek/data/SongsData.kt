@@ -1,7 +1,7 @@
 package com.onerainbow.module.seek.data
 
 /**
- * description ： TODO:类的作用
+ * description ： 获取歌手对应单曲信息
  * author : summer_palace2
  * email : 2992203079qq.com
  * date : 2025/7/19 15:51
