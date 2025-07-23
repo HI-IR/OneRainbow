@@ -1,9 +1,12 @@
-package com.onerainbow.module.musicplayer.model
+package com.onerainbow.module.musicplayer.domain
 
 import android.net.Uri
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
 import com.google.gson.Gson
+import com.onerainbow.lib.database.ArtistLite
+import com.onerainbow.lib.database.Converter
+import com.onerainbow.lib.database.entity.RecentPlayedEntity
 
 
 /**
@@ -17,7 +20,7 @@ data class Song(
     val name: String,
     val artists: List<Artist>,
     val coverUrl: String
-){
+) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other !is Song) return false
@@ -28,7 +31,6 @@ data class Song(
         return id.hashCode()
     }
 }
-
 
 
 data class Artist(
@@ -48,4 +50,16 @@ fun Song.toMediaMetadata(): MediaMetadata {
 fun MediaItem.toSong(): Song {
     val json = this.localConfiguration?.tag as? String ?: ""
     return Gson().fromJson(json, Song::class.java)
+}
+
+//把Artist数据转化为数据库存储数据
+fun Artist.toArtistLite() = ArtistLite(name, id)
+
+//把数据库存储数据转化为Artist数据
+fun ArtistLite.toArtist() = Artist(name, id)
+
+//将数据库中存储的RecentPlayedEntity转化为Song数据
+fun RecentPlayedEntity.toSong(): Song {
+    val artistList = Converter().toArtistLists(artistsJson)
+    return Song(songId, songName, artistList.map { it.toArtist() }, coverUrl)
 }

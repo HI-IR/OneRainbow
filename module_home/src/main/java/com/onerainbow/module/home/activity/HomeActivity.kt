@@ -13,20 +13,18 @@ import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.onerainbow.lib.base.BaseActivity
+import com.onerainbow.lib.base.utils.ToastUtils
+import com.onerainbow.lib.base.utils.UsernameUtils
 import com.onerainbow.lib.route.RoutePath
 import com.onerainbow.module.home.R
 import com.onerainbow.module.home.adapter.HomeVpAdapter
 import com.onerainbow.module.home.databinding.ActivityHomeBinding
 import com.onerainbow.module.home.databinding.LayoutDrawerBinding
 import com.onerainbow.module.home.viewmodel.HomeViewModel
-import com.onerainbow.module.musicplayer.model.Artist
-import com.onerainbow.module.musicplayer.model.Song
-import com.onerainbow.module.musicplayer.service.MusicManager
 import com.onerainbow.module.musicplayer.ui.PlayerListDialog
 import com.onerainbow.module.mv.fragment.MvFragment
 import com.onerainbow.module.recommend.ui.RecommendFragment
 import com.onerainbow.module.top.view.TopFragment
-import com.onerainbow.module.user.UserFragment
 import com.therouter.TheRouter
 import com.therouter.router.Route
 
@@ -36,6 +34,7 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>() {
     private  val drawerBinding: LayoutDrawerBinding by lazy {
         binding.includeDrawer
     }
+
     private val fragments by lazy {
         listOf(
             RecommendFragment(),
@@ -44,6 +43,7 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>() {
             UserFragment()
         )
     }
+
     private val viewModel by lazy {
         ViewModelProvider(this)[HomeViewModel::class.java]
     }
@@ -80,11 +80,7 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>() {
         //去除底部导航栏的覆盖色
         binding.navHome.itemIconTintList = null
 
-        //初始化BottomNavigationView
-        initBottomNav()
 
-        //初始化VP2
-        initVp2()
     }
 
     private fun initVp2() {
@@ -182,6 +178,22 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>() {
                 playerList.setSongs(it)
             }
 
+            avatarData.observe(this@HomeActivity){
+                Glide.with(this@HomeActivity).load(it).apply(requestOptions).into(drawerBinding.imgAvatar)
+            }
+            errorAvatar.observe(this@HomeActivity){
+                ToastUtils.makeText(it)
+            }
+
+            usernameData.observe(this@HomeActivity){
+                drawerBinding.apply {
+                    tvUsername.visibility =View.VISIBLE
+                    tvUsername.text = it
+                    tvLogin.visibility = View.GONE
+                }
+                ToastUtils.makeText("欢迎回来~ ${it}")
+
+            }
         }
     }
     fun dpToPx(dp: Int): Int {
@@ -192,23 +204,18 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>() {
 
     //TODO 流出点击事件的接口，等待完善
     override fun initEvent() {
+        initView()
+        initClick()
+
+    }
+
+    private fun initClick() {
         binding.apply {
             btnOpenDrawer.setOnClickListener {
                 drawerlayoutHome.openDrawer(GravityCompat.START)
             }
             searchBarMain.setOnClickListener {
-               TheRouter.build(RoutePath.SEEK).navigation()
-            }
-
-            test.setOnClickListener {
-                //TODO 测试
-                MusicManager.addSongs(
-                    mutableListOf(
-                        Song(2722532807,"二十岁", listOf(Artist("宝石Gem",12084497)),"https://p2.music.126.net/v-h49Jow6qgEPCZkNXlY5A==/109951171462194133.jpg"),
-                        Song(2721721636,"洗牌",listOf(Artist("宝石Gem",12084497),Artist("张天枢",33371675)),"https://p2.music.126.net/uermWb8sH_HYEwVScAAW8Q==/109951171392740991.jpg"),
-                        Song(2724462272,"u sure u do?",listOf(Artist("张天枢",33371675)),"https://p2.music.126.net/whaVtSBYZlo-CqPRqU4Sig==/109951171439212278.jpg")
-                    )
-                )
+                TheRouter.build(RoutePath.SEEK).navigation()
             }
 
             btnPlay.setOnClickListener {
@@ -228,6 +235,15 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>() {
 
         //侧边栏的事件绑定
         drawerBinding.apply {
+            tvLogin.setOnClickListener {
+                //跳转到登录页
+                TheRouter.build(RoutePath.LOGIN).navigation()
+            }
+            tvUsername.setOnClickListener {
+                binding.vp2Home.currentItem = 3 //去到我的页
+                binding.drawerlayoutHome.close()
+            }
+
             itemCollect.setOnClickListener {
                 Toast.makeText(this@HomeActivity,"点击了我的收藏",Toast.LENGTH_SHORT).show()
             }
@@ -241,16 +257,30 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>() {
                 Toast.makeText(this@HomeActivity,"点击了我的关注",Toast.LENGTH_SHORT).show()
             }
             btnLogout.setOnClickListener {
-                Toast.makeText(this@HomeActivity,"点击了退出登录",Toast.LENGTH_SHORT).show()
-            }
-            tvUsername.setOnClickListener {
-                Toast.makeText(this@HomeActivity,"点击了登录",Toast.LENGTH_SHORT).show()
-            }
-            imgAvatar.setOnClickListener {
-                Toast.makeText(this@HomeActivity,"点击了头像",Toast.LENGTH_SHORT).show()
+                drawerBinding.apply {
+                    imgAvatar.setImageResource(R.drawable.avatar)
+                    tvUsername.visibility = View.GONE
+                    tvLogin.visibility = View.VISIBLE
+                }
+                UsernameUtils.clearUsername()
+                ToastUtils.makeText("退出登录成功")
+                binding.drawerlayoutHome.close()
             }
         }
+    }
 
+    private fun initView() {
+        //初始化BottomNavigationView
+        initBottomNav()
+
+        //初始化VP2
+        initVp2()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        //加载头像
+        viewModel.loadUserInfo()
     }
 
     override fun onDestroy() {

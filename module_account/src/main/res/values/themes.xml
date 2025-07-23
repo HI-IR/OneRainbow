@@ -6,5 +6,19 @@
     </style>
 
     <style name="Theme.OneRainbow" parent="Base.Theme.OneRainbow" />
+    <style name="Login.TextInputLayout" parent="ThemeOverlay.Material3.TextInputEditText">
+        <item name="boxCornerRadiusBottomEnd">15dp</item>
+        <item name="boxCornerRadiusBottomStart">15dp</item>
+        <item name="boxCornerRadiusTopEnd">15dp</item>
+        <item name="boxCornerRadiusTopStart">15dp</item>
+        <item name="boxStrokeWidth">0dp</item>
+        <item name="boxStrokeWidthFocused">1dp</item>
+        <item name="boxStrokeColor">#FE3A3B</item>
+        <item name="hintTextColor">#FE3A3B</item>
+        <item name="colorControlActivated">#FE3A3B</item>
+    </style>
 
+    <style name="Login.TextEdit" parent="">
+        <item name="colorPrimary">#FE3A3B</item>
+    </style>
 </resources>

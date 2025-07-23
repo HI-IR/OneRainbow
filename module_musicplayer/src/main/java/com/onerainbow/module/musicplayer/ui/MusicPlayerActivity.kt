@@ -22,7 +22,7 @@ import com.onerainbow.lib.base.utils.ToastUtils
 import com.onerainbow.lib.route.RoutePath
 import com.onerainbow.module.musicplayer.R
 import com.onerainbow.module.musicplayer.databinding.ActivityMusicPlayerBinding
-import com.onerainbow.module.musicplayer.model.Song
+import com.onerainbow.module.musicplayer.domain.Song
 import com.onerainbow.module.musicplayer.service.MusicManager
 import com.onerainbow.module.musicplayer.viewmodel.MusicPlayerViewModel
 import com.onerainbow.module.share.CustomShare

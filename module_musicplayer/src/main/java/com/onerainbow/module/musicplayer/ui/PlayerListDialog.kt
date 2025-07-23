@@ -10,7 +10,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.onerainbow.module.musicplayer.R
 import com.onerainbow.module.musicplayer.adapter.PlayerListAdapter
 import com.onerainbow.module.musicplayer.databinding.DialogPlayerlListBinding
-import com.onerainbow.module.musicplayer.model.Song
+import com.onerainbow.module.musicplayer.domain.Song
 import com.onerainbow.module.musicplayer.service.MusicManager
 
 /**

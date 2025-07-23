@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.onerainbow.module.musicplayer.databinding.ItemPlayerlistSongBinding
-import com.onerainbow.module.musicplayer.model.Song
+import com.onerainbow.module.musicplayer.domain.Song
 import com.onerainbow.module.musicplayer.service.MusicManager
 
 /**
@@ -33,7 +33,7 @@ class PlayerListAdapter(
     inner class ViewHolder(val binding: ItemPlayerlistSongBinding):RecyclerView.ViewHolder(binding.root){
         private var currentData: Song? = null
 
-        fun bind(data: Song,position: Int){
+        fun bind(data: Song, position: Int){
             currentData = data
             binding.apply {
                 playerlistItemName.text = data.name

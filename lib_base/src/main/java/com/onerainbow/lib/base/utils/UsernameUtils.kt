@@ -9,25 +9,25 @@ import com.onerainbow.lib.base.BaseApplication
  * email : qq2420226433@outlook.com
  * date : 2025/7/15 10:03
  */
-object CookieUtils {
+object UsernameUtils {
     //SharedPreferences的名字
-    private const val PREF_NAME = "cookie_prefs"
+    private const val PREF_NAME = "username_prefs"
 
-    //CookieE的KEY
-    private const val KEY_COOKIE = "cookie_value"
+    //保存username的KEY
+    private const val KEY_USERNAME = "username_value"
 
-    fun saveCookie(cookie: String) {
+    fun saveUsername(username: String) {
         val prefs = BaseApplication.context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
-        prefs.edit().putString(KEY_COOKIE, cookie).apply()
+        prefs.edit().putString(KEY_USERNAME, username).apply()
     }
 
-    fun getCookie(): String? {
+    fun getUsername(): String? {
         val prefs = BaseApplication.context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
-        return prefs.getString(KEY_COOKIE, null)
+        return prefs.getString(KEY_USERNAME, null)
     }
 
-    fun clearCookie() {
+    fun clearUsername() {
         val prefs = BaseApplication.context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
-        prefs.edit().remove(KEY_COOKIE).apply()
+        prefs.edit().remove(KEY_USERNAME).apply()
     }
 }

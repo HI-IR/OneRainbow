@@ -1,10 +1,11 @@
-package com.onerainbow.module.user
+package com.onerainbow.module.home.activity
 
+import androidx.lifecycle.ViewModelProvider
 import com.onerainbow.lib.base.BaseFragment
 import com.onerainbow.lib.route.RoutePath
-import com.onerainbow.module.user.databinding.FragmentUserBinding
+import com.onerainbow.module.home.databinding.FragmentUserBinding
+import com.onerainbow.module.home.viewmodel.HomeViewModel
 import com.therouter.TheRouter
-import com.therouter.router.Route
 
 /**
  * description ： 用户页的Fragment
@@ -14,11 +15,17 @@ import com.therouter.router.Route
  */
 class UserFragment : BaseFragment<FragmentUserBinding>() {
     override fun getViewBinding(): FragmentUserBinding = FragmentUserBinding.inflate(layoutInflater)
-
+    private val viewModel by lazy {
+        //使用Home页的ViewModel
+        ViewModelProvider(requireActivity())[HomeViewModel::class.java]
+    }
     override fun initEvent() {
-        binding.myselfButton.setOnClickListener{TheRouter.build(RoutePath.LOGIN).navigation()}
+
     }
 
     override fun observeData() {
+        viewModel.apply {
+
+        }
     }
 }

@@ -16,8 +16,8 @@ import androidx.media3.common.PlaybackException
 import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
 import com.onerainbow.module.musicplayer.R
-import com.onerainbow.module.musicplayer.model.Song
-import com.onerainbow.module.musicplayer.model.toMediaMetadata
+import com.onerainbow.module.musicplayer.domain.Song
+import com.onerainbow.module.musicplayer.domain.toMediaMetadata
 import com.onerainbow.module.musicplayer.model.SongModel
 import com.onerainbow.module.musicplayer.ui.MusicPlayerActivity
 import io.reactivex.rxjava3.disposables.CompositeDisposable

@@ -1,6 +1,5 @@
 package com.onerainbow.lib.net
 
-import com.onerainbow.lib.net.interceptor.CookieInterceptor
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
@@ -23,7 +22,6 @@ object RetrofitClient {
         .connectTimeout(10, TimeUnit.SECONDS)
         .readTimeout(10, TimeUnit.SECONDS)
         .writeTimeout(10, TimeUnit.SECONDS)
-        .addInterceptor(CookieInterceptor())
         .build()
 
     private val retrofit: Retrofit = Retrofit.Builder()

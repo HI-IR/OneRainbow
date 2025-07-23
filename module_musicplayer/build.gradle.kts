@@ -39,6 +39,14 @@ android {
 }
 
 dependencies {
+    //数据持久化
+    implementation ("androidx.room:room-runtime:2.6.1")
+    ksp("androidx.room:room-compiler:2.6.1")
+    implementation("androidx.room:room-ktx:2.6.1")
+
+    //数据库
+    implementation(project(":lib_database"))
+
     //媒体框架
     implementation ("androidx.media3:media3-exoplayer:1.7.1")
     implementation ("androidx.media3:media3-ui:1.7.1")

@@ -11,9 +11,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.onerainbow.lib.base.utils.ToastUtils
+import com.onerainbow.module.musicplayer.domain.Artist
 import com.onerainbow.module.seek.data.SongGetPlay
 import com.onerainbow.module.seek.databinding.ItemPlaylistSongBinding
-import com.onerainbow.module.musicplayer.model.Song
+import com.onerainbow.module.musicplayer.domain.Song
 import com.onerainbow.module.musicplayer.service.MusicManager
 
 /**
@@ -58,7 +59,7 @@ class SongListDetailAdapter :ListAdapter<SongGetPlay,SongListDetailAdapter.ViewH
                         binding.root.context.getColor(android.R.color.black) // 未选中：黑色
                 )
                 val convertedArtists = item.ar.map {
-                    com.onerainbow.module.musicplayer.model.Artist(
+                    Artist(
                         id = it.id,
                         name = it.name
                     )

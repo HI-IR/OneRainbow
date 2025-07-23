@@ -5,7 +5,12 @@ import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.os.IBinder
-import com.onerainbow.module.musicplayer.model.Song
+import com.onerainbow.module.musicplayer.domain.Song
+import com.onerainbow.module.musicplayer.helper.RecentPlayHelper
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
 
 /**
  * description ： 音乐管理类，用于往服务中添加音乐
@@ -16,6 +21,7 @@ import com.onerainbow.module.musicplayer.model.Song
 object MusicManager {
     private var musicBinder: NewMusicService.MusicBinder? = null
     private var isServiceConnected = false
+    private val coroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
     //多监听器
     private val listenerList = mutableListOf<PlaybackStateListener>()
@@ -96,6 +102,11 @@ object MusicManager {
     //播放列表相关
     //使用这个
     fun addToPlayerList(vararg song: Song):Boolean{
+
+        //添加到最近播放
+        coroutineScope.launch {
+            RecentPlayHelper.addPlaylistToRecent(song.toList())
+        }
         return if (isServiceConnected){
             musicBinder?.addToPlayerList(song.toList())
             true
@@ -104,6 +115,11 @@ object MusicManager {
 
     //使用这个
     fun addToPlayerList(songs: List<Song>):Boolean{
+        //添加到最近播放
+        coroutineScope.launch {
+            RecentPlayHelper.addPlaylistToRecent(songs)
+        }
+
         return if (isServiceConnected){
             musicBinder?.addToPlayerList(songs)
             true
@@ -129,7 +145,7 @@ object MusicManager {
      * 添加歌曲到播放列表
      * 废弃
      */
-    fun addSong(song:Song):Boolean{
+    fun addSong(song: Song):Boolean{
         return if (isServiceConnected){
             musicBinder?.addSong(song)
             true

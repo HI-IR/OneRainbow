@@ -6,7 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.onerainbow.lib.base.utils.StoreUtils
 import com.onerainbow.lib.base.utils.ToastUtils
-import com.onerainbow.module.musicplayer.model.Song
+import com.onerainbow.module.musicplayer.domain.Song
 import com.onerainbow.module.musicplayer.service.MusicManager
 import com.onerainbow.module.musicplayer.service.PlaybackStateListener
 

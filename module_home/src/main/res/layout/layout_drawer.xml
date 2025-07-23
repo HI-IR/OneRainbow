@@ -26,10 +26,21 @@
             android:scaleType="centerCrop"
             android:src="@drawable/avatar"
             app:shapeAppearanceOverlay="@style/circleImageStyle" />
+        <TextView
+            android:maxEms="10"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:visibility="gone"
+            android:layout_marginStart="5dp"
+            android:id="@+id/tv_username"
+            android:textSize="18sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="username"/>
 
         <TextView
             android:layout_marginStart="5dp"
-            android:id="@+id/tv_username"
+            android:id="@+id/tv_login"
             android:textSize="18sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

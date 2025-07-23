@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <ImageView
+        android:background="@drawable/background_user"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/guideline3"/>
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/img_user_avatar"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
+        android:layout_gravity="center"
+        android:scaleType="centerCrop"
+        android:src="@drawable/avatar"
+        app:shapeAppearanceOverlay="@style/circleImageStyle"
+        app:layout_constraintBottom_toTopOf="@id/guideline3"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="70dp"/>
+    <TextView
+        android:id="@+id/tv_user_login"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="立即登录"
+        android:textStyle="bold"
+        android:textColor="@color/text_third"
+        android:textSize="19sp"
+        app:layout_constraintTop_toBottomOf="@id/img_user_avatar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="25dp"/>
+    <TextView
+        android:visibility="gone"
+        android:id="@+id/tv_user_username"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="你好！ username"
+        android:textStyle="bold"
+        android:textColor="@color/text_third"
+        android:textSize="19sp"
+        app:layout_constraintTop_toBottomOf="@id/img_user_avatar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="25dp"/>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.3" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:paddingStart="20dp"
+        android:paddingTop="7dp"
+        android:paddingBottom="7dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/guideline3">
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/img_user_recentplayed"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/avatar"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:shapeAppearanceOverlay="@style/coverImageStyle" />
+
+        <ImageView
+            app:layout_constraintTop_toTopOf="@+id/img_user_recentplayed"
+            app:layout_constraintBottom_toBottomOf="@+id/img_user_recentplayed"
+            app:layout_constraintStart_toStartOf="@+id/img_user_recentplayed"
+            app:layout_constraintEnd_toEndOf="@+id/img_user_recentplayed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/play_recentplayed"/>
+
+        <TextView
+            android:layout_marginTop="5dp"
+            android:id="@+id/tv_user_recentplayed"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="最近播放"
+            android:textSize="16sp"
+            app:layout_constraintStart_toEndOf="@id/img_user_recentplayed"
+            android:textColor="@color/text_first"
+            android:layout_marginStart="10dp"
+            android:textStyle="bold"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0首"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:textColor="@color/text_second"
+            app:layout_constraintTop_toBottomOf="@+id/tv_user_recentplayed"
+            app:layout_constraintStart_toEndOf="@id/img_user_recentplayed"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

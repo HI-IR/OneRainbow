@@ -7,22 +7,8 @@
     "params": {}
   },
   {
-    "path": "/user/user",
-    "className": "com.onerainbow.module.user.UserFragment",
-    "action": "",
-    "description": "",
-    "params": {}
-  },
-  {
     "path": "/seek/videos",
     "className": "com.onerainbow.module.seek.VideosActivity",
-    "action": "",
-    "description": "",
-    "params": {}
-  },
-  {
-    "path": "/seek/video",
-    "className": "com.onerainbow.module.seek.VideoActivity",
     "action": "",
     "description": "",
     "params": {}
@@ -56,13 +42,6 @@
     "params": {}
   },
   {
-    "path": "/musicplayer/test",
-    "className": "com.onerainbow.module.musicplayer.ui.NewMusicPlayerActivity",
-    "action": "",
-    "description": "",
-    "params": {}
-  },
-  {
     "path": "/player/music",
     "className": "com.onerainbow.module.musicplayer.ui.MusicPlayerActivity",
     "action": "",
@@ -85,7 +64,7 @@
   },
   {
     "path": "/account/login",
-    "className": "com.onerainbow.module.account.LoginActivity",
+    "className": "com.onerainbow.module.account.view.LoginActivity",
     "action": "",
     "description": "",
     "params": {}
