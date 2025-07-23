@@ -1,16 +1,15 @@
 package com.onerainbow.module.seek
 
-import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.onerainbow.lib.base.BaseActivity
 import com.onerainbow.lib.base.utils.ToastUtils
 import com.onerainbow.lib.route.RoutePath
-import com.onerainbow.module.musicplayer.model.Song
+import com.onerainbow.module.musicplayer.domain.Artist
+import com.onerainbow.module.musicplayer.domain.Song
 import com.onerainbow.module.musicplayer.service.MusicManager
 import com.onerainbow.module.seek.adapter.SongListDetailAdapter
-import com.onerainbow.module.seek.adapter.SongerAdapter
 import com.onerainbow.module.seek.data.Playlists
 import com.onerainbow.module.seek.databinding.ActivityPlaylistBinding
 import com.onerainbow.module.seek.viewmodel.PlaylistViewModel
@@ -31,8 +30,8 @@ class PlaylistActivity : BaseActivity<ActivityPlaylistBinding>() {
     override fun observeData() {
         playlistViewModel.playListLiveData.observe(this) { result ->
             songListDetailAdapter.submitList(result.songs)
-            fun com.onerainbow.module.seek.data.Artist.toModelArtist(): com.onerainbow.module.musicplayer.model.Artist {
-                return com.onerainbow.module.musicplayer.model.Artist(
+            fun com.onerainbow.module.seek.data.Artist.toModelArtist(): Artist {
+                return Artist(
                     id = this.id,
                     name = this.name
                 )

@@ -12,7 +12,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.onerainbow.lib.base.utils.ToastUtils
-import com.onerainbow.module.musicplayer.model.Song
+import com.onerainbow.module.musicplayer.domain.Artist
+import com.onerainbow.module.musicplayer.domain.Song
 import com.onerainbow.module.musicplayer.service.MusicManager
 import com.onerainbow.module.seek.R
 import com.onerainbow.module.seek.data.SongData
@@ -68,7 +69,7 @@ class SongPageAdapter : ListAdapter<SongData, SongPageAdapter.PageViewHolder>(Di
                     notifyItemChanged(selectedPosition / 3) // 刷新当前选中的页
 
                     val convertedArtists = item.ar.map {
-                        com.onerainbow.module.musicplayer.model.Artist(
+                        Artist(
                             id = it.id,
                             name = it.name
                         )
