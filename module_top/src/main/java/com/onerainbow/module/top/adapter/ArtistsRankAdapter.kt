@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.onerainbow.lib.base.anim.scaleAnim
 import com.onerainbow.lib.route.RoutePath
 import com.onerainbow.module.top.R
 import com.onerainbow.module.top.bean.Artist
@@ -56,6 +57,7 @@ class ArtistsRankAdapter(private val context: Context) :
                     TheRouter.build(RoutePath.PLAYLIST).withLong("id", it.id).navigation()
                 }
             }
+            item.scaleAnim()
         }
 
         fun bind(data: Artist, index: Int) {

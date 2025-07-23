@@ -3,14 +3,13 @@ package com.onerainbow.module.recommend.adapter
 import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
-import com.onerainbow.lib.base.anim.scale
+import com.onerainbow.lib.base.anim.scaleAnim
 import com.onerainbow.lib.route.RoutePath
 import com.onerainbow.module.recommend.R
 import com.onerainbow.module.recommend.bean.Banner
@@ -23,54 +22,46 @@ import com.therouter.TheRouter
  * email : qq2420226433@outlook.com
  * date : 2025/7/14 13:22
  */
-class BannerAdapter(private val context: Context): ListAdapter<Banner,BannerAdapter.ViewHolder>(object :DiffUtil.ItemCallback<Banner>(){
-    override fun areItemsTheSame(oldItem: Banner, newItem: Banner): Boolean {
-        return oldItem.bannerId == newItem.bannerId
-    }
+class BannerAdapter(private val context: Context) :
+    ListAdapter<Banner, BannerAdapter.ViewHolder>(object : DiffUtil.ItemCallback<Banner>() {
+        override fun areItemsTheSame(oldItem: Banner, newItem: Banner): Boolean {
+            return oldItem.bannerId == newItem.bannerId
+        }
 
-    override fun areContentsTheSame(oldItem: Banner, newItem: Banner): Boolean {
-        return oldItem == newItem
-    }
-}){
+        override fun areContentsTheSame(oldItem: Banner, newItem: Banner): Boolean {
+            return oldItem == newItem
+        }
+    }) {
 
-    inner class ViewHolder(binding: FragmentBannerBinding): RecyclerView.ViewHolder(binding.root){
+    inner class ViewHolder(binding: FragmentBannerBinding) : RecyclerView.ViewHolder(binding.root) {
         private val imageBanner = binding.imgBanner
         private val itemBanner = binding.itemBanner
         private val textBanner = binding.tvBanner
         private var currentData: Banner? = null
+
         init {
             initClick()
         }
 
-        @SuppressLint("ClickableViewAccessibility")
         private fun initClick() {
-            itemBanner.setOnClickListener{ view ->
+            itemBanner.setOnClickListener { view ->
                 currentData?.url?.let {
-                    if (it.isNotBlank()){
+                    if (it.isNotBlank()) {
                         TheRouter.build(RoutePath.WEB)
                             .withString("url", it)
                             .navigation()
                     }
                 }
             }
-            itemBanner.setOnTouchListener { v, event ->
-                when(event.actionMasked){
-                    MotionEvent.ACTION_DOWN ->{
-                        v.animate().scaleX(1.05f).scaleY(1.05f).setDuration(100).start()
-                    }
-                    MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
-                        v.animate().scaleX(1f).scaleY(1f).setDuration(100).start()
-                    }
-                }
-                false
-            }
+            itemBanner.scaleAnim()
         }
 
-        fun bind(data: Banner){
+        fun bind(data: Banner) {
             currentData = data
             //加载网络图片
-            val requestOptions: RequestOptions = RequestOptions().placeholder(R.drawable.banner_example)
-                .fallback(R.drawable.banner_example)
+            val requestOptions: RequestOptions =
+                RequestOptions().placeholder(R.drawable.banner_example)
+                    .fallback(R.drawable.banner_example)
             Glide.with(context).load(data.pic).apply(requestOptions).into(imageBanner)
 
             textBanner.text = data.typeTitle
@@ -80,7 +71,7 @@ class BannerAdapter(private val context: Context): ListAdapter<Banner,BannerAdap
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
-            FragmentBannerBinding.inflate(LayoutInflater.from(parent.context),parent,false)
+            FragmentBannerBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         )
     }
 

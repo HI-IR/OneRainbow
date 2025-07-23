@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.onerainbow.lib.base.anim.scaleAnim
 import com.onerainbow.module.seek.data.Creator
 import com.onerainbow.module.seek.data.Playlists
 import com.onerainbow.lib.route.RoutePath
@@ -78,6 +79,7 @@ class CuratedPlaylistAdapter(val context: Context) : ListAdapter<Curated, Curate
                     .withParcelable("playlists",playlist)
                     .navigation()
             }
+            item.scaleAnim()
         }
 
 
