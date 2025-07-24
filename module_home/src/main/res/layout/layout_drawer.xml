@@ -166,6 +166,7 @@
         android:padding="15dp"
         app:layout_constraintEnd_toEndOf="parent">
         <android.widget.Button
+            android:visibility="gone"
             android:id="@+id/btn_logout"
             android:layout_width="0dp"
             android:layout_weight="1"

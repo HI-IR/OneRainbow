@@ -123,6 +123,18 @@ class HomeViewModel: ViewModel(){
                 _errorAvatar.postValue(e.message?:"头像加载失败")
             }
         }
-
     }
+
+    /**
+     * 登出
+     */
+    fun logout(){
+        //本地没有保存用户名，则没登陆，不能登出
+        val username =UsernameUtils.getUsername()
+        if (username.isNullOrBlank()) return
+        UsernameUtils.clearUsername()
+        //传递一个空字符串，代表已经登出
+        _usernameData.postValue("")
+    }
+
 }

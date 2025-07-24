@@ -33,7 +33,7 @@
                 MotionEvent.ACTION_MOVE ->{
                     val dx = ev.x - startX
                     val dy = ev.y - startY
-                    if (abs(dx) > abs(dy) * 0.3 && abs(dx) >= touchSlop){
+                    if (abs(dx) > abs(dy) * 0.5 && abs(dx) >= touchSlop){
                         //水平滑动
                         Log.d("conflict", "dx -> ${dx},dy -> ${dy}")
                         return false

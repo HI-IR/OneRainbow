@@ -1,4 +1,4 @@
-package com.onerainbow.module.musicplayer.model
+package com.onerainbow.module.musicplayer.domain
 
 /**
  * description ： 评论能用的数据类
@@ -8,7 +8,7 @@ package com.onerainbow.module.musicplayer.model
  */
 data class Comment(
     val id :Long,//评论的ID
-    val user:User,//用户
+    val user: User,//用户
     val content: String,//内容
     val timeStr: String,//评论时间
     val likeCount: Long

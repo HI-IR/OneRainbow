@@ -393,6 +393,13 @@ class NewMusicService : Service() {
 
         fun getSongPlaylist(): List<Song> = playlist.toList()  // 返回不可变列表
 
+        fun getCurrentSong():Song?{
+            if (currentIndex <0 || playlist.isEmpty()){
+                return null
+            }
+            return playlist[currentIndex]
+        }
+
         fun getCurrentIndex(): Int = currentIndex.coerceAtLeast(-1)
 
         fun isPlaying(): Boolean = player.isPlaying

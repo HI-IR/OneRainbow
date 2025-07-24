@@ -14,7 +14,6 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.onerainbow.lib.base.BaseActivity
 import com.onerainbow.lib.base.utils.ToastUtils
-import com.onerainbow.lib.base.utils.UsernameUtils
 import com.onerainbow.lib.route.RoutePath
 import com.onerainbow.module.home.R
 import com.onerainbow.module.home.adapter.HomeVpAdapter
@@ -31,7 +30,7 @@ import com.therouter.router.Route
 @Route(path = RoutePath.HOME)
 class HomeActivity : BaseActivity<ActivityHomeBinding>() {
     override fun getViewBinding(): ActivityHomeBinding = ActivityHomeBinding.inflate(layoutInflater)
-    private  val drawerBinding: LayoutDrawerBinding by lazy {
+    private val drawerBinding: LayoutDrawerBinding by lazy {
         binding.includeDrawer
     }
 
@@ -47,6 +46,7 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>() {
     private val viewModel by lazy {
         ViewModelProvider(this)[HomeViewModel::class.java]
     }
+
     //图片加载配置
     val requestOptions: RequestOptions =
         RequestOptions().placeholder(com.onerainbow.module.musicplayer.R.drawable.loading)
@@ -87,15 +87,15 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>() {
         binding.apply {
             vp2Home.let {
                 //配置适配器
-                it.adapter = HomeVpAdapter(this@HomeActivity,fragments)
+                it.adapter = HomeVpAdapter(this@HomeActivity, fragments)
 
                 it.isUserInputEnabled = false //拦截用户手势
 
                 //设置滑动的事件与BottomNav的联动
-                it.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback(){
+                it.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
                     override fun onPageSelected(position: Int) {
                         super.onPageSelected(position)
-                        when(position){
+                        when (position) {
                             0 -> navHome.selectedItemId = R.id.menu_recommend
                             1 -> navHome.selectedItemId = R.id.menu_top
                             2 -> navHome.selectedItemId = R.id.menu_mv
@@ -111,8 +111,8 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>() {
 
         //BottomNav联动Vp
         binding.navHome.apply {
-            setOnItemSelectedListener { item->
-                when(item.itemId){
+            setOnItemSelectedListener { item ->
+                when (item.itemId) {
                     R.id.menu_recommend -> binding.vp2Home.currentItem = 0
                     R.id.menu_top -> binding.vp2Home.currentItem = 1
                     R.id.menu_mv -> binding.vp2Home.currentItem = 2
@@ -127,7 +127,7 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>() {
     override fun observeData() {
         //注册ViewModel的监听
         viewModel.apply {
-            isPlaying.observe(this@HomeActivity){
+            isPlaying.observe(this@HomeActivity) {
                 //图标变化
                 if (it) {
                     binding.btnPlay.setImageResource(R.drawable.pause)//如果是播放状态下则显示暂停
@@ -136,21 +136,21 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>() {
                 }
 
                 //CD 旋转动画
-                if (it){
+                if (it) {
                     //如果在播放状态下
-                    if (!cdAnimator.isStarted){
+                    if (!cdAnimator.isStarted) {
                         cdAnimator.start()//没启动则启动
-                    }else{
+                    } else {
                         cdAnimator.resume()//启动过了则恢复
                     }
-                }else{
+                } else {
                     cdAnimator.pause()
                 }
             }
 
-            currentIndex.observe(this@HomeActivity){
+            currentIndex.observe(this@HomeActivity) {
                 if (viewModel.playlist.value == null) return@observe
-                if (it in viewModel.playlist.value!!.indices){
+                if (it in viewModel.playlist.value!!.indices) {
                     val currentSong = viewModel.playlist.value!![it]
                     Glide.with(this@HomeActivity).load(currentSong.coverUrl).apply(requestOptions)
                         .into(binding.imgCover)
@@ -164,8 +164,8 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>() {
             }
 
             //播放列表为空，则隐藏
-            playlist.observe(this@HomeActivity){
-                if (it.isNullOrEmpty()){
+            playlist.observe(this@HomeActivity) {
+                if (it.isNullOrEmpty()) {
                     binding.playBar.visibility = View.GONE
                     playerList.setSongs(emptyList())
                     binding.vp2Home.setPadding(0, 0, 0, 0)
@@ -178,24 +178,38 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>() {
                 playerList.setSongs(it)
             }
 
-            avatarData.observe(this@HomeActivity){
-                Glide.with(this@HomeActivity).load(it).apply(requestOptions).into(drawerBinding.imgAvatar)
+            avatarData.observe(this@HomeActivity) {
+                Glide.with(this@HomeActivity).load(it).apply(requestOptions)
+                    .into(drawerBinding.imgAvatar)
             }
-            errorAvatar.observe(this@HomeActivity){
+            errorAvatar.observe(this@HomeActivity) {
                 ToastUtils.makeText(it)
             }
 
-            usernameData.observe(this@HomeActivity){
-                drawerBinding.apply {
-                    tvUsername.visibility =View.VISIBLE
-                    tvUsername.text = it
-                    tvLogin.visibility = View.GONE
+            usernameData.observe(this@HomeActivity) {
+                if (it.isNotBlank()) {
+                    drawerBinding.apply {
+                        btnLogout.visibility = View.VISIBLE
+                        tvUsername.visibility = View.VISIBLE
+                        tvUsername.text = it
+                        tvLogin.visibility = View.GONE
+                    }
+                    //ToastUtils.makeText("欢迎回来~ ${it}")
+                } else {
+                    //返回“”，表示登出
+                    drawerBinding.apply {
+                        imgAvatar.setImageResource(R.drawable.avatar)
+                        tvUsername.visibility = View.GONE
+                        tvLogin.visibility = View.VISIBLE
+                        btnLogout.visibility = View.GONE
+                    }
                 }
-                ToastUtils.makeText("欢迎回来~ ${it}")
 
             }
+
         }
     }
+
     fun dpToPx(dp: Int): Int {
         return TypedValue.applyDimension(
             TypedValue.COMPLEX_UNIT_DIP, dp.toFloat(), Resources.getSystem().displayMetrics
@@ -245,24 +259,19 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>() {
             }
 
             itemCollect.setOnClickListener {
-                Toast.makeText(this@HomeActivity,"点击了我的收藏",Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@HomeActivity, "点击了我的收藏", Toast.LENGTH_SHORT).show()
             }
             itemRecentplayed.setOnClickListener {
-                Toast.makeText(this@HomeActivity,"点击了最近播放",Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@HomeActivity, "点击了最近播放", Toast.LENGTH_SHORT).show()
             }
             itemCloud.setOnClickListener {
-                Toast.makeText(this@HomeActivity,"点击了我的云盘",Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@HomeActivity, "因为接口原因暂未实现", Toast.LENGTH_SHORT).show()
             }
             itemSubscription.setOnClickListener {
-                Toast.makeText(this@HomeActivity,"点击了我的关注",Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@HomeActivity, "因为接口原因暂未实现", Toast.LENGTH_SHORT).show()
             }
             btnLogout.setOnClickListener {
-                drawerBinding.apply {
-                    imgAvatar.setImageResource(R.drawable.avatar)
-                    tvUsername.visibility = View.GONE
-                    tvLogin.visibility = View.VISIBLE
-                }
-                UsernameUtils.clearUsername()
+                viewModel.logout()
                 ToastUtils.makeText("退出登录成功")
                 binding.drawerlayoutHome.close()
             }

@@ -1,7 +1,7 @@
 package com.onerainbow.module.musicplayer.bean
 
-import com.onerainbow.module.musicplayer.model.Comment
-import com.onerainbow.module.musicplayer.model.User
+import com.onerainbow.module.musicplayer.domain.Comment
+import com.onerainbow.module.musicplayer.domain.User
 
 /**
  * description ： 评论的网络访问
@@ -241,7 +241,7 @@ data class AvatarDetail(
     val userType: Long
 )
 //扩展函数将Response转化为Comment数据类
-fun CommentInfo.toComment(): Comment{
+fun CommentInfo.toComment(): Comment {
     val iconUrl = user.vipRights?.associator?.iconUrl ?: "default_icon_url"
     return Comment(commentId,
         User(user.avatarUrl,iconUrl,user.nickname),

@@ -244,9 +244,12 @@ object MusicManager {
     fun isPlaying(): Boolean =
         musicBinder?.isPlaying() == true
 
-    /** 获取当前播放索引 */
+    //获取当前播放索引
     fun getCurrentIndex(): Int =
         musicBinder?.getCurrentIndex() ?: -1
+
+    //获取当前播放歌曲
+    fun getCurrentSong():Song? = musicBinder?.getCurrentSong()
 
     //获取当前播放时间
     fun getCurrentPosition():Long = musicBinder?.getCurrentPosition()?:1L

@@ -164,10 +164,21 @@ class MusicPlayerActivity : BaseActivity<ActivityMusicPlayerBinding>() {
 
                 val song = viewModel.playlist.value?.get(it)
                 //更新显示信息
+                viewModel.checkCollect()
                 binding.musicplayerTitle.text = song?.name
                 binding.musicplayerCreator.text = song?.artists?.joinToString(" / ") { it.name }
                 playerList.setSelectedPosition(it)
                 lastIndex = it
+            }
+
+            //是否收藏hang
+            isCollect.observe(this@MusicPlayerActivity){
+                binding.musicplayerCollected.setImageResource(if(it) R.drawable.collected else R.drawable.uncollected)
+            }
+
+            //有关收藏的错误信息
+            errorCollect.observe(this@MusicPlayerActivity){
+                ToastUtils.makeText(it)
             }
 
         }
@@ -304,9 +315,11 @@ class MusicPlayerActivity : BaseActivity<ActivityMusicPlayerBinding>() {
                         .withLong("musicId", id)
                         .navigation()
                 }
-
             }
 
+            musicplayerCollected.setOnClickListener {
+                viewModel.toggleCollection()
+            }
         }
     }
 
