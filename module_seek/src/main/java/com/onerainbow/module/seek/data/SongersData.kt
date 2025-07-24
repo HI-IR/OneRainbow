@@ -1,5 +1,7 @@
 package com.onerainbow.module.seek.data
 
+import com.google.gson.annotations.SerializedName
+
 /**
  * description ： 获取歌手信息
  * author : summer_palace2
@@ -7,13 +9,13 @@ package com.onerainbow.module.seek.data
  * date : 2025/7/19 14:37
  */
 data class SongersData(
-    val artist: ArtistX,
-    val code: Int,
+    @SerializedName("artist") val artist: ArtistX,
+    @SerializedName("code") val code: Int,
 )
 
 data class ArtistX(
-    val briefDesc: String,
-    val id: Int,
-    val img1v1Url: String,
-    val name: String,
+    @SerializedName("briefDesc") val briefDesc: String,
+    @SerializedName("id") val id: Int,
+    @SerializedName("img1v1Url") val img1v1Url: String,
+    @SerializedName("name") val name: String,
 )

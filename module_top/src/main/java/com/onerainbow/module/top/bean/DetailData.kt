@@ -1,5 +1,6 @@
 package com.onerainbow.module.top.bean
 
+import com.google.gson.annotations.SerializedName
 import com.onerainbow.module.seek.data.Creator
 import com.onerainbow.module.seek.data.Playlists
 
@@ -10,23 +11,23 @@ import com.onerainbow.module.seek.data.Playlists
  * date : 2025/7/20 14:22
  */
 data class DetailData(
-    val code: Long,
-    val list: List<DetailRank>,
+    @SerializedName("code") val code: Long,
+    @SerializedName("list") val list: List<DetailRank>,
 )
 
 data class DetailRank(
-    val coverImgUrl: String,//封面图片
-    val description: String,//描述
-    val id: Long,//歌单ID
-    val name: String,//榜单名
-    val tracks: List<DetailTrack?>,//歌曲
-    val updateFrequency: String,//更新速率
-    val trackCount: Long
+    @SerializedName("coverImgUrl") val coverImgUrl: String,//封面图片
+    @SerializedName("description") val description: String,//描述
+    @SerializedName("id") val id: Long,//歌单ID
+    @SerializedName("name") val name: String,//榜单名
+    @SerializedName("tracks") val tracks: List<DetailTrack?>,//歌曲
+    @SerializedName("updateFrequency") val updateFrequency: String,//更新速率
+    @SerializedName("trackCount") val trackCount: Long
 )
 
 data class DetailTrack(
-    val first: String,//歌名
-    val second: String //创作者
+    @SerializedName("first") val first: String,//歌名
+    @SerializedName("second") val second: String //创作者
 )
 
 

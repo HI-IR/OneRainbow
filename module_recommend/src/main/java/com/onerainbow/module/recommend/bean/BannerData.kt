@@ -1,5 +1,7 @@
 package com.onerainbow.module.recommend.bean
 
+import com.google.gson.annotations.SerializedName
+
 /**
  * description ： 轮播图的数据类
  * author : HI-IR
@@ -7,31 +9,13 @@ package com.onerainbow.module.recommend.bean
  * date : 2025/7/14 11:48
  */
 data class BannerData(
-    val banners: List<Banner>,
-    val code: Long,
-    val trp: Trp
+    @SerializedName("banners") val banners: List<Banner>,
+    @SerializedName("code") val code: Long,
 )
 
 data class Banner(
-    val alg: String,
-    val bannerBizType: String,
-    val bannerId: String,
-    val encodeId: String,
-    val exclusive: Boolean,
-    val monitorClickList: List<Any>,
-    val monitorImpressList: List<Any>,
-    val pic: String,
-    val requestId: String,
-    val s_ctrp: String,
-    val scm: String,
-    val showAdTag: Boolean,
-    val targetId: Long,
-    val targetType: Long,
-    val titleColor: String,
-    val typeTitle: String,
-    val url: String?
-)
-
-data class Trp(
-    val rules: List<String>
+    @SerializedName("bannerId") val bannerId: String,
+    @SerializedName("pic") val pic: String,
+    @SerializedName("typeTitle") val typeTitle: String,
+    @SerializedName("url") val url: String?
 )

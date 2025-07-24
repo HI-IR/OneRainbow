@@ -1,5 +1,7 @@
 package com.onerainbow.module.seek.data
 
+import com.google.gson.annotations.SerializedName
+
 /**
  * description ： 获取图片Url
  * author : summer_palace2
@@ -7,10 +9,10 @@ package com.onerainbow.module.seek.data
  * date : 2025/7/20 21:02
  */
 data class MvUrl(
-    val code: Int,
-    val `data`: Data
+    @SerializedName("code") val code: Int,
+    @SerializedName("data") val `data`: Data
 )
 
 data class Data(
-    val url: String
+    @SerializedName("url") val url: String
 )

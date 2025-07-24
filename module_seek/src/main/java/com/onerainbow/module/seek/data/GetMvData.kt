@@ -1,5 +1,7 @@
 package com.onerainbow.module.seek.data
 
+import com.google.gson.annotations.SerializedName
+
 /**
  * description ： 获取评论相关信息
  * author : summer_palace2
@@ -7,19 +9,19 @@ package com.onerainbow.module.seek.data
  * date : 2025/7/18 16:41
  */
 data class GetMvData(
-    val code: Int,
-    val result: ResultGetMv
+    @SerializedName("code") val code: Int,
+    @SerializedName("result") val result: ResultGetMv
 )
 
 data class ResultGetMv(
-    val mvs: List<Mv>
+    @SerializedName("mvs") val mvs: List<Mv>
 )
 
 data class Mv(
-    val artists: List<ArtistX>,
-    val cover: String,
-    val duration: Long,
-    val id: Int,
-    val name: String,
-    val playCount:Int
+    @SerializedName("artists") val artists: List<ArtistX>,
+    @SerializedName("cover") val cover: String,
+    @SerializedName("duration") val duration: Long,
+    @SerializedName("id") val id: Int,
+    @SerializedName("name") val name: String,
+    @SerializedName("playCount") val playCount:Int
 )

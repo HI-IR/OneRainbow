@@ -1,6 +1,6 @@
 package com.onerainbow.module.seek.data
 
-import android.provider.MediaStore.Audio.Playlists
+import com.google.gson.annotations.SerializedName
 
 /**
  * description ： 获取排行榜信息
@@ -9,14 +9,14 @@ import android.provider.MediaStore.Audio.Playlists
  * date : 2025/7/15 21:03
  */
 data class PopmusicData(
-    val code: Int,
-    val playlist: Playlist,
+    @SerializedName("code") val code: Int,
+    @SerializedName("playlist") val playlist: Playlist,
 )
 data class Playlist(
-    val tracks: List<Tracks>,
-    val name:String
+    @SerializedName("tracks") val tracks: List<Tracks>,
+    @SerializedName("name") val name:String
 )
 data class Tracks(
-    val name:String,
-    val id:String
+    @SerializedName("name") val name:String,
+    @SerializedName("id") val id:String
 )

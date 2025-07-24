@@ -16,14 +16,13 @@ import com.onerainbow.module.account.viewmodel.AccountViewModel
 import com.onerainbow.module.module.account.databinding.ActivityLoginBinding
 import com.therouter.TheRouter
 import com.therouter.router.Route
-import kotlin.math.max
 
 @Route(path = RoutePath.LOGIN)
 class LoginActivity : BaseActivity<ActivityLoginBinding>() {
     //是否在动画状态下
     private var isAnimator = false
     private var currentAnimatorSet: AnimatorSet? = null
-
+    private var currentPage = PageType.LOGIN
     private val viewModel by lazy {
         ViewModelProvider(this)[AccountViewModel::class.java]
     }
@@ -63,7 +62,8 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>() {
                     etLoginUsername.error = "密码不能为空"
                     return@setOnClickListener
                 }
-                if (btnLoginLogin.text.toString() == "登录"){
+                //根据当前页面类型进行操作
+                if (currentPage == PageType.LOGIN){
                     viewModel.doLogin(username, password)
                 }else{
                     viewModel.doRegistered(username, password)
@@ -72,13 +72,13 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>() {
 
             tvLoginLogin.setOnClickListener {
                 //显示注册界面
-                pageChange("registered")
+                pageChange(PageType.REGISTERED)
 
             }
 
             tvLoginRegistered.setOnClickListener {
                 //显示登录界面
-                pageChange("login")
+                pageChange(PageType.LOGIN)
 
             }
         }
@@ -89,10 +89,8 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>() {
     /**
      * 登录页、注册页变化的动画
      * @param type 改变的类型
-     * 可选："login" 前往login界面
-     *      "registered" 前往registered界面
      */
-    fun pageChange(type: String) {
+    fun pageChange(type: PageType) {
         if (isAnimator) return
         isAnimator = true
         cancelCurrentAnimation()
@@ -106,10 +104,10 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>() {
         var anim1: Animator? = null
         var anim2: Animator? = null
         when (type) {
-            "login" -> {
+            PageType.LOGIN -> {
                 tvRegister.visibility = View.GONE
                 tvLogin.visibility = View.VISIBLE
-
+                currentPage = PageType.LOGIN
                 //隐藏第一个按钮
                 anim1 = ValueAnimator.ofFloat(0f, 1f).apply {
                     duration = 350L
@@ -141,9 +139,11 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>() {
                 }
             }
 
-            "registered" -> {
+            PageType.REGISTERED -> {
                 tvRegister.visibility = View.VISIBLE
                 tvLogin.visibility = View.GONE
+                currentPage = PageType.REGISTERED//更新当前页面的状态
+
                 //隐藏第一个按钮
                 anim1 = ValueAnimator.ofFloat(0f, 1f).apply {
                     duration = 350L
@@ -214,4 +214,6 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>() {
         super.onDestroy()
         cancelCurrentAnimation()
     }
+
+    enum class PageType{LOGIN,REGISTERED}
 }

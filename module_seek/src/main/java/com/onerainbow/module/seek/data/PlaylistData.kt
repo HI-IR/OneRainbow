@@ -1,8 +1,8 @@
 package com.onerainbow.module.seek.data
 
 import android.os.Parcelable
+import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.Parcelize
-import kotlinx.android.parcel.RawValue
 
 /**
  * description ： 获取歌单列表
@@ -12,26 +12,28 @@ import kotlinx.android.parcel.RawValue
  */
 
 data class PlaylistData(
-    val code: Int,
-    val result: ResultPlaylist
+    @SerializedName("code") val code: Int,
+    @SerializedName("result") val result: ResultPlaylist
 )
 
 data class ResultPlaylist(
     val playlists: List<Playlists>,
 )
+
 @Parcelize
 data class Playlists(
-    val coverImgUrl: String,
-    val creator: Creator,
-    val description: String,
-    val id: Long,
-    val name: String,
-    val userId: Long,
-    val trackCount :Int
-): Parcelable
+    @SerializedName("coverImgUrl") val coverImgUrl: String,
+    @SerializedName("creator") val creator: Creator,
+    @SerializedName("description") val description: String,
+    @SerializedName("id") val id: Long,
+    @SerializedName("name") val name: String,
+    @SerializedName("userId") val userId: Long,
+    @SerializedName("trackCount") val trackCount: Int
+) : Parcelable
+
 @Parcelize
 data class Creator(
-    val avatarUrl: String,
-    val nickname: String,
-    val userId: Long,
-):Parcelable
+    @SerializedName("avatarUrl") val avatarUrl: String,
+    @SerializedName("nickname") val nickname: String,
+    @SerializedName("userId") val userId: Long,
+) : Parcelable

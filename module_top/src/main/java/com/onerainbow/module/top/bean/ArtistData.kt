@@ -1,5 +1,7 @@
 package com.onerainbow.module.top.bean
 
+import com.google.gson.annotations.SerializedName
+
 /**
  * description ： 歌手榜的数据类
  * author : HI-IR
@@ -7,20 +9,19 @@ package com.onerainbow.module.top.bean
  * date : 2025/7/20 19:12
  */
 data class ArtistData(
-    val code: Long,
-    val list: ResponseData
+    @SerializedName("code") val code: Long,
+    @SerializedName("list") val list: ResponseData
 )
 
 data class ResponseData(
-    val artists: List<Artist>,
+    @SerializedName("artists") val artists: List<Artist>,
 )
 
 data class Artist(
-
-    val id: Long,//歌手Id
-    val lastRank: Long,//上一次的排名
-    val musicSize: Long,//音乐数
-    val name: String,//名字
-    val picUrl: String,//图片URL
-    val score: Long,//分数
+    @SerializedName("id") val id: Long,//歌手Id
+    @SerializedName("lastRank") val lastRank: Long,//上一次的排名
+    @SerializedName("musicSize") val musicSize: Long,//音乐数
+    @SerializedName("name") val name: String,//名字
+    @SerializedName("picUrl") val picUrl: String,//图片URL
+    @SerializedName("score") val score: Long,//分数
 )
