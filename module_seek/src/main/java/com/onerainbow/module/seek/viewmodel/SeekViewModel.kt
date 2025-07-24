@@ -1,6 +1,7 @@
 package com.onerainbow.module.seek.viewmodel
 
 import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.onerainbow.module.seek.data.Playlist
@@ -17,7 +18,9 @@ import io.reactivex.rxjava3.disposables.Disposable
  */
 class SeekViewModel :ViewModel() {
     private val seekRepository:SeekRepository=SeekRepository()
-    val PopmusicDataLiveData = MutableLiveData<List<PopmusicData>>()
+
+    val _PopmusicDataLiveData = MutableLiveData<List<PopmusicData>>()
+    val PopmusicDataLiveData :LiveData<List<PopmusicData>> = _PopmusicDataLiveData
 
     fun getPopmusic() {
         seekRepository.getPopmusic().subscribe(object : Observer<List<PopmusicData>> {
@@ -28,7 +31,7 @@ class SeekViewModel :ViewModel() {
             override fun onNext(t: List<PopmusicData>) {
                 // 更新LiveData
                 Log.d("PopmusicData",t.toString())
-                PopmusicDataLiveData.postValue(t)
+                _PopmusicDataLiveData.postValue(t)
             }
 
             override fun onError(e: Throwable) {

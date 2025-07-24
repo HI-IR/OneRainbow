@@ -1,6 +1,7 @@
 package com.onerainbow.module.mv
 
 import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import io.reactivex.rxjava3.core.Observable
@@ -16,8 +17,12 @@ import io.reactivex.rxjava3.disposables.Disposable
  */
 class MvViewModel : ViewModel() {
     private val mvRepository: MvRepository = MvRepository()
-    val mvinlandLiveData = MutableLiveData<MvsData>()
-    val mvforeignLiveData = MutableLiveData<MvsData>()
+
+    val _mvinlandLiveData = MutableLiveData<MvsData>()
+    val mvinlandLiveData : LiveData<MvsData> = _mvinlandLiveData
+
+    val _mvforeignLiveData = MutableLiveData<MvsData>()
+    val mvforeignLiveData : LiveData<MvsData> = _mvforeignLiveData
 
     fun getmvinland() {
         mvRepository.getMvsData("内地").subscribe(object : Observer<MvsData> {
@@ -35,7 +40,7 @@ class MvViewModel : ViewModel() {
 
             override fun onNext(t: MvsData) {
                 Log.d("MvinlandData", t.toString())
-                mvinlandLiveData.postValue(t)
+                _mvinlandLiveData.postValue(t)
             }
 
         })
@@ -57,7 +62,7 @@ class MvViewModel : ViewModel() {
 
             override fun onNext(t: MvsData) {
                 Log.d("MvForeignData", t.toString())
-                mvforeignLiveData.postValue(t)
+                _mvforeignLiveData.postValue(t)
             }
 
         })

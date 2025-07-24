@@ -14,13 +14,6 @@
     "params": {}
   },
   {
-    "path": "/seek/video",
-    "className": "com.onerainbow.module.seek.VideoActivity",
-    "action": "",
-    "description": "",
-    "params": {}
-  },
-  {
     "path": "/seek/singer",
     "className": "com.onerainbow.module.seek.SingerActivity",
     "action": "",

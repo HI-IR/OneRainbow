@@ -1,20 +1,21 @@
 package com.onerainbow.module.seek.viewmodel
 
 import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import com.onerainbow.module.musicplayer.model.CommentModel
 import com.onerainbow.module.seek.data.Comment
 import com.onerainbow.module.seek.data.CommentNumber
-import com.onerainbow.module.seek.data.MvComments
 import com.onerainbow.module.seek.data.MvUrl
 import com.onerainbow.module.seek.repository.VideoRepository
 import io.reactivex.rxjava3.core.Observer
 import io.reactivex.rxjava3.disposables.Disposable
 import kotlinx.coroutines.flow.Flow
+import kotlin.math.E
 
 /**
  * description ： TODO:类的作用
@@ -24,12 +25,16 @@ import kotlinx.coroutines.flow.Flow
  */
 class VideoViewModel : ViewModel() {
     val videoRepository: VideoRepository = VideoRepository()
-    val getUrlLiveData = MutableLiveData<MvUrl>()
-    val getCommentNumberLiveData = MutableLiveData<CommentNumber>()
-    private val model by lazy {
-        com.onerainbow.module.seek.viewmodel.CommentModel
-    }
 
+    val _getUrlLiveData = MutableLiveData<MvUrl>()
+    val Url: LiveData<MvUrl> = _getUrlLiveData
+
+    val _getCommentNumberLiveData = MutableLiveData<CommentNumber>()
+    val getCommentNumberLiveData: LiveData<CommentNumber> = _getCommentNumberLiveData
+
+    private val model by lazy {
+        CommentModel
+    }
 
 
     fun getUrl(id: Long) {
@@ -48,7 +53,7 @@ class VideoViewModel : ViewModel() {
 
             override fun onNext(t: MvUrl) {
                 Log.d("MvUrl", t.toString())
-                getUrlLiveData.postValue(t)
+                _getUrlLiveData.postValue(t)
             }
 
         })
@@ -71,12 +76,13 @@ class VideoViewModel : ViewModel() {
 
             override fun onNext(t: CommentNumber) {
                 Log.d("CommentNumber", t.toString())
-                getCommentNumberLiveData.postValue(t)
+                _getCommentNumberLiveData.postValue(t)
             }
 
         })
     }
-    fun getComments(musicId:Long): Flow<PagingData<Comment>> {
+
+    fun getComments(musicId: Long): Flow<PagingData<Comment>> {
         return model.getComment(musicId).cachedIn(viewModelScope)
     }
 }

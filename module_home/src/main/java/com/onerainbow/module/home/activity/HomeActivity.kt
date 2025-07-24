@@ -23,6 +23,7 @@ import com.onerainbow.module.home.viewmodel.HomeViewModel
 import com.onerainbow.module.musicplayer.ui.PlayerListDialog
 import com.onerainbow.module.mv.fragment.MvFragment
 import com.onerainbow.module.recommend.ui.RecommendFragment
+import com.onerainbow.module.seek.PlaylistActivity
 import com.onerainbow.module.top.view.TopFragment
 import com.therouter.TheRouter
 import com.therouter.router.Route
@@ -260,10 +261,10 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>() {
             }
 
             itemCollect.setOnClickListener {
-                Toast.makeText(this@HomeActivity, "点击了我的收藏", Toast.LENGTH_SHORT).show()
+                PlaylistActivity.startPlaylistActivity("collect")
             }
             itemRecentplayed.setOnClickListener {
-                Toast.makeText(this@HomeActivity, "点击了最近播放", Toast.LENGTH_SHORT).show()
+                PlaylistActivity.startPlaylistActivity("recent")
             }
             itemCloud.setOnClickListener {
                 Toast.makeText(this@HomeActivity, "因为接口原因暂未实现", Toast.LENGTH_SHORT).show()

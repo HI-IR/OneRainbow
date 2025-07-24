@@ -1,12 +1,14 @@
 package com.onerainbow.module.musicplayer.domain
 
 import android.net.Uri
+import android.os.Parcelable
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
 import com.google.gson.Gson
 import com.onerainbow.lib.database.ArtistLite
 import com.onerainbow.lib.database.Converter
 import com.onerainbow.lib.database.entity.RecentPlayedEntity
+import kotlinx.android.parcel.Parcelize
 
 
 /**
@@ -15,12 +17,13 @@ import com.onerainbow.lib.database.entity.RecentPlayedEntity
  * email : qq2420226433@outlook.com
  * date : 2025/7/16 14:25
  */
+@Parcelize
 data class Song(
     val id: Long,
     val name: String,
     val artists: List<Artist>,
     val coverUrl: String
-) {
+): Parcelable {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other !is Song) return false
@@ -32,11 +35,11 @@ data class Song(
     }
 }
 
-
+@Parcelize
 data class Artist(
     val name: String, //歌曲名
     val id: Long //作者id
-)
+): Parcelable
 
 
 fun Song.toMediaMetadata(): MediaMetadata {

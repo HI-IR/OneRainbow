@@ -2,6 +2,7 @@ package com.onerainbow.module.seek.viewmodel
 
 import android.util.Log
 import android.view.View
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.onerainbow.module.seek.data.GetMvData
@@ -22,12 +23,24 @@ import io.reactivex.rxjava3.disposables.Disposable
  */
 class FinishSeekViewModel : ViewModel() {
     private val fInishSeekRepository: FInishSeekRepository = FInishSeekRepository()
-    val singleDataLiveData = MutableLiveData<SingleData>()
-    val playlistDataLiveData = MutableLiveData<PlaylistData>()
-    val userDataLiveData = MutableLiveData<UserData>()
-    val LyricDataLiveData = MutableLiveData<LyricData>()
-    val getMvDataLiveData = MutableLiveData<GetMvData>()
-    val getUrlDataLiveData =MutableLiveData<UrlData>()
+
+    val _singleDataLiveData = MutableLiveData<SingleData>()
+    val singleDataLiveData: LiveData<SingleData> = _singleDataLiveData
+
+    val _playlistDataLiveData = MutableLiveData<PlaylistData>()
+    val playlistDataLiveData : LiveData<PlaylistData> = _playlistDataLiveData
+
+    val _userDataLiveData = MutableLiveData<UserData>()
+    val userDataLiveData : LiveData<UserData> = _userDataLiveData
+
+    val _LyricDataLiveData = MutableLiveData<LyricData>()
+    val LyricDataLiveData : LiveData<LyricData> = _LyricDataLiveData
+
+    val _getMvDataLiveData = MutableLiveData<GetMvData>()
+    val getMvDataLiveData : LiveData<GetMvData> = _getMvDataLiveData
+
+    val _getUrlDataLiveData = MutableLiveData<UrlData>()
+    val getUrlDataLiveData : LiveData<UrlData> = _getUrlDataLiveData
 
 
     fun getSingle(keyWord: String) {
@@ -46,7 +59,7 @@ class FinishSeekViewModel : ViewModel() {
 
             override fun onNext(t: SingleData) {
                 Log.d("SingleData", t.toString())
-                singleDataLiveData.postValue(t)
+                _singleDataLiveData.postValue(t)
             }
 
         })
@@ -71,7 +84,7 @@ class FinishSeekViewModel : ViewModel() {
 
             override fun onNext(t: PlaylistData) {
                 Log.d("PlaylistData", t.toString())
-                playlistDataLiveData.postValue(t)
+                _playlistDataLiveData.postValue(t)
             }
 
         })
@@ -93,7 +106,7 @@ class FinishSeekViewModel : ViewModel() {
 
             override fun onNext(t: UserData) {
                 Log.d("UserData", t.toString())
-                userDataLiveData.postValue(t)
+                _userDataLiveData.postValue(t)
 
             }
 
@@ -116,7 +129,7 @@ class FinishSeekViewModel : ViewModel() {
 
             override fun onNext(t: LyricData) {
                 Log.d("LyricData", t.toString())
-                LyricDataLiveData.postValue(t)
+                _LyricDataLiveData.postValue(t)
 
             }
 
@@ -139,12 +152,13 @@ class FinishSeekViewModel : ViewModel() {
 
             override fun onNext(t: GetMvData) {
                 Log.d("GetMvlData", t.toString())
-                getMvDataLiveData.postValue(t)
+                _getMvDataLiveData.postValue(t)
 
             }
 
         })
     }
+
     fun getUrlData(id: Long, onResult: (UrlData) -> Unit, onError: (Throwable) -> Unit) {
         // 每次新请求前取消旧请求
         fInishSeekRepository.cancelUrlRequest()
@@ -152,7 +166,7 @@ class FinishSeekViewModel : ViewModel() {
         fInishSeekRepository.getUrlData(
             id,
             { result ->
-                getUrlDataLiveData.postValue(result)
+                _getUrlDataLiveData.postValue(result)
                 onResult(result)
             },
             { error ->
@@ -165,11 +179,10 @@ class FinishSeekViewModel : ViewModel() {
         super.onCleared()
         fInishSeekRepository.cancelUrlRequest() // 清理 URL 请求
     }
+
     fun cancelUrlRequest() {
         fInishSeekRepository.cancelUrlRequest()
     }
-
-
 
 
 }

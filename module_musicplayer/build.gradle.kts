@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     id("com.google.devtools.ksp")
+    id ("kotlin-parcelize")
 
 }
 
@@ -61,6 +62,7 @@ dependencies {
     implementation(project(":lib_route"))
     implementation(project(":lib_net"))
     implementation(project(":lib_base"))
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
