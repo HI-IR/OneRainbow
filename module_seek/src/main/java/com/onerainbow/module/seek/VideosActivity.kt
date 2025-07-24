@@ -19,11 +19,16 @@ import androidx.media3.exoplayer.ExoPlayer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.onerainbow.lib.base.BaseActivity
+import com.onerainbow.lib.base.utils.CopyUtils
 import com.onerainbow.lib.route.RoutePath
 import com.onerainbow.module.seek.adapter.CommentAdapter_mv
+import com.onerainbow.module.seek.data.MvUrl
+import com.onerainbow.module.seek.data.UrlData
 import com.onerainbow.module.seek.databinding.ActivityVideosBinding
 import com.onerainbow.module.seek.databinding.LayoutBottomSheetCommentsBinding
 import com.onerainbow.module.seek.viewmodel.VideoViewModel
+import com.onerainbow.module.share.CustomShare
+import com.onerainbow.module.share.utils.ShareUtils
 import com.therouter.router.Autowired
 import com.therouter.router.Route
 import kotlinx.coroutines.Job
@@ -146,7 +151,7 @@ class VideosActivity : BaseActivity<ActivityVideosBinding>() {
     }
 
     override fun observeData() {
-        videoViewModel.getUrlLiveData.observe(this) { result ->
+        videoViewModel._getUrlLiveData.observe(this) { result ->
             initPlayer(result.data.url)
             initUI()
             videoViewModel.getCommentNumber(id!!)
@@ -161,6 +166,9 @@ class VideosActivity : BaseActivity<ActivityVideosBinding>() {
     }
 
     override fun initEvent() {
+        binding.mvShareImg.setOnClickListener{
+            initShare()
+        }
         binding.videoName.text = name
         binding.videoBack.setOnClickListener {
             finish()
@@ -182,6 +190,38 @@ class VideosActivity : BaseActivity<ActivityVideosBinding>() {
                 // 如果隐藏，点击就显示然后3秒后隐藏
                 showControlsTemporarily()
             }
+        }
+
+    }
+    private fun initShare(){
+        val url = videoViewModel.Url.value
+        if (url != null) {
+            val customShare = CustomShare(this)
+            customShare.setOnQqClickListener{
+                ShareUtils.shareToQQ(
+                    this,
+                    "${name}这个视频很有意思，分享给你好啦\n${url.data.url}"
+                )
+                customShare.dismiss()
+            }
+            customShare.setOnWxClickListener {
+                ShareUtils.shareToWX(
+                    this,
+                    "${name}这个视频很有意思，分享给你好啦\n${url.data.url}"
+                )
+            }
+            customShare.setOnBrowseClickListener{
+                ShareUtils.shareToBrowser(this,url.data.url)
+                customShare.dismiss()
+            }
+            customShare.setOnLinkClickListener{
+                CopyUtils.copy(
+                    this,
+                    "${name}这个视频很有意思，分享给你好啦\n${url.data.url}"
+                )
+                customShare.dismiss()
+            }
+            customShare.show()
         }
 
     }

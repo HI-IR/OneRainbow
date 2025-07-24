@@ -10,6 +10,7 @@ import com.onerainbow.lib.route.RoutePath
 import com.onerainbow.module.home.R
 import com.onerainbow.module.home.databinding.FragmentUserBinding
 import com.onerainbow.module.home.viewmodel.HomeViewModel
+import com.onerainbow.module.seek.PlaylistActivity
 import com.therouter.TheRouter
 
 /**
@@ -43,6 +44,7 @@ class UserFragment : BaseFragment<FragmentUserBinding>() {
                     ToastUtils.makeText("你还没登录哟")
                     return@setOnClickListener
                 }
+                PlaylistActivity.startPlaylistActivity("collect")
             }
 
             itemUserRecentplayed.setOnClickListener {
@@ -51,6 +53,7 @@ class UserFragment : BaseFragment<FragmentUserBinding>() {
                     ToastUtils.makeText("你还没登录哟")
                     return@setOnClickListener
                 }
+                PlaylistActivity.startPlaylistActivity("recent")
             }
         }
     }

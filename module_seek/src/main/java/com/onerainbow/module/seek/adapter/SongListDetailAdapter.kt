@@ -27,7 +27,7 @@ class SongListDetailAdapter :ListAdapter<SongGetPlay,SongListDetailAdapter.ViewH
     private var selectedPosition = RecyclerView.NO_POSITION
     inner class ViewHolder(var binding :ItemPlaylistSongBinding) :RecyclerView.ViewHolder(binding.root){
         fun bind(item :SongGetPlay ,isSelected :Boolean){
-            binding.tvSingleAblum.text ="-${item.al.name}"
+            binding.tvSingleAblum.text = item.al.name?.takeIf { it.isNotBlank() }?.let { "-$it" } ?: ""
             binding.tvSingleTitle.text =item.name
             Glide.with(binding.songImg.context)
                 .load(item.al.picUrl)
