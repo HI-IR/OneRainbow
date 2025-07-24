@@ -7,6 +7,7 @@ import com.bumptech.glide.request.RequestOptions
 import com.onerainbow.lib.base.BaseFragment
 import com.onerainbow.lib.base.utils.ToastUtils
 import com.onerainbow.lib.route.RoutePath
+import com.onerainbow.module.home.R
 import com.onerainbow.module.home.databinding.FragmentUserBinding
 import com.onerainbow.module.home.viewmodel.HomeViewModel
 import com.therouter.TheRouter
@@ -35,9 +36,7 @@ class UserFragment : BaseFragment<FragmentUserBinding>() {
                 TheRouter.build(RoutePath.LOGIN).navigation()
             }
 
-            btnUserLogout.setOnClickListener {
-                viewModel.logout()
-            }
+
             itemUserCollect.setOnClickListener {
                 //未登录的状态
                 if (viewModel.usernameData.value.isNullOrBlank()) {
@@ -70,7 +69,6 @@ class UserFragment : BaseFragment<FragmentUserBinding>() {
                         tvUserUsername.text = "你好！ ${it}"
                         tvUserUsername.visibility = View.VISIBLE
                         tvUserLogin.visibility = View.GONE
-                        btnUserLogout.visibility = View.VISIBLE
                     }
                 } else {
                     //返回“”，表示登出
@@ -78,22 +76,40 @@ class UserFragment : BaseFragment<FragmentUserBinding>() {
                     binding.apply {
                         tvUserUsername.visibility = View.GONE
                         tvUserLogin.visibility = View.VISIBLE
-                        btnUserLogout.visibility = View.GONE
                     }
                 }
             }
 
             //头像的加载
             avatarData.observe(viewLifecycleOwner) {
-                Glide.with(requireActivity()).load(it).apply(requestOptions)
-                    .into(binding.imgUserAvatar)
+                it?.let {
+                    Glide.with(requireActivity()).load(it).apply(requestOptions)
+                        .into(binding.imgUserAvatar)
+                }?:binding.imgUserAvatar.setImageResource(R.drawable.avatar)
             }
 
             errorAvatar.observe(viewLifecycleOwner) {
                 ToastUtils.makeText(it)
             }
 
+            //最近播放的一首歌封面
+            lastPlay.observe(this@UserFragment) {
+                it?.let {
+                    Glide.with(requireActivity()).load(it.coverUrl).apply(requestOptions)
+                    .into(binding.imgUserRecentplayed)
+                }?:binding.imgUserRecentplayed.setImageResource(com.onerainbow.module.musicplayer.R.drawable.loading)
+            }
 
+                collect.observe(this@UserFragment) {
+                    it?.let {
+                        Glide.with(requireActivity()).load(it.coverUrl).apply(requestOptions)
+                            .into(binding.imgUserCollect)
+                    }?:binding.imgUserCollect.setImageResource(com.onerainbow.module.musicplayer.R.drawable.loading)
+                }
+
+            collectCount.observe(this@UserFragment) {
+                binding.tvUserLikeCount.text = "${it} 首"
+            }
         }
     }
 }

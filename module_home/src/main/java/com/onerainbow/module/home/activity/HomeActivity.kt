@@ -179,8 +179,10 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>() {
             }
 
             avatarData.observe(this@HomeActivity) {
-                Glide.with(this@HomeActivity).load(it).apply(requestOptions)
-                    .into(drawerBinding.imgAvatar)
+                it?.let {
+                    Glide.with(this@HomeActivity).load(it).apply(requestOptions)
+                        .into(drawerBinding.imgAvatar)
+                }?:drawerBinding.imgAvatar.setImageResource(R.drawable.avatar)
             }
             errorAvatar.observe(this@HomeActivity) {
                 ToastUtils.makeText(it)
@@ -204,8 +206,8 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>() {
                         btnLogout.visibility = View.GONE
                     }
                 }
-
             }
+
 
         }
     }
@@ -216,7 +218,6 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>() {
         ).toInt()
     }
 
-    //TODO 流出点击事件的接口，等待完善
     override fun initEvent() {
         initView()
         initClick()
@@ -290,6 +291,7 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>() {
         super.onResume()
         //加载头像
         viewModel.loadUserInfo()
+        viewModel.loadAccount()
     }
 
     override fun onDestroy() {

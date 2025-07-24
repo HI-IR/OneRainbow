@@ -82,6 +82,6 @@ object RecentPlayHelper {
     suspend fun getHistory(): List<Song>? {
         val username = UsernameUtils.getUsername()
         if (username.isNullOrBlank()) return null
-        return dao.getRecentPlayList(username).map { it.toSong() }
+        return dao.getRecentPlayList(username)?.map { it.toSong() }
     }
 }

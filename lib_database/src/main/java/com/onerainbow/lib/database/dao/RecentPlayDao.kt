@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import com.onerainbow.lib.database.entity.CollectEntity
 import com.onerainbow.lib.database.entity.RecentPlayedEntity
 
 /**
@@ -32,7 +33,7 @@ interface RecentPlayDao {
      * 获取最近听歌数据
      */
     @Query("select * from recent_played_table where username = :username order by currentTime desc ")
-    suspend fun getRecentPlayList(username: String): List<RecentPlayedEntity>
+    suspend fun getRecentPlayList(username: String): List<RecentPlayedEntity>?
 
 
     /**
@@ -40,5 +41,11 @@ interface RecentPlayDao {
      */
     @Query("delete from recent_played_table where username = :username")
     suspend fun clearHistory(username: String)
+
+    /**
+     * 最近播放的一首歌
+     */
+    @Query("select * from recent_played_table where username = :username order by currentTime DESC limit 1")
+    suspend fun getLastPlay(username: String): RecentPlayedEntity?
 
 }

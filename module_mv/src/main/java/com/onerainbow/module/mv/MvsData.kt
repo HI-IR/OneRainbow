@@ -1,7 +1,7 @@
 package com.onerainbow.module.mv
 
 /**
- * description ： TODO:类的作用
+ * description ： MV的数据类
  * author : summer_palace2
  * email : 2992203079qq.com
  * date : 2025/7/21 14:20

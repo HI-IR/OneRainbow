@@ -154,6 +154,7 @@
             android:layout_marginTop="5dp"
             android:id="@+id/tv_user_recentplayed"
             app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="最近播放"
@@ -162,32 +163,8 @@
             android:textColor="@color/text_first"
             android:layout_marginStart="10dp"
             android:textStyle="bold"/>
-        <TextView
-            android:id="@+id/tv_user_recentplayed_count"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="0首"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="8dp"
-            android:textColor="@color/text_second"
-            app:layout_constraintBottom_toBottomOf="@id/img_user_recentplayed"
-            app:layout_constraintStart_toEndOf="@id/img_user_recentplayed"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <android.widget.Button
-        android:visibility="gone"
-        android:id="@+id/btn_user_logout"
-        android:layout_marginStart="15dp"
-        android:layout_marginEnd="15dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:background="@drawable/background_item"
-        android:text="退出登录"
-        android:textSize="15sp"
-        android:textStyle="bold"
-        android:textColor="#FA3E4F"
-        android:layout_marginBottom="5dp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

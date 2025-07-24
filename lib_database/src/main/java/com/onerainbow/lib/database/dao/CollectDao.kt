@@ -33,4 +33,29 @@ interface CollectDao {
      */
     @Query("select count(*) from collect_table where username = :username and songId = :songId")
     suspend fun hasCollectSongBySongId(username: String, songId: Long):Long
+
+
+    /**
+     * 查询所有我喜欢的
+     */
+    @Query("select * from collect_table where username =:username order by currentTime DESC")
+    suspend fun getCollectionList(username: String):List<CollectEntity>?
+
+    /**
+     * 清除所有我喜欢的
+     */
+    @Query("delete from collect_table where username = :username")
+    suspend fun clearCollection(username: String)
+
+    /**
+     * 最近收藏的一首歌
+     */
+    @Query("select * from collect_table where username = :username order by currentTime DESC limit 1")
+    suspend fun getLastCollection(username: String):CollectEntity?
+
+    /**
+     * 查询收藏的数量
+     */
+    @Query("select count(*) from collect_table where username = :username")
+    suspend fun getCollectCount(username: String):Long
 }
