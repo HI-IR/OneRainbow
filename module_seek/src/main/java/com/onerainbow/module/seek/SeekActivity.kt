@@ -3,6 +3,7 @@ package com.onerainbow.module.seek
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.widget.TextView
 import androidx.activity.viewModels
@@ -46,9 +47,7 @@ class SeekActivity : BaseActivity<ActivitySeekBinding>() {
         binding.tvDelete.setOnClickListener {
             clearAllTags()
         }
-        binding.tvSeek.setOnClickListener {
-
-            Log.d("keywordone", binding.etSeek.text.toString())
+        binding.tvSeek.clickWithScale {
             val keyword = binding.etSeek.text?.toString()?.trim()?.ifBlank { "冬眠" }
             TheRouter.build(RoutePath.FINISHSEEK)
                 .withString("keyword", keyword)
@@ -56,6 +55,7 @@ class SeekActivity : BaseActivity<ActivitySeekBinding>() {
             addTag(keyword!!)
             setHistory()
         }
+
         LiveDataBus.keywordResult.observe(this) { result ->
             binding.etSeek.setText(result)
         }
@@ -139,9 +139,24 @@ class SeekActivity : BaseActivity<ActivitySeekBinding>() {
             val params = FlexboxLayout.LayoutParams(WRAP_CONTENT, WRAP_CONTENT).apply {
                 setMargins(16, 16, 16, 16)
             }
+            textView.alpha = 0f
             binding.flexboxLayout.addView(textView, params)
+            textView.animate()
+                .alpha(1f)
+                .setDuration(300)
+                .start()
+
         }
     }
+    fun View.clickWithScale(block: () -> Unit) {
+        this.setOnClickListener {
+            this.animate().scaleX(0.9f).scaleY(0.9f).setDuration(100).withEndAction {
+                this.animate().scaleX(1f).scaleY(1f).setDuration(100).start()
+                block()
+            }.start()
+        }
+    }
+
 
 
 }

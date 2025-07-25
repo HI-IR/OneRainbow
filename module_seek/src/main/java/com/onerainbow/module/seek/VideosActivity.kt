@@ -141,8 +141,7 @@ class VideosActivity : BaseActivity<ActivityVideosBinding>() {
             )
         } else {
             @Suppress("DEPRECATION")
-            window.decorView.systemUiVisibility =
-                window.decorView.systemUiVisibility and View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR.inv()
+            window.decorView.systemUiVisibility = window.decorView.systemUiVisibility and View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR.inv()
         }
         // 注册全局布局监听
         binding.root.viewTreeObserver.addOnGlobalLayoutListener(layoutListener)
@@ -165,6 +164,20 @@ class VideosActivity : BaseActivity<ActivityVideosBinding>() {
     }
 
     override fun initEvent() {
+        val views = listOf(binding.mvCommentImg, binding.mvShareImg)
+        views.forEach { view ->
+            view.scaleX = 0.8f
+            view.scaleY = 0.8f
+            view.alpha = 0f
+            view.animate()
+                .scaleX(1f)
+                .scaleY(1f)
+                .alpha(1f)
+                .setDuration(400)
+                .setStartDelay(300)
+                .start()
+        }
+
         binding.mvShareImg.setOnClickListener{
             initShare()
         }
@@ -260,6 +273,13 @@ class VideosActivity : BaseActivity<ActivityVideosBinding>() {
 
 
     private fun initPlayer(url: String) {
+        binding.playerView.alpha = 0f
+        binding.playerView.animate()
+            .alpha(1f)
+            .setDuration(500)
+            .start()
+
+
         val mediaItem = MediaItem.fromUri(url)
         player.setMediaItem(mediaItem)
         player.prepare()
@@ -377,6 +397,7 @@ class VideosActivity : BaseActivity<ActivityVideosBinding>() {
             height = ViewGroup.LayoutParams.MATCH_PARENT
             width = ViewGroup.LayoutParams.MATCH_PARENT
         }
+
         binding.videoBack.visibility = View.GONE
         binding.videoName.visibility = View.GONE
         binding.mvCommentImg.visibility = View.GONE

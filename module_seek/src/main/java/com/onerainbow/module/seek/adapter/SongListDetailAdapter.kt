@@ -48,7 +48,7 @@ class SongListDetailAdapter :
                         coverUrl = it.al.picUrl
                     )
                     val previousPosition = selectedPosition
-                    selectedPosition = position
+                    selectedPosition = bindingAdapterPosition
                     notifyItemChanged(previousPosition)
                     notifyItemChanged(selectedPosition)
 
@@ -72,33 +72,31 @@ class SongListDetailAdapter :
                 .load(item.al.picUrl)
                 .transform(RoundedCorners(20))
                 .into(binding.songImg)
-            item.ar.forEach {
-                val maxSingerLen = 12
-                val allNames = item.ar.joinToString(separator = "、") { it.name }
-                val displaySingers = if (allNames.length > maxSingerLen) {
-                    allNames.substring(0, maxSingerLen) + "…"
-                } else {
-                    allNames
-                }
-
-                val flexSingers = binding.flexSingers
-                flexSingers.removeAllViews()
-                val tv = TextView(binding.root.context).apply {
-                    text = displaySingers
-                    textSize = 12f
-                    setTextColor(Color.GRAY)
-                    setPadding(8, 4, 8, 4)
-                }
-                flexSingers.addView(tv)
-                // 根据是否选中设置歌名字体颜色
-                binding.tvSingleTitle.setTextColor(
-                    if (isSelected)
-                        binding.root.context.getColor(android.R.color.holo_red_dark) // 选中：红色
-                    else
-                        binding.root.context.getColor(android.R.color.black) // 未选中：黑色
-                )
-
+            val maxSingerLen = 12
+            val allNames = item.ar.joinToString(separator = "、") { it.name }
+            val displaySingers = if (allNames.length > maxSingerLen) {
+                allNames.substring(0, maxSingerLen) + "…"
+            } else {
+                allNames
             }
+
+             // 清空并设置新的歌手 TextView
+            binding.flexSingers.removeAllViews()
+            val tv = TextView(binding.root.context).apply {
+                text = displaySingers
+                textSize = 12f
+                setTextColor(Color.GRAY)
+                setPadding(8, 4, 8, 4)
+            }
+            binding.flexSingers.addView(tv)
+            // 设置歌曲标题颜色（只需设置一次）
+            binding.tvSingleTitle.setTextColor(
+                if (isSelected)
+                    binding.root.context.getColor(android.R.color.holo_red_dark)
+                else
+                    binding.root.context.getColor(android.R.color.black)
+            )
+
 
         }
     }
@@ -112,6 +110,7 @@ class SongListDetailAdapter :
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val isSelected = (position == selectedPosition)
         holder.bind(getItem(position), isSelected)
+
     }
 
     companion object {

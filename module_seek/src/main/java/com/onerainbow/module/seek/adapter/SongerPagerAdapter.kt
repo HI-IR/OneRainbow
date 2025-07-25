@@ -130,6 +130,7 @@ class SongPageAdapter : ListAdapter<SongData, SongPageAdapter.PageViewHolder>(Di
 
     override fun onBindViewHolder(holder: PageViewHolder, position: Int) {
         holder.bindItemData(position)
+
     }
 
 

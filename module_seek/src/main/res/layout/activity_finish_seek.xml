@@ -23,10 +23,10 @@
         <!-- 右侧图标 -->
         <ImageView
             android:id="@+id/btn_openDrawer"
-            android:layout_width="40sp"
-            android:layout_height="40sp"
+            android:layout_width="20sp"
+            android:layout_height="20sp"
             android:gravity="center"
-            android:src="@drawable/comeback"
+            android:src="@drawable/comback"
             android:textColor="@color/black"
             android:textSize="25sp" />
 

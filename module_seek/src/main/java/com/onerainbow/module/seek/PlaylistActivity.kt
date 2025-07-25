@@ -39,6 +39,21 @@ class PlaylistActivity : BaseActivity<ActivityPlaylistBinding>() {
     private val playlistViewModel: PlaylistViewModel by lazy { PlaylistViewModel() }
     private lateinit var songListDetailAdapter: SongListDetailAdapter
     private var song : List<Song>? =null
+    override fun onStart() {
+        super.onStart()
+        binding.playlistImg.apply {
+            scaleX = 0.8f
+            scaleY = 0.8f
+            alpha = 0f
+            animate()
+                .scaleX(1f)
+                .scaleY(1f)
+                .alpha(1f)
+                .setDuration(500)
+                .start()
+        }
+    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -107,6 +122,9 @@ class PlaylistActivity : BaseActivity<ActivityPlaylistBinding>() {
 
     override fun initEvent() {
         binding.playAllContainer.setOnClickListener {
+            it.animate().scaleX(0.95f).scaleY(0.95f).setDuration(100).withEndAction {
+                it.animate().scaleX(1f).scaleY(1f).setDuration(100).start()
+            }.start()
             if (song != null) {
                 if (MusicManager.addToPlayerList(song!!)) {
                     ToastUtils.makeText("添加成功")

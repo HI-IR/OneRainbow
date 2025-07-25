@@ -22,25 +22,26 @@ class SeekViewModel :ViewModel() {
     val _PopmusicDataLiveData = MutableLiveData<List<PopmusicData>>()
     val PopmusicDataLiveData :LiveData<List<PopmusicData>> = _PopmusicDataLiveData
 
+    private val tempList = mutableListOf<PopmusicData>()
+
     fun getPopmusic() {
-        seekRepository.getPopmusic().subscribe(object : Observer<List<PopmusicData>> {
+        seekRepository.getPopmusic().subscribe(object : Observer<PopmusicData> {
             override fun onSubscribe(d: Disposable) {
-                // 可以在这里处理订阅
+                // 可选处理订阅
             }
 
-            override fun onNext(t: List<PopmusicData>) {
-                // 更新LiveData
-                Log.d("PopmusicData",t.toString())
-                _PopmusicDataLiveData.postValue(t)
+            override fun onNext(data: PopmusicData) {
+                Log.d("PopmusicData", "返回数据: $data")
+                tempList.add(data)
+                _PopmusicDataLiveData.postValue(tempList.toList()) // 每次追加后更新 UI
             }
 
             override fun onError(e: Throwable) {
-                // 处理错误
-                e.printStackTrace()
+                Log.e("PopmusicData", "请求出错: ${e.message}")
             }
 
             override fun onComplete() {
-                // 完成处理
+                Log.d("PopmusicData", "所有请求完成")
             }
         })
     }

@@ -70,4 +70,6 @@ class FinishSeekActivity : BaseActivity<ActivityFinishSeekBinding>() {
         tabLayoutMediator?.detach()
 
     }
+
+
 }

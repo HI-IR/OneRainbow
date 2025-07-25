@@ -51,26 +51,25 @@ class GetMvDataAdapter : ListAdapter<Mv, GetMvDataAdapter.ViewHolder>(DiffCallba
                 .load(item.cover)
                 .transform(RoundedCorners(20))
                 .into(binding.mvImg)
-            item.artists.forEach { artists ->
-                // 对歌手名拼接超过12字符截断
-                val maxSingerLen = 8
-                val allNames = item.artists.joinToString(separator = "、") { it.name }
-                val displaySingers = if (allNames.length > maxSingerLen) {
-                    allNames.substring(0, maxSingerLen) + "…"
-                } else {
-                    allNames
-                }
-
-                val flexSingers = binding.flexMvAuthor
-                flexSingers.removeAllViews()
-                val tv = TextView(binding.root.context).apply {
-                    text = displaySingers
-                    textSize = 12f
-                    setTextColor(Color.GRAY)
-                    setPadding(8, 4, 8, 4)
-                }
-                flexSingers.addView(tv)
+            // 拼接歌手名
+            val allNames = item.artists.joinToString(separator = "、") { it.name }
+            val maxSingerLen = 8
+            val displaySingers = if (allNames.length > maxSingerLen) {
+                allNames.substring(0, maxSingerLen) + "…"
+            } else {
+                allNames
             }
+
+            // 清空后添加一个 TextView
+            val flexSingers = binding.flexMvAuthor
+            flexSingers.removeAllViews()
+            val tv = TextView(binding.root.context).apply {
+                text = displaySingers
+                textSize = 12f
+                setTextColor(Color.GRAY)
+                setPadding(8, 4, 8, 4)
+            }
+            flexSingers.addView(tv)
 
         }
 

@@ -38,7 +38,7 @@ class LyricDataAdapter(private val getImgUrl: GetImgUrl) :
             binding.root.setOnClickListener {
                 //设置高亮
                 val previousPosition = selectedPosition
-                selectedPosition = adapterPosition
+                selectedPosition = bindingAdapterPosition
                 notifyItemChanged(previousPosition)
                 notifyItemChanged(selectedPosition)
                 currentData?.let { it1 ->
@@ -86,39 +86,42 @@ class LyricDataAdapter(private val getImgUrl: GetImgUrl) :
 
             val flexSongLyric = binding.flexSingers
             flexSongLyric.removeAllViews()
-            item.artists.forEach { artist ->
-                val maxTitleLen = 10
-                val displayTitle = if (item.name.length > maxTitleLen) {
-                    item.name.substring(0, maxTitleLen) + "…"
-                } else {
-                    item.name
-                }
-                binding.tvSingleTitle.text = displayTitle
-                val maxAblum = 6
-                val displayAblum = if (item.album.name.length > maxAblum) {
-                    item.album.name.substring(0, maxAblum) + "…"
-                } else {
-                    item.album.name
-                }
-                binding.tvSingleAblum.text = "-${displayAblum}"
-                val maxSingerLen = 12
-                val allNames = item.artists.joinToString(separator = "、") { it.name }
-                val displaySingers = if (allNames.length > maxSingerLen) {
-                    allNames.substring(0, maxSingerLen) + "…"
-                } else {
-                    allNames
-                }
-
-                val flexSingers = binding.flexSingers
-                flexSingers.removeAllViews()
-                val tv = TextView(binding.root.context).apply {
-                    text = displaySingers
-                    textSize = 12f
-                    setTextColor(Color.GRAY)
-                    setPadding(8, 4, 8, 4)
-                }
-                flexSingers.addView(tv)
+            val maxTitleLen = 10
+            val displayTitle = if (item.name.length > maxTitleLen) {
+                item.name.substring(0, maxTitleLen) + "…"
+            } else {
+                item.name
             }
+            binding.tvSingleTitle.text = displayTitle
+
+            val maxAlbumLen = 6
+            val displayAlbum = if (item.album.name.length > maxAlbumLen) {
+                item.album.name.substring(0, maxAlbumLen) + "…"
+            } else {
+                item.album.name
+            }
+            binding.tvSingleAblum.text = "-$displayAlbum"
+
+            // 处理歌手名
+            val maxSingerLen = 12
+            val allNames = item.artists.joinToString(separator = "、") { it.name }
+            val displaySingers = if (allNames.length > maxSingerLen) {
+                allNames.substring(0, maxSingerLen) + "…"
+            } else {
+                allNames
+            }
+
+            // 清除旧视图，添加新的 TextView
+            val flexSingers = binding.flexSingers
+            flexSingers.removeAllViews()
+            val tv = TextView(binding.root.context).apply {
+                text = displaySingers
+                textSize = 12f
+                setTextColor(Color.GRAY)
+                setPadding(8, 4, 8, 4)
+            }
+            flexSingers.addView(tv)
+
 
             // 根据是否选中设置歌名字体颜色
             binding.tvSingleTitle.setTextColor(

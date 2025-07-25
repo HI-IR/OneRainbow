@@ -17,17 +17,15 @@ import io.reactivex.rxjava3.schedulers.Schedulers
 class SeekRepository {
     private val popmusicService = RetrofitClient.create(PopmusicService::class.java)
 
-    fun getPopmusic(): Observable<List<PopmusicData>> {
-        return Observable
-            .mergeDelayError(
-                popmusicService.getPopmusic(19723756),
-                popmusicService.getPopmusic(3779629),
-                popmusicService.getPopmusic(2884035)
-            )//mergeDelayError即使有一个返回错误仍然可以返回数据
-            .subscribeOn(Schedulers.io())
+    fun getPopmusic(): Observable<PopmusicData> {
+        val ids = listOf(19723756, 3779629, 2884035)
+
+        return Observable.fromIterable(ids)
+            .concatMap { id ->
+                popmusicService.getPopmusic(id)
+                    .subscribeOn(Schedulers.io())
+            }
             .observeOn(AndroidSchedulers.mainThread())
-            .toList() // 把3个结果收集成List<PopmusicData>
-            .toObservable()
             .doOnNext {
                 println("返回数据成功：$it")
             }
@@ -35,4 +33,5 @@ class SeekRepository {
                 println("请求错误：${it.message}")
             }
     }
+
 }
