@@ -23,17 +23,56 @@ import com.onerainbow.module.musicplayer.service.MusicManager
  * email : 2992203079qq.com
  * date : 2025/7/19 10:31
  */
-class SongListDetailAdapter :ListAdapter<SongGetPlay,SongListDetailAdapter.ViewHolder>(DiffCallback) {
+class SongListDetailAdapter :
+    ListAdapter<SongGetPlay, SongListDetailAdapter.ViewHolder>(DiffCallback) {
     private var selectedPosition = RecyclerView.NO_POSITION
-    inner class ViewHolder(var binding :ItemPlaylistSongBinding) :RecyclerView.ViewHolder(binding.root){
-        fun bind(item :SongGetPlay ,isSelected :Boolean){
-            binding.tvSingleAblum.text = item.al.name?.takeIf { it.isNotBlank() }?.let { "-$it" } ?: ""
-            binding.tvSingleTitle.text =item.name
+
+    inner class ViewHolder(var binding: ItemPlaylistSongBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        private var currentData: SongGetPlay? = null
+
+        init {
+            initClick()
+        }
+
+        fun initClick() {
+            binding.root.setOnClickListener {
+                currentData?.let {
+                    val convertedArtists = it.ar.map {
+                        Artist(id = it.id, name = it.name)
+                    }
+                    val song = Song(
+                        id = it.id,
+                        name = it.name,
+                        artists = convertedArtists,
+                        coverUrl = it.al.picUrl
+                    )
+                    val previousPosition = selectedPosition
+                    selectedPosition = position
+                    notifyItemChanged(previousPosition)
+                    notifyItemChanged(selectedPosition)
+
+                    Log.d("SongDetail", song.toString())
+                    if (MusicManager.addToPlayerList(song)) {
+                        ToastUtils.makeText("添加成功")
+                    } else {
+                        ToastUtils.makeText("添加失败")
+                    }
+                }
+            }
+        }
+
+
+        fun bind(item: SongGetPlay, isSelected: Boolean) {
+            currentData = item
+            binding.tvSingleAblum.text =
+                item.al.name.takeIf { it.isNotBlank() }?.let { "-$it" } ?: ""
+            binding.tvSingleTitle.text = item.name
             Glide.with(binding.songImg.context)
                 .load(item.al.picUrl)
                 .transform(RoundedCorners(20))
                 .into(binding.songImg)
-            item.ar.forEach{
+            item.ar.forEach {
                 val maxSingerLen = 12
                 val allNames = item.ar.joinToString(separator = "、") { it.name }
                 val displaySingers = if (allNames.length > maxSingerLen) {
@@ -58,41 +97,15 @@ class SongListDetailAdapter :ListAdapter<SongGetPlay,SongListDetailAdapter.ViewH
                     else
                         binding.root.context.getColor(android.R.color.black) // 未选中：黑色
                 )
-                val convertedArtists = item.ar.map {
-                    Artist(
-                        id = it.id,
-                        name = it.name
-                    )
-                }
-                // 点击事件：更新选中状态
-                binding.root.setOnClickListener {
-                    val previousPosition = selectedPosition
-                    selectedPosition = adapterPosition
-                    notifyItemChanged(previousPosition) // 刷新之前选中的
-                    notifyItemChanged(selectedPosition)
-                // 刷新当前选中的
 
-                    val song = Song(
-                        id = item.id,
-                        name = item.name,
-                        artists = convertedArtists,
-                        coverUrl = item.al.picUrl
-                    )
-                    Log.d("SongDatail",song.toString())
-                    if (MusicManager.addToPlayerList(song)){
-                        ToastUtils.makeText("添加成功")
-                    }else{
-                        ToastUtils.makeText("添加失败")
-                    }
-
-                }
             }
 
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val binding =ItemPlaylistSongBinding.inflate(LayoutInflater.from(parent.context),parent,false)
+        val binding =
+            ItemPlaylistSongBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(binding)
     }
 
@@ -100,8 +113,9 @@ class SongListDetailAdapter :ListAdapter<SongGetPlay,SongListDetailAdapter.ViewH
         val isSelected = (position == selectedPosition)
         holder.bind(getItem(position), isSelected)
     }
-    companion object{
-        private val DiffCallback =object :DiffUtil.ItemCallback<SongGetPlay>(){
+
+    companion object {
+        private val DiffCallback = object : DiffUtil.ItemCallback<SongGetPlay>() {
             override fun areItemsTheSame(oldItem: SongGetPlay, newItem: SongGetPlay): Boolean {
                 return oldItem.id == newItem.id
             }

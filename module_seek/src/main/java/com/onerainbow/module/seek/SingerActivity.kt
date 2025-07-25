@@ -31,7 +31,6 @@ class SingerActivity : BaseActivity<ActivitySingerBinding>() {
 
     override fun observeData() {
 
-
     }
 
     override fun initEvent() {

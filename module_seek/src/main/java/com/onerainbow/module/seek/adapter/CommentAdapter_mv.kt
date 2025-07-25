@@ -38,19 +38,8 @@ class CommentAdapter_mv(private val context: Context) : PagingDataAdapter<Commen
     val requestOptions: RequestOptions = RequestOptions().placeholder(R.drawable.empty)
         .fallback(R.drawable.empty)
     inner class ViewHolder(val binding: ItemCommentsBinding):RecyclerView.ViewHolder(binding.root){
-        private var currentData: Comment? = null
-
-
-        init {
-            initClick()
-        }
-
-        private fun initClick() {
-
-        }
 
         fun bind(data: Comment){
-            currentData = data
 
             binding.apply {
                 Glide.with(context).load(data.user.avatarUrl).apply(requestOptions).into(imgAvatar)

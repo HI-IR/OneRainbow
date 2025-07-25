@@ -18,27 +18,41 @@ import com.therouter.TheRouter
  * email : 2992203079qq.com
  * date : 2025/7/17 20:15
  */
-class PlaylistDataAdapter :ListAdapter<Playlists,PlaylistDataAdapter.ViewHolder>(DiffCallback) {
-    inner class ViewHolder(val binding :ItemPlaylistBinding):RecyclerView.ViewHolder(binding.root){
-        fun bind(item:Playlists){
+class PlaylistDataAdapter : ListAdapter<Playlists, PlaylistDataAdapter.ViewHolder>(DiffCallback) {
+    inner class ViewHolder(val binding: ItemPlaylistBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        private var currentData: Playlists? = null
+
+        init {
+            initClick()
+        }
+
+        fun initClick() {
+            binding.root.setOnClickListener {
+                currentData?.let {
+                    TheRouter.build(RoutePath.PLAYLIST)
+                        .withParcelable("playlists", it)
+                        .navigation()
+                }
+            }
+        }
+
+        fun bind(item: Playlists) {
+            currentData = item
             binding.tvPlaylistTitle.text = item.name
             Glide.with(binding.playlistImg.context)
                 .load(item.coverImgUrl)
                 .transform(RoundedCorners(20))
                 .into(binding.playlistImg)
 
-            binding.tvPlaylistAuthor.text ="by${item.creator.nickname}"
-            binding.tvPlaylistNumber.text ="${item.trackCount}首音乐"
-            binding.root.setOnClickListener{
-                TheRouter.build(RoutePath.PLAYLIST)
-                    .withParcelable("playlists",item)
-                    .navigation()
-            }
+            binding.tvPlaylistAuthor.text = "by${item.creator.nickname}"
+            binding.tvPlaylistNumber.text = "${item.trackCount}首音乐"
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val binding =ItemPlaylistBinding.inflate(LayoutInflater.from(parent.context),parent,false)
+        val binding =
+            ItemPlaylistBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(binding)
     }
 
@@ -46,14 +60,15 @@ class PlaylistDataAdapter :ListAdapter<Playlists,PlaylistDataAdapter.ViewHolder>
         holder.bind(getItem(position))
 
     }
-    companion object{
-        private val DiffCallback =object :DiffUtil.ItemCallback<Playlists>(){
+
+    companion object {
+        private val DiffCallback = object : DiffUtil.ItemCallback<Playlists>() {
             override fun areItemsTheSame(oldItem: Playlists, newItem: Playlists): Boolean {
                 return oldItem.id == newItem.id
             }
 
             override fun areContentsTheSame(oldItem: Playlists, newItem: Playlists): Boolean {
-               return oldItem == newItem
+                return oldItem == newItem
             }
 
         }

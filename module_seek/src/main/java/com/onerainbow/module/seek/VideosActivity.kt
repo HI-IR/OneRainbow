@@ -157,7 +157,6 @@ class VideosActivity : BaseActivity<ActivityVideosBinding>() {
             videoViewModel.getCommentNumber(id!!)
         }
         videoViewModel.getCommentNumberLiveData.observe(this) { result ->
-            binding.mvLikeTv.text = result.likedCount.toString()
             binding.mvCommentTv.text = result.commentCount.toString()
             binding.mvShareTv.text = result.shareCount.toString()
 
@@ -380,11 +379,9 @@ class VideosActivity : BaseActivity<ActivityVideosBinding>() {
         }
         binding.videoBack.visibility = View.GONE
         binding.videoName.visibility = View.GONE
-        binding.mvLikeImg.visibility = View.GONE
         binding.mvCommentImg.visibility = View.GONE
         binding.mvShareImg.visibility = View.GONE
 
-        binding.mvLikeTv.visibility = View.GONE
         binding.mvCommentTv.visibility = View.GONE
         binding.mvShareTv.visibility = View.GONE
 
@@ -422,11 +419,9 @@ class VideosActivity : BaseActivity<ActivityVideosBinding>() {
         }
         binding.videoBack.visibility = View.VISIBLE
         binding.videoName.visibility = View.VISIBLE
-        binding.mvLikeImg.visibility = View.VISIBLE
         binding.mvCommentImg.visibility = View.VISIBLE
         binding.mvShareImg.visibility = View.VISIBLE
 
-        binding.mvLikeTv.visibility = View.VISIBLE
         binding.mvCommentTv.visibility = View.VISIBLE
         binding.mvShareTv.visibility = View.VISIBLE
 

@@ -27,8 +27,42 @@ import com.onerainbow.module.musicplayer.service.MusicManager
 class SongerAdapter : ListAdapter<SongData, SongerAdapter.ViewHolder>(DiffCallback) {
     private var selectedPosition = RecyclerView.NO_POSITION
 
-    inner class ViewHolder(var binding: ItemPlaylistSongBinding) :
-        RecyclerView.ViewHolder(binding.root) {
+    inner class ViewHolder(var binding: ItemPlaylistSongBinding) : RecyclerView.ViewHolder(binding.root) {
+        private var currentData : SongData? = null
+
+        init {
+            initClick()
+        }
+        fun initClick(){
+            currentData?.let { it1 ->
+                val convertedArtists = it1.ar.map {
+                    Artist(
+                        id = it.id,
+                        name = it.name
+                    )
+                }
+                // 点击事件：更新选中状态
+                binding.root.setOnClickListener {
+                    val previousPosition = selectedPosition
+                    selectedPosition = adapterPosition
+                    notifyItemChanged(previousPosition) // 刷新之前选中的
+                    notifyItemChanged(selectedPosition) // 刷新当前选中的
+
+                    val song = Song(
+                        id = it1.id,
+                        name = it1.name,
+                        artists = convertedArtists,
+                        coverUrl = it1.al.picUrl
+                    )
+                    Log.d("SongDatail", song.toString())
+                    if (MusicManager.addToPlayerList(song)) {
+                        ToastUtils.makeText("添加成功")
+                    } else {
+                        ToastUtils.makeText("添加失败")
+                    }
+                }
+            }
+        }
         fun bind(item: SongData, isSelected: Boolean) {
             binding.tvSingleAblum.text = "-${item.al.name}"
             binding.tvSingleTitle.text = item.name
@@ -62,32 +96,6 @@ class SongerAdapter : ListAdapter<SongData, SongerAdapter.ViewHolder>(DiffCallba
                     else
                         binding.root.context.getColor(android.R.color.black) // 未选中：黑色
                 )
-                val convertedArtists = item.ar.map {
-                    Artist(
-                        id = it.id,
-                        name = it.name
-                    )
-                }
-                // 点击事件：更新选中状态
-                binding.root.setOnClickListener {
-                    val previousPosition = selectedPosition
-                    selectedPosition = adapterPosition
-                    notifyItemChanged(previousPosition) // 刷新之前选中的
-                    notifyItemChanged(selectedPosition) // 刷新当前选中的
-
-                    val song = Song(
-                        id = item.id,
-                        name = item.name,
-                        artists = convertedArtists,
-                        coverUrl = item.al.picUrl
-                    )
-                    Log.d("SongDatail",song.toString())
-                    if (MusicManager.addToPlayerList(song)){
-                        ToastUtils.makeText("添加成功")
-                    }else{
-                        ToastUtils.makeText("添加失败")
-                    }
-                }
 
             }
 

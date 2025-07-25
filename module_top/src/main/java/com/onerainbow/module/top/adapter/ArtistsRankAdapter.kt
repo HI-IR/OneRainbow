@@ -54,7 +54,7 @@ class ArtistsRankAdapter(private val context: Context) :
         private fun initClick() {
             item.setOnClickListener {
                 currentData?.let {
-                    TheRouter.build(RoutePath.PLAYLIST).withLong("id", it.id).navigation()
+                    TheRouter.build(RoutePath.SINGER).withLong("id", it.id).withString("name",it.name).withString("url",it.picUrl).navigation()
                 }
             }
             item.scaleAnim()

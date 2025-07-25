@@ -20,7 +20,28 @@ import com.therouter.TheRouter
  */
 class UserDataAdapter : ListAdapter<ArtistUser, UserDataAdapter.ViewHodler>(DiffCallback) {
     inner class ViewHodler(val binding: ItemUserBinding) : RecyclerView.ViewHolder(binding.root) {
+        private var currentData: ArtistUser? = null
+
+        init {
+            initClick()
+        }
+
+        fun initClick() {
+            binding.root.setOnClickListener {
+                currentData?.let {
+                    TheRouter.build(RoutePath.SINGER)
+                        .withLong("id", it.id)
+                        .withString("url", it.picUrl)
+                        .withString("name", it.name)
+                        .navigation()
+
+                }
+            }
+
+        }
+
         fun bind(item: ArtistUser) {
+            currentData = item
             binding.userName.text = item.name
             Glide.with(binding.userImg.context)
                 .load(item.picUrl)
@@ -30,14 +51,6 @@ class UserDataAdapter : ListAdapter<ArtistUser, UserDataAdapter.ViewHodler>(Diff
                 .circleCrop() // 裁剪成圆形
                 .into(binding.userImg)
 
-            binding.root.setOnClickListener {
-                TheRouter.build(RoutePath.SINGER)
-                    .withLong("id", item.id)
-                    .withString("url",item.picUrl)
-                    .withString("name",item.name)
-                    .navigation()
-
-            }
         }
     }
 

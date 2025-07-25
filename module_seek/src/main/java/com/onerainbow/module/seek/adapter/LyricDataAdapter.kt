@@ -22,11 +22,53 @@ import com.onerainbow.module.seek.interfaces.GetImgUrl
  * email : 2992203079qq.com
  * date : 2025/7/18 14:02
  */
-class LyricDataAdapter(private val getImgUrl: GetImgUrl) : ListAdapter<SongLyric, LyricDataAdapter.ViewHolder>(DiffCallback) {
-    private var selectedPosition = RecyclerView.NO_POSITION
+class LyricDataAdapter(private val getImgUrl: GetImgUrl) :
+    ListAdapter<SongLyric, LyricDataAdapter.ViewHolder>(DiffCallback) {
+    private var selectedPosition = RecyclerView.NO_POSITION //初始为-1 也就是没有选中
 
     inner class ViewHolder(var binding: ItemLyricBinding) : RecyclerView.ViewHolder(binding.root) {
+        private var currentData: SongLyric? = null
+
+        init {
+            initClick()
+        }
+
+        // 点击事件：更新选中状态
+        fun initClick() {
+            binding.root.setOnClickListener {
+                //设置高亮
+                val previousPosition = selectedPosition
+                selectedPosition = adapterPosition
+                notifyItemChanged(previousPosition)
+                notifyItemChanged(selectedPosition)
+                currentData?.let { it1 ->
+                    val convertedArtists = it1.artists.map {
+                        Artist(
+                            id = it.id,
+                            name = it.name
+                        )
+                    }
+                    getImgUrl.getGetImgUrl(it1.id) { imgUrl ->
+                        val song = Song(
+                            id = it1.id,
+                            name = it1.name,
+                            artists = convertedArtists,
+                            coverUrl = imgUrl
+                        )
+                        if (MusicManager.addToPlayerList(song)) {
+                            ToastUtils.makeText("添加成功")
+                        } else {
+                            ToastUtils.makeText("添加失败")
+                        }
+
+                    }
+                }
+            }
+
+        }
+
         fun bind(item: SongLyric, isSelected: Boolean) {
+            currentData = item
             binding.tvLyric.text = item.lyrics.txt
             var isExpanded = false
 
@@ -77,12 +119,7 @@ class LyricDataAdapter(private val getImgUrl: GetImgUrl) : ListAdapter<SongLyric
                 }
                 flexSingers.addView(tv)
             }
-            val convertedArtists = item.artists.map {
-                Artist(
-                    id = it.id,
-                    name = it.name
-                )
-            }
+
             // 根据是否选中设置歌名字体颜色
             binding.tvSingleTitle.setTextColor(
                 if (isSelected)
@@ -96,28 +133,7 @@ class LyricDataAdapter(private val getImgUrl: GetImgUrl) : ListAdapter<SongLyric
             } else {
                 binding.singleImg.setImageResource(R.drawable.sungle_close) // 恢复成默认图片
             }
-            // 点击事件：更新选中状态
-            binding.root.setOnClickListener {
-                val previousPosition = selectedPosition
-                selectedPosition = adapterPosition
-                notifyItemChanged(previousPosition) // 刷新之前选中的
-                notifyItemChanged(selectedPosition) // 刷新当前选中的
-                getImgUrl.getGetImgUrl(item.id) { imgUrl ->
-                    val song = Song(
-                        id = item.id,
-                        name = item.name,
-                        artists = convertedArtists,
-                        coverUrl = imgUrl
-                    )
-                    if (MusicManager.addToPlayerList(song)){
-                        ToastUtils.makeText("添加成功")
-                    }else{
-                        ToastUtils.makeText("添加失败")
-                    }
 
-                }
-
-            }
         }
     }
 

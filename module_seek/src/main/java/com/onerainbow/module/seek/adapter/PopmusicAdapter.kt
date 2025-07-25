@@ -19,15 +19,23 @@ class PopmusicAdapter(
 ) : ListAdapter<Tracks, PopmusicAdapter.ViewHolder>(DiffCallback) {
 
     inner class ViewHolder(val binding: ItemPopmusicBinding) : RecyclerView.ViewHolder(binding.root) {
+        private var currentData : Tracks? = null
+        init {
+            initClick()
+        }
+        fun initClick(){
+            binding.root.setOnClickListener {
+                currentData?.let {
+                    onItemClick?.invoke(it) // 调用外部传入的点击逻辑
+                }
+            }
+        }
         fun bind(item: Tracks, position: Int) {
+            currentData = item
             // 设置内容
             binding.tvHotTitleOne.text = (position + 1).toString()
             binding.tvHotmusicName.text = item.name
 
-            // 点击事件
-            binding.root.setOnClickListener {
-                onItemClick?.invoke(item) // 调用外部传入的点击逻辑
-            }
         }
     }
 

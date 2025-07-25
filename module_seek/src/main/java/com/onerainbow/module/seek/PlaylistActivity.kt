@@ -38,6 +38,7 @@ class PlaylistActivity : BaseActivity<ActivityPlaylistBinding>() {
 
     private val playlistViewModel: PlaylistViewModel by lazy { PlaylistViewModel() }
     private lateinit var songListDetailAdapter: SongListDetailAdapter
+    private var song : List<Song>? =null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,26 +63,8 @@ class PlaylistActivity : BaseActivity<ActivityPlaylistBinding>() {
         playlistViewModel.playListLiveData.observe(this) { result ->
             songListDetailAdapter.submitList(result.songs)
 
-            val songs: List<Song> = result.songs.map { songGetPlay ->
-                Song(
-                    id = songGetPlay.id,
-                    name = songGetPlay.name,
-                    artists = songGetPlay.ar.map { it.toModelArtist() }, // 直接用原来的 Artist 列表
-                    coverUrl = songGetPlay.al.picUrl // 从 al 取封面
-                )
+             song = result.songs.map { it.tosongs() }
 
-            }
-            binding.playAllContainer.setOnClickListener {
-                if (songs != null) {
-                    if (MusicManager.addToPlayerList(songs)) {
-                        ToastUtils.makeText("添加成功")
-                    } else {
-                        ToastUtils.makeText("添加失败")
-                    }
-
-                }
-
-            }
         }
         playlistViewModel.apply {
             avatarData.observe(this@PlaylistActivity){
@@ -93,23 +76,27 @@ class PlaylistActivity : BaseActivity<ActivityPlaylistBinding>() {
             }
             recentDataLiveData.observe(this@PlaylistActivity){
                 result ->
-                Glide.with(binding.playlistImg.context)
-                    .load(result[0].coverUrl)
-                    .into(binding.playlistImg)
-                binding.tvPlaylistAuthor.text = UsernameUtils.getUsername()
-                binding.tvPlaylistTitle.text = "最近播放"
-                binding.tvDescription.text="寻找你的时光日记"
-                songListDetailAdapter.submitList(result.map { it.toSongGetPlay() })
+                if(result.isNullOrEmpty()) {return@observe ToastUtils.makeText("没有最近播放啊")}
+                    Glide.with(binding.playlistImg.context)
+                        .load(result.get(0).coverUrl)
+                        .into(binding.playlistImg)
+                    binding.tvPlaylistAuthor.text = UsernameUtils.getUsername()
+                    binding.tvPlaylistTitle.text = "最近播放"
+                    binding.tvDescription.text = "寻找你的时光日记"
+                    song = result.map { it.toSongGetPlay() }.map { it.tosongs() }
+                    songListDetailAdapter.submitList(result.map { it.toSongGetPlay() })
 
             }
             collectDataLiveData.observe(this@PlaylistActivity){
                 result ->
+                if(result.isNullOrEmpty()) {return@observe ToastUtils.makeText("这番天地等着你来探索")}
                 Glide.with(binding.playlistImg.context)
                     .load(result[0].coverUrl)
                     .into(binding.playlistImg)
                 binding.tvPlaylistAuthor.text = UsernameUtils.getUsername()
                 binding.tvDescription.text="那些被时间温柔收录的声音"
                 binding.tvPlaylistTitle.text = "我的收藏"
+                song = result.map { it.toSongGetPlay() }.map { it.tosongs() }
                 songListDetailAdapter.submitList(result.map { it.toSongGetPlay() })
 
             }
@@ -119,6 +106,17 @@ class PlaylistActivity : BaseActivity<ActivityPlaylistBinding>() {
     }
 
     override fun initEvent() {
+        binding.playAllContainer.setOnClickListener {
+            if (song != null) {
+                if (MusicManager.addToPlayerList(song!!)) {
+                    ToastUtils.makeText("添加成功")
+                } else {
+                    ToastUtils.makeText("添加失败")
+                }
+
+            }
+
+        }
         if (this::playlists.isInitialized && !this::type.isInitialized) {
             initPlaylist()
         } else initMyselfPlaylist(type)
@@ -211,6 +209,15 @@ class PlaylistActivity : BaseActivity<ActivityPlaylistBinding>() {
                 picUrl = coverUrl
             )
         )
+    }
+    fun SongGetPlay.tosongs(): Song  {
+        return Song(
+            id = id,
+            name = name,
+            artists = ar.map { it.toModelArtist() }, // 直接用原来的 Artist 列表
+            coverUrl =al.picUrl // 从 al 取封面
+        )
+
     }
 
 

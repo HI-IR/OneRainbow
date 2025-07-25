@@ -1,4 +1,5 @@
 package com.onerainbow.module.seek.adapter
+
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -22,8 +23,28 @@ import com.therouter.TheRouter
  */
 class GetMvDataAdapter : ListAdapter<Mv, GetMvDataAdapter.ViewHolder>(DiffCallback) {
     inner class ViewHolder(val binding: ItemMvBinding) : RecyclerView.ViewHolder(binding.root) {
+        private var currentData: Mv? = null
+
+        init {
+            initClick()
+        }
+
+        fun initClick() {
+
+            binding.root.setOnClickListener {
+                currentData?.let {
+                    TheRouter.build(RoutePath.MVS)
+                        .withLong("id", it.id.toLong())
+                        .withString("name", it.name)
+                        .navigation()
+                }
+            }
+
+        }
+
         fun bind(item: Mv) {
-            binding.myNumber.text ="播放${item.playCount}次"
+            currentData = item
+            binding.myNumber.text = "播放${item.playCount}次"
             binding.mvTitle.text = "${item.name}"
             binding.mvTime.text = "${item.duration.toMinuteSecond()},by"
             Glide.with(binding.mvImg.context)
@@ -50,18 +71,11 @@ class GetMvDataAdapter : ListAdapter<Mv, GetMvDataAdapter.ViewHolder>(DiffCallba
                 }
                 flexSingers.addView(tv)
             }
-            binding.root.setOnClickListener{
-                TheRouter.build(RoutePath.MVS)
-                    .withLong("id",item.id.toLong())
-                    .withString("name",item.name)
-                    .navigation()
-            }
-
 
         }
 
         fun Long.toMinuteSecond(): String {
-            if(this == 0L) return "暂无数据"
+            if (this == 0L) return "暂无数据"
             val totalSeconds = this / 1000 // 毫秒转秒
             val minutes = totalSeconds / 60
             val seconds = totalSeconds % 60

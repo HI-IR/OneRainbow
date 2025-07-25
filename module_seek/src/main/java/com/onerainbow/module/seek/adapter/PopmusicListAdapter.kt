@@ -41,8 +41,7 @@ class PopmusicListAdapter(private val context: Context) :
         // 2. 限制 tracks 只取前 20 条
         val limitedTracks = data.tracks.take(20)
 
-        val adapter=PopmusicAdapter{
-                item ->
+        val adapter=PopmusicAdapter{ item ->
             // 点击事件逻辑
             TheRouter.build(RoutePath.FINISHSEEK)
                 .withString("keyword", item.name)

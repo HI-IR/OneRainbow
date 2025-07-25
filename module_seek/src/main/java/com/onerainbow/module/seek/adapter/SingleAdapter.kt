@@ -23,14 +23,57 @@ import com.onerainbow.module.musicplayer.service.MusicManager
  * email : 2992203079@qq.com
  * date : 2025/7/17 15:45
  */
-class SingleAdapter(private val getImgUrl: GetImgUrl) : ListAdapter<Songi, SingleAdapter.ViewHolder>(DiffCallback) {
+class SingleAdapter(private val getImgUrl: GetImgUrl) :
+    ListAdapter<Songi, SingleAdapter.ViewHolder>(DiffCallback) {
 
     private var selectedPosition = RecyclerView.NO_POSITION // 当前选中的播放项
 
 
     inner class ViewHolder(val binding: ItemSingleBinding) : RecyclerView.ViewHolder(binding.root) {
+        private var currentData: Songi? = null
+
+        init {
+            initClick()
+        }
+
+        fun initClick() {
+            // 点击事件：更新选中状态
+
+            binding.root.setOnClickListener {
+                currentData?.let { it1 ->
+                    val convertedArtists = it1.artists.map {
+                        Artist(
+                            id = it.id,
+                            name = it.name
+                        )
+                    }
+                    val previousPosition = selectedPosition
+                    selectedPosition = position
+                    notifyItemChanged(previousPosition)
+                    notifyItemChanged(selectedPosition)
+                    Log.d("SingleAdapter", "Clicked: ${it1.name}")
+                    getImgUrl.getGetImgUrl(it1.id) { imgUrl ->
+                        val song = Song(
+                            id = it1.id,
+                            name = it1.name,
+                            artists = convertedArtists,
+                            coverUrl = imgUrl
+                        )
+                        Log.d("SingleAdapter", "Song added: $song")
+                        if (MusicManager.addToPlayerList(song)) {
+                            ToastUtils.makeText("添加成功")
+                        } else {
+                            ToastUtils.makeText("添加失败")
+                        }
+
+
+                    }
+                }
+            }
+        }
 
         fun bind(item: Songi, isSelected: Boolean) {
+            currentData = item
             binding.tvSingleAblum.text = "-${item.album.name}"
 
             // 处理歌手名显示
@@ -71,7 +114,6 @@ class SingleAdapter(private val getImgUrl: GetImgUrl) : ListAdapter<Songi, Singl
                 }
                 flexSingers.addView(tv)
 
-
             }
 
             // 根据是否选中设置歌名字体颜色
@@ -87,47 +129,8 @@ class SingleAdapter(private val getImgUrl: GetImgUrl) : ListAdapter<Songi, Singl
             } else {
                 binding.singleImg.setImageResource(R.drawable.sungle_close) // 恢复成默认图片
             }
-            val convertedArtists = item.artists.map {
-                Artist(
-                    id = it.id,
-                    name = it.name
-                )
-            }
-
-            // 点击事件：更新选中状态
-
-            binding.root.setOnClickListener {
-                val position = bindingAdapterPosition
-                if (position == RecyclerView.NO_POSITION) return@setOnClickListener
-
-                val previousPosition = selectedPosition
-                selectedPosition = position
-
-                notifyItemChanged(previousPosition)
-                notifyItemChanged(selectedPosition)
-                Log.d("SingleAdapter", "Clicked: ${item.name}")
-
-                getImgUrl.getGetImgUrl(item.id) { imgUrl ->
-                    val song = Song(
-                        id = item.id,
-                        name = item.name,
-                        artists = convertedArtists,
-                        coverUrl = imgUrl
-                    )
-                    Log.d("SingleAdapter", "Song added: $song")
-                    if (MusicManager.addToPlayerList(song)){
-                        ToastUtils.makeText("添加成功")
-                    }else{
-                        ToastUtils.makeText("添加失败")
-                    }
-
-
-                }
-            }
 
         }
-
-
 
 
     }
