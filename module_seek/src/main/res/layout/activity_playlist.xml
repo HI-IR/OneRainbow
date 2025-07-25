@@ -32,14 +32,12 @@
                 app:layout_collapseMode="parallax">
 
 
-                <TextView
+                <ImageView
                     android:id="@+id/tv_back"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="返回"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/comback_playlist"
                     android:textColor="@color/white"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintLeft_toLeftOf="parent"
                     android:layout_marginStart="16dp" />

@@ -19,17 +19,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
+
+        <!-- 右侧图标 -->
+        <ImageView
             android:id="@+id/btn_openDrawer"
-            android:layout_width="29sp"
+            android:layout_width="40sp"
             android:layout_height="40sp"
             android:gravity="center"
-            android:text="&lt;"
+            android:src="@drawable/comeback"
             android:textColor="@color/black"
             android:textSize="25sp" />
 
-
-        <!-- 右侧图标 -->
         <LinearLayout
             android:id="@+id/search_bar_main"
             android:layout_width="0dp"

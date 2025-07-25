@@ -17,14 +17,12 @@
         app:resize_mode="fill"
         app:use_controller="false"
         tools:layout_editor_absoluteX="16dp" />
-    <TextView
+    <ImageView
         android:id="@+id/video_back"
-        android:text="返回"
-        android:textSize="16dp"
+        android:src="@drawable/comback_mv"
         android:padding="10dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@color/white"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:layout_marginBottom="80dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintBottom_toTopOf="@id/playerView"/>
