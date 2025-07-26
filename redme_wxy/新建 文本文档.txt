@@ -18,7 +18,7 @@
 
 一个图片加上点缩放动画
 
-![mmexport1753521725845](D:\Users\summer\OneRainbow\redme_wxy\mmexport1753521725845.gif)
+![image](https://github.com/summerpalace2/OneRainbow/blob/master/OneRainbow\redme_wxy\mmexport1753519364762.gif)
 
 #### Seek(search)模块
 
