@@ -30,15 +30,14 @@ share模块：app的分享功能
 
 直接上图
 
-![image](https://github.com/HI-IR/OneRainbow/HI-IR's Readme/home.gif)
-
+![image](https://github.com/HI-IR/OneRainbow/blob/master/HI-IR's%20Readme/home.gif)
 
 
 ### recommend模块
 
 home模块支持下的第一个Fragment，用于显示推荐歌单等
 
-![image](https://github.com/HI-IR/OneRainbow/HI-IR's Readme/recommend.gif)
+![image](https://github.com/HI-IR/OneRainbow/blob/master/HI-IR's%20Readme/recommend.gif)
 
 主要内容就是一个通过Vp2制作的一个Banner和一些RV和Vp2。
 
@@ -50,7 +49,7 @@ home模块支持下的第一个Fragment，用于显示推荐歌单等
 
 就是一个Vp2中放了2个Fragment，用于展示一些热门排行榜，和歌手榜
 
-![image](https://github.com/HI-IR/OneRainbow/HI-IR's Readme/top.gif)
+![image](https://github.com/HI-IR/OneRainbow/blob/master/HI-IR's%20Readme/top.gif)
 
 这里使用了NestedScrollView中嵌套RV的方式来解决了嵌套滑动的问题
 
@@ -88,13 +87,13 @@ interface PlaybackStateListener {
 
 关于播放器页面，属于是仿写网易云音乐的播放页面，在这个部分中也是尝试使用了值动画的方式来实现动画，效果就看下图吧
 
-![image](https://github.com/HI-IR/OneRainbow/HI-IR's Readme/musicplayer.gif)
+![image](https://github.com/HI-IR/OneRainbow/blob/master/HI-IR's%20Readme/musicplayer.gif)
 
  ### account模块
 
 这个模块主要就是登录页，还有一些关于软件的Room数据库相关的搭建
 
-![image](https://github.com/HI-IR/OneRainbow/HI-IR's Readme/account.gif)
+![image](https://github.com/HI-IR/OneRainbow/blob/master/HI-IR's%20Readme/account.gif)
 
 ### share模块
 
@@ -103,8 +102,7 @@ interface PlaybackStateListener {
 就是一个自定义的Dialog，然后通过Intent来调用系统的分享，可以分享到QQ，WX，浏览器，还有复制链接
 
 
-
-![image](https://github.com/HI-IR/OneRainbow/HI-IR's Readme/share.gif)
+![image](https://github.com/HI-IR/OneRainbow/blob/master/HI-IR's%20Readme/share.gif)
 
 ## 使用的技术
 
