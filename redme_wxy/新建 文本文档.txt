@@ -17,28 +17,27 @@
 #### app模块(开屏页)
 
 一个图片加上点缩放动画
-
-![image](https://github.com/summerpalace2/OneRainbow/blob/master/OneRainbow\redme_wxy\mmexport1753519364762.gif)
+![image](https://github.com/HI-IR/OneRainbow/blob/master/redme_wxy/mmexport1753521725845.gif)
 
 #### Seek(search)模块
 
 主要使用rv,vp2,MVVM架构以及sharepreferences，实现搜索界面
 
-![mmexport1753519364762](D:\Users\summer\OneRainbow\redme_wxy\mmexport1753519364762.gif)
+![image](https://github.com/HI-IR/OneRainbow/blob/master/redme_wxy/mmexport1753519364762.gif)
 
 这里使用sharepreferences保存本地搜索，使用vp2实现排行榜功能每一个vp2页都是rv，这里把每一页和每一个排名分别看成一个item，使用两个adapter继承于listadapter，再拿给viewpager2使用，历史搜索以及排行榜上的内容均有点击事件，均可跳转搜索
 
-![Screenshot_2025-07-26-16-38-39-10_84258bf26a1e533](D:\Users\summer\OneRainbow\redme_wxy\Screenshot_2025-07-26-16-38-39-10_84258bf26a1e533.jpg)
+![image](https://github.com/HI-IR/OneRainbow/blob/master/redme_wxy/Screenshot_2025-07-26-16-38-39-10_84258bf26a1e533.jpg)
 
 来到搜索结果界面，可以看到这里有5个结果，每个搜索结果均是一个rv，点击歌词，单曲里面的歌曲，可以添加到播放列表并且点击的歌曲会变红方便显示
 
-![mmexport1753520127629](D:\Users\summer\OneRainbow\redme_wxy\mmexport1753520127629.gif)
+![image](https://github.com/HI-IR/OneRainbow/blob/master/redme_wxy/mmexport1753520127629.gif)
 
 ### playlist模块
 
 其实就是歌单显示，贯穿所有歌单的点击事件，传入Playlist类型值，便可跳转
 
-![mmexport1753520453511](D:\Users\summer\OneRainbow\redme_wxy\mmexport1753520453511.gif)
+![image](https://github.com/HI-IR/OneRainbow/blob/master/redme_wxy/mmexport1753520453511.gif)
 
 这里也有点击歌曲变红的相关逻辑，并且额外添加了播放全部逻辑
 
@@ -46,7 +45,7 @@
 
 实现内容和上面playlist相似，不在赘述
 
-![mmexport1753520609247](D:\Users\summer\OneRainbow\redme_wxy\mmexport1753520609247.gif)
+![image](https://github.com/HI-IR/OneRainbow/blob/master/redme_wxy/mmexport1753520609247.gif)
 
 ### Mv模块
 
@@ -54,11 +53,11 @@ Mv模块有两个部分组成搜索的Mv,主界面的Mv，都是rv，这里的Mv
 
 
 
-![Screenshot_2025-07-26-15-47-24-63_84258bf26a1e533](D:\Users\summer\OneRainbow\redme_wxy\Screenshot_2025-07-26-15-47-24-63_84258bf26a1e533.jpg)
+![image](https://github.com/HI-IR/OneRainbow/blob/master/redme_wxy/Screenshot_2025-07-26-15-47-24-63_84258bf26a1e533.jpg)
 
 
 
-![mmexport1753521105834](D:\Users\summer\OneRainbow\redme_wxy\mmexport1753521105834.gif)
+![image](https://github.com/HI-IR/OneRainbow/blob/master/redme_wxy/mmexport1753521105834.gif)
 
 #### 其他：
 
