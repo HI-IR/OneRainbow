@@ -17,28 +17,27 @@
 #### app模块(开屏页)
 
 一个图片加上点缩放动画
-
-![mmexport1753521725845](D:\Users\summer\OneRainbow\redme_wxy\mmexport1753521725845.gif)
+![image](https://github.com/HI-IR/OneRainbow/blob/master/redme_wxy/mmexport1753521725845.gif)
 
 #### Seek(search)模块
 
 主要使用rv,vp2,MVVM架构以及sharepreferences，实现搜索界面
 
-![mmexport1753519364762](D:\Users\summer\OneRainbow\redme_wxy\mmexport1753519364762.gif)
+![image](https://github.com/HI-IR/OneRainbow/blob/master/redme_wxy/mmexport1753519364762.gif)
 
 这里使用sharepreferences保存本地搜索，使用vp2实现排行榜功能每一个vp2页都是rv，这里把每一页和每一个排名分别看成一个item，使用两个adapter继承于listadapter，再拿给viewpager2使用，历史搜索以及排行榜上的内容均有点击事件，均可跳转搜索
 
-![Screenshot_2025-07-26-16-38-39-10_84258bf26a1e533](D:\Users\summer\OneRainbow\redme_wxy\Screenshot_2025-07-26-16-38-39-10_84258bf26a1e533.jpg)
+![image](https://github.com/HI-IR/OneRainbow/blob/master/redme_wxy/Screenshot_2025-07-26-16-38-39-10_84258bf26a1e533.jpg)
 
 来到搜索结果界面，可以看到这里有5个结果，每个搜索结果均是一个rv，点击歌词，单曲里面的歌曲，可以添加到播放列表并且点击的歌曲会变红方便显示
 
-![mmexport1753520127629](D:\Users\summer\OneRainbow\redme_wxy\mmexport1753520127629.gif)
+![image](https://github.com/HI-IR/OneRainbow/blob/master/redme_wxy/mmexport1753520127629.gif)
 
 ### playlist模块
 
 其实就是歌单显示，贯穿所有歌单的点击事件，传入Playlist类型值，便可跳转
 
-![mmexport1753520453511](D:\Users\summer\OneRainbow\redme_wxy\mmexport1753520453511.gif)
+![image](https://github.com/HI-IR/OneRainbow/blob/master/redme_wxy/mmexport1753520453511.gif)
 
 这里也有点击歌曲变红的相关逻辑，并且额外添加了播放全部逻辑
 
@@ -46,7 +45,7 @@
 
 实现内容和上面playlist相似，不在赘述
 
-![mmexport1753520609247](D:\Users\summer\OneRainbow\redme_wxy\mmexport1753520609247.gif)
+![image](https://github.com/HI-IR/OneRainbow/blob/master/redme_wxy/mmexport1753520609247.gif)
 
 ### Mv模块
 
@@ -54,11 +53,11 @@ Mv模块有两个部分组成搜索的Mv,主界面的Mv，都是rv，这里的Mv
 
 
 
-![Screenshot_2025-07-26-15-47-24-63_84258bf26a1e533](D:\Users\summer\OneRainbow\redme_wxy\Screenshot_2025-07-26-15-47-24-63_84258bf26a1e533.jpg)
+![image](https://github.com/HI-IR/OneRainbow/blob/master/redme_wxy/Screenshot_2025-07-26-15-47-24-63_84258bf26a1e533.jpg)
 
 
 
-![mmexport1753521105834](D:\Users\summer\OneRainbow\redme_wxy\mmexport1753521105834.gif)
+![image](https://github.com/HI-IR/OneRainbow/blob/master/redme_wxy/mmexport1753521105834.gif)
 
 #### 其他：
 
@@ -79,10 +78,3 @@ Mv模块有两个部分组成搜索的Mv,主界面的Mv，都是rv，这里的Mv
 ### 个人感悟
 
 来红岩网校有大半年了，在这里学到了不少真东西，也认识了不少同学。学长学姐的热情让我感受到移动部门的温暖。其实我的学习道路多余转折。从第一节课更不上进度而选择放弃的懊悔，以及在11月中旬选择重新加入的决心。仍然记得那一晚面对面对对象作业的绝望，以及初学安卓无法适应的我，期末考试仍然在赶红岩网校的进度，面对寒假考核的无力，以及某一晚的豁然开朗，期中考核5天任务的艰巨。我多次怀疑过我的能力，赶不上的进度，知识的短浅，稀碎的java/kotlin基础。但最后我仍然支撑到了现在。这大半年过的并不轻松，我并不想其他人一样，学习的道路上仍充满缺口，并没有熟练掌握之前学过的东西，直到现在我仍然觉得我的基础相当薄弱，代码并不属性，平时写代码还是不太规范，面对一些问题时Al依赖度较大，解决问题的能力稍弱，这都是我后面需要加强的点。总的来说，来红岩网校我近几年最正确的的选择之一，正确引导了我的学习道路，让我看到了未来的希望。以后我会更加注重我的基础，多加练习下代码。防止这次啥都忘了了的情况出现。
-
-
-
-
-
-
-

@@ -18,8 +18,7 @@ import com.therouter.TheRouter
  * email : 2992203079qq.com
  * date : 2025/7/16 17:24
  */
-class PopmusicListAdapter(private val context: Context) :
-    ListAdapter<Playlist, PopmusicListAdapter.PopmusicviewHolder>(object :DiffUtil.ItemCallback<Playlist>(){
+class PopmusicListAdapter(private val context: Context) : ListAdapter<Playlist, PopmusicListAdapter.PopmusicviewHolder>(object :DiffUtil.ItemCallback<Playlist>(){
     override fun areItemsTheSame(oldItem: Playlist, newItem: Playlist): Boolean {
         return oldItem.tracks== newItem.tracks
     }
