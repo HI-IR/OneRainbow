@@ -87,7 +87,6 @@ class MusicPlayerActivity : BaseActivity<ActivityMusicPlayerBinding>() {
         //初始化对话框,设置点击事件
         PlayerListDialog(this@MusicPlayerActivity) {
             viewModel.playAt(it)
-            ToastUtils.makeText("点击了${it}")
         }
     }
 

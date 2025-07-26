@@ -157,7 +157,7 @@ class NewMusicService : Service() {
             // 创建媒体项（使用最新URL，保留原有媒体元数据）
             val mediaItem = MediaItem.Builder()
                 .setUri(freshUrl)  // 核心：使用最新请求的URL
-                .setMediaMetadata(song.toMediaMetadata())  // 复用原有媒体元数据（歌名、封面等）
+                .setMediaMetadata(song.toMediaMetadata())
                 .build()
 
             // 更新播放器状态
@@ -168,13 +168,13 @@ class NewMusicService : Service() {
             // 更新通知和UI状态
             updateNotification("正在播放：${song.name}")
             MusicManager.notifyPlayState(true)
-            MusicManager.notifyPlayIndex(currentIndex)   // 通知当前播放索引
+            MusicManager.notifyPlayIndex(currentIndex)
         } catch (e: Exception) {
             handleUrlError(song, "播放器初始化失败：${e.message}")
         }
     }
 
-    // URL请求失败：处理错误逻辑
+    // URL请求失败
     private fun handleUrlError(song: Song, errorMsg: String) {
         Log.e("MusicService", "歌曲${song.name}URL获取失败：$errorMsg")
         updateNotification("获取资源失败：${song.name}")
