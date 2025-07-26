@@ -19,17 +19,16 @@
         android:id="@+id/my_play"
         android:layout_width="20dp"
         android:layout_height="20dp"
-        android:layout_marginLeft="35dp"
-        android:layout_marginTop="25dp"
         android:src="@drawable/play_white"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toStartOf="@id/mv_img"
+        app:layout_constraintEnd_toEndOf="@id/mv_img"
+        app:layout_constraintTop_toTopOf="@id/mv_img"
+        app:layout_constraintBottom_toBottomOf="@id/mv_img"/>
 
     <TextView
         android:id="@+id/mv_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="30dp"
         android:layout_marginTop="10dp"
         android:ellipsize="end"
         android:maxEms="10"
@@ -37,7 +36,7 @@
         android:text="summer"
         android:textSize="14dp"
         android:textStyle="bold"
-        app:layout_constraintLeft_toRightOf="@id/mv_img"
+        app:layout_constraintLeft_toLeftOf="@id/mv_time"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView

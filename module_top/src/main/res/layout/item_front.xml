@@ -77,7 +77,7 @@
         android:textColor="@color/text_first"
         android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@id/tv_no1"
-        app:layout_constraintTop_toTopOf="@id/img_cover" />
+        app:layout_constraintBottom_toBottomOf="@id/tv_no1" />
 
     <TextView
         android:id="@+id/tv_no2_name"
