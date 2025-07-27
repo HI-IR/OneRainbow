@@ -1,6 +1,11 @@
 package com.onerainbow.module.home.activity
 
+import android.Manifest
+import android.content.pm.PackageManager
+import android.os.Build
+import android.os.Bundle
 import android.view.View
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
@@ -30,6 +35,31 @@ class UserFragment : BaseFragment<FragmentUserBinding>() {
         initClick()
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        // 仅 Android 13 及以上版本申请 READ_MEDIA_IMAGES 权限
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            val permission = Manifest.permission.READ_MEDIA_IMAGES
+            if (requireContext().checkSelfPermission(permission) != PackageManager.PERMISSION_GRANTED) {
+                permissionLauncher.launch(permission)
+            }
+        }
+    }
+    // 申请单个权限回调Launcher
+    private val permissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { granted ->
+        if (!granted) {
+            ToastUtils.makeText("请授予访问图片的权限，否则无法更换头像")
+        }
+    }
+
+    private val pickImageLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+        uri?.let {
+            viewModel.saveAvatar(it)
+        }
+    }
+
     //初始化点击事件
     private fun initClick() {
         binding.apply {
@@ -55,6 +85,16 @@ class UserFragment : BaseFragment<FragmentUserBinding>() {
                 }
                 PlaylistActivity.startPlaylistActivity("recent")
             }
+
+            imgUserAvatar.setOnClickListener {
+                // 登录状态下才允许更换头像
+                if (viewModel.usernameData.value.isNullOrBlank()) {
+                    ToastUtils.makeText("请先登录再更换头像")
+                } else {
+                    pickImageLauncher.launch("image/*")
+                }
+            }
+
         }
     }
 

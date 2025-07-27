@@ -1,20 +1,29 @@
 package com.onerainbow.module.home.viewmodel
 
+import android.app.Application
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.net.Uri
 import android.util.Base64
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.onerainbow.lib.base.BaseApplication
 import com.onerainbow.lib.base.utils.UsernameUtils
 import com.onerainbow.lib.database.OneRainbowDatabase
 import com.onerainbow.lib.database.entity.CollectEntity
 import com.onerainbow.lib.database.entity.RecentPlayedEntity
+import com.onerainbow.module.home.model.HomeModel
 import com.onerainbow.module.musicplayer.domain.Song
 import com.onerainbow.module.musicplayer.service.MusicManager
 import com.onerainbow.module.musicplayer.service.PlaybackStateListener
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.supervisorScope
+import kotlinx.coroutines.withContext
+import java.io.ByteArrayOutputStream
+import java.io.InputStream
 
 /**
  * description ： 主页框架的ViewModel
@@ -23,6 +32,10 @@ import kotlinx.coroutines.supervisorScope
  * date : 2025/7/19 15:36
  */
 class HomeViewModel: ViewModel(){
+
+    private val model by lazy {
+        HomeModel()
+    }
 
     //最近播放的一首歌的数据
     private val _lastPlay = MutableLiveData<RecentPlayedEntity?>()
@@ -131,7 +144,7 @@ class HomeViewModel: ViewModel(){
         super.onCleared()
     }
 
-    fun loadUserInfo() {
+    fun loadUserAvatar() {
         //本地没有保存用户名，则没登陆，不加载头像
         val username =UsernameUtils.getUsername()
         if (username.isNullOrBlank()) return
@@ -201,6 +214,56 @@ class HomeViewModel: ViewModel(){
         _collectCount.postValue(0)
         _collect.postValue(null)
         _avatarData.postValue(null)
+    }
+
+    //压缩图片并转化为base64
+    private fun convertToBase64(uri: Uri): String? {
+        val maxSize = 1080
+        return try {
+            val contentResolver = BaseApplication.context.contentResolver
+
+            // 先获取图片尺寸
+            val options = BitmapFactory.Options().apply { inJustDecodeBounds = true }
+            contentResolver.openInputStream(uri)?.use { BitmapFactory.decodeStream(it, null, options) }
+
+            // 计算缩放比例
+            var scale = 1
+            val width = options.outWidth
+            val height = options.outHeight
+            if (width > maxSize || height > maxSize) {
+                scale = Math.max(width / maxSize, height / maxSize)
+            }
+
+            // 加载缩放后的Bitmap
+            val decodeOptions = BitmapFactory.Options().apply { inSampleSize = scale }
+            val bitmap = contentResolver.openInputStream(uri)?.use {
+                BitmapFactory.decodeStream(it, null, decodeOptions)
+            } ?: return null
+
+            // 压缩成JPEG，质量85%
+            val baos = ByteArrayOutputStream()
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 20, baos)
+
+            // 转Base64，无换行
+            Base64.encodeToString(baos.toByteArray(), Base64.NO_WRAP)
+        } catch (e: Exception) {
+            null
+        }
+    }
+
+    fun saveAvatar(uri: Uri) {
+        val username =UsernameUtils.getUsername()
+        if (username.isNullOrBlank()) return
+        viewModelScope.launch(Dispatchers.IO) {
+            val base64 = convertToBase64(uri)
+            if (base64 != null) {
+                model.updateAvatarResByUsername(username,base64)
+            }
+            withContext(Dispatchers.Main){
+                loadUserAvatar() // 存入数据库后立即刷新头像
+            }
+        }
+
     }
 
 }

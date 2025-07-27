@@ -291,7 +291,7 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>() {
     override fun onResume() {
         super.onResume()
         //加载头像
-        viewModel.loadUserInfo()
+        viewModel.loadUserAvatar()
         viewModel.loadAccount()
     }
 

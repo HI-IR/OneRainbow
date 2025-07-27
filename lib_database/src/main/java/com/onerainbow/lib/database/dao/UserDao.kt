@@ -36,4 +36,10 @@ interface UserDao {
 
     @Query("select avatarRes from user_table where username = :username")
     suspend fun getAvatarResByUsername(username: String): String?
+
+    /**
+     * 根据用户名更新头像资源
+     */
+    @Query("update user_table set avatarRes =:avatarRes where username = :username")
+    suspend fun updateAvatarRes(username: String,avatarRes: String)
 }
