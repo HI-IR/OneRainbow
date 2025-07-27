@@ -4,7 +4,6 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.onerainbow.module.seek.data.Playlist
 import com.onerainbow.module.seek.data.PopmusicData
 import com.onerainbow.module.seek.repository.SeekRepository
 import io.reactivex.rxjava3.core.Observer

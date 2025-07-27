@@ -1,6 +1,6 @@
 package com.onerainbow.module.seek.interfaces
 
-import com.onerainbow.module.seek.data.Playlist
+
 import com.onerainbow.module.seek.data.PopmusicData
 import io.reactivex.rxjava3.core.Observable
 import retrofit2.http.GET

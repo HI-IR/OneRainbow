@@ -3,7 +3,7 @@ package com.onerainbow.module.seek.data
 import com.google.gson.annotations.SerializedName
 
 /**
- * description ： 获取评论相关信息
+ * description ： 获取视频相关信息
  * author : summer_palace2
  * email : 2992203079qq.com
  * date : 2025/7/18 16:41

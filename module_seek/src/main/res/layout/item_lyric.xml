@@ -10,6 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="冬眠"
+        android:layout_marginLeft="2dp"
         android:textColor="@color/single"
         android:textSize="17dp"
         app:layout_constraintLeft_toLeftOf="@id/tv_lyric"
@@ -30,7 +31,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintStart_toStartOf="@id/tv_single_title"
+        app:layout_constraintStart_toStartOf="@id/tv_lyric"
         app:layout_constraintTop_toBottomOf="@id/tv_single_title">
 
         <com.google.android.flexbox.FlexboxLayout
@@ -38,8 +39,7 @@
             flexWrap="wrap"
             justifyContent="flex-start"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp" />
+            android:layout_height="wrap_content" />
 
         <TextView
             android:id="@+id/tv_single_ablum"

@@ -1,9 +1,8 @@
 package com.onerainbow.module.seek.repository
 
-import com.onerainbow.module.seek.data.Playlist
+import com.onerainbow.lib.net.RetrofitClient
 import com.onerainbow.module.seek.data.PopmusicData
 import com.onerainbow.module.seek.interfaces.PopmusicService
-import com.onerainbow.lib.net.RetrofitClient
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
