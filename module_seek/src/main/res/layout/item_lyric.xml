@@ -30,14 +30,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginLeft="-2dp"
-        app:layout_constraintStart_toStartOf="@id/tv_lyric"
+        app:layout_constraintStart_toStartOf="@id/tv_single_title"
         app:layout_constraintTop_toBottomOf="@id/tv_single_title">
 
-        <com.google.android.flexbox.FlexboxLayout
+        <TextView
             android:id="@+id/flex_singers"
-            flexWrap="wrap"
-            justifyContent="flex-start"
+            android:textColor="@color/text_second"
+            android:textSize="12sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 

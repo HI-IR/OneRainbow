@@ -103,17 +103,7 @@ class SingleAdapter(private val getImgUrl: GetImgUrl) :
                 allNames
             }
 
-             // 清除旧的歌手视图，添加新的 TextView
-            val flexSingers = binding.flexSingers
-            flexSingers.removeAllViews()
-            val tv = TextView(binding.root.context).apply {
-                text = displaySingers
-                textSize = 12f
-                setTextColor(Color.GRAY)
-                setPadding(8, 4, 8, 4)
-            }
-            flexSingers.addView(tv)
-
+           binding.flexSingers.text = displaySingers
 
             // 根据是否选中设置歌名字体颜色
             binding.tvSingleTitle.setTextColor(

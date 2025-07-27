@@ -84,8 +84,6 @@ class LyricDataAdapter(private val getImgUrl: GetImgUrl) :
                 isExpanded = !isExpanded
             }
 
-            val flexSongLyric = binding.flexSingers
-            flexSongLyric.removeAllViews()
             val maxTitleLen = 10
             val displayTitle = if (item.name.length > maxTitleLen) {
                 item.name.substring(0, maxTitleLen) + "…"
@@ -110,18 +108,7 @@ class LyricDataAdapter(private val getImgUrl: GetImgUrl) :
             } else {
                 allNames
             }
-
-            // 清除旧视图，添加新的 TextView
-            val flexSingers = binding.flexSingers
-            flexSingers.removeAllViews()
-            val tv = TextView(binding.root.context).apply {
-                text = displaySingers
-                textSize = 12f
-                setTextColor(Color.GRAY)
-                setPadding(8, 4, 8, 4)
-            }
-            flexSingers.addView(tv)
-
+            binding.flexSingers.text = displaySingers
 
             // 根据是否选中设置歌名字体颜色
             binding.tvSingleTitle.setTextColor(

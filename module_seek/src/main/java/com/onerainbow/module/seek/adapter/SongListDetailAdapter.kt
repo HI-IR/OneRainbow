@@ -79,24 +79,7 @@ class SongListDetailAdapter :
             } else {
                 allNames
             }
-
-             // 清空并设置新的歌手 TextView
-            binding.flexSingers.removeAllViews()
-            val tv = TextView(binding.root.context).apply {
-                text = displaySingers
-                textSize = 12f
-                setTextColor(Color.GRAY)
-                setPadding(8, 4, 8, 4)
-            }
-            binding.flexSingers.addView(tv)
-            // 设置歌曲标题颜色（只需设置一次）
-            binding.tvSingleTitle.setTextColor(
-                if (isSelected)
-                    binding.root.context.getColor(android.R.color.holo_red_dark)
-                else
-                    binding.root.context.getColor(android.R.color.black)
-            )
-
+            binding.flexSingers.text = displaySingers
 
         }
     }

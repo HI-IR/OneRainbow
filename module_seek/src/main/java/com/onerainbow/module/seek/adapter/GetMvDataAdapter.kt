@@ -60,6 +60,7 @@ class GetMvDataAdapter : ListAdapter<Mv, GetMvDataAdapter.ViewHolder>(DiffCallba
                 allNames
             }
 
+
             // 清空后添加一个 TextView
             val flexSingers = binding.flexMvAuthor
             flexSingers.removeAllViews()

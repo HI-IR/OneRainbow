@@ -78,16 +78,7 @@ class SongerAdapter : ListAdapter<SongData, SongerAdapter.ViewHolder>(DiffCallba
             } else {
                 allNames
             }
-
-            val flexSingers = binding.flexSingers
-            flexSingers.removeAllViews()
-            val tv = TextView(binding.root.context).apply {
-                text = displaySingers
-                textSize = 12f
-                setTextColor(Color.GRAY)
-                setPadding(8, 4, 8, 4)
-            }
-            flexSingers.addView(tv)
+            binding.flexSingers.text = displaySingers
 
 // 设置歌名颜色
             binding.tvSingleTitle.setTextColor(

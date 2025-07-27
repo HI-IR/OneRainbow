@@ -79,16 +79,7 @@ class SongPageAdapter : ListAdapter<SongData, SongPageAdapter.PageViewHolder>(Di
             } else {
                 allNames
             }
-
-            val flexSingers = binding.flexSingers
-            flexSingers.removeAllViews()
-            val tv = TextView(binding.root.context).apply {
-                text = displaySingers
-                textSize = 12f
-                setTextColor(Color.GRAY)
-                setPadding(8, 4, 8, 4)
-            }
-            flexSingers.addView(tv)
+            binding.flexSingers.text = displaySingers
 
             // 高亮选中项
             binding.tvSingleTitle.setTextColor(

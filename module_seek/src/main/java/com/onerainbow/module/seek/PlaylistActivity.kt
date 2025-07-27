@@ -38,7 +38,7 @@ class PlaylistActivity : BaseActivity<ActivityPlaylistBinding>() {
 
     private val playlistViewModel: PlaylistViewModel by lazy { PlaylistViewModel() }
     private lateinit var songListDetailAdapter: SongListDetailAdapter
-    private var song : List<Song>? =null
+    private var song: List<Song>? = null
     override fun onStart() {
         super.onStart()
         binding.playlistImg.apply {
@@ -78,39 +78,40 @@ class PlaylistActivity : BaseActivity<ActivityPlaylistBinding>() {
         playlistViewModel.playListLiveData.observe(this) { result ->
             songListDetailAdapter.submitList(result.songs)
 
-             song = result.songs.map { it.tosongs() }
+            song = result.songs.map { it.tosongs() }
 
         }
         playlistViewModel.apply {
-            avatarData.observe(this@PlaylistActivity){
-                result ->
+            avatarData.observe(this@PlaylistActivity) { result ->
                 Glide.with(binding.playlistAuthorImg.context)
                     .load(result)
                     .circleCrop()
                     .into(binding.playlistAuthorImg)
             }
-            recentDataLiveData.observe(this@PlaylistActivity){
-                result ->
-                if(result.isNullOrEmpty()) {return@observe ToastUtils.makeText("没有最近播放啊")}
-                    Glide.with(binding.playlistImg.context)
-                        .load(result.get(0).coverUrl)
-                        .into(binding.playlistImg)
-                    binding.tvPlaylistAuthor.text = UsernameUtils.getUsername()
-                    binding.tvPlaylistTitle.text = "最近播放"
-                    binding.tvDescription.text = "寻找你的时光日记"
-                    song = result.map { it.toSongGetPlay() }.map { it.tosongs() }
-                    songListDetailAdapter.submitList(result.map { it.toSongGetPlay() })
+            recentDataLiveData.observe(this@PlaylistActivity) { result ->
+                binding.tvPlaylistAuthor.text = UsernameUtils.getUsername()
+                binding.tvPlaylistTitle.text = "最近播放"
+                binding.tvDescription.text = "寻找你的时光日记"
+                if (result.isNullOrEmpty()) {
+                    return@observe ToastUtils.makeText("没有最近播放啊")
+                }
+                Glide.with(binding.playlistImg.context)
+                    .load(result.get(0).coverUrl)
+                    .into(binding.playlistImg)
+                song = result.map { it.toSongGetPlay() }.map { it.tosongs() }
+                songListDetailAdapter.submitList(result.map { it.toSongGetPlay() })
 
             }
-            collectDataLiveData.observe(this@PlaylistActivity){
-                result ->
-                if(result.isNullOrEmpty()) {return@observe ToastUtils.makeText("这番天地等着你来探索")}
+            collectDataLiveData.observe(this@PlaylistActivity) { result ->
+                binding.tvPlaylistAuthor.text = UsernameUtils.getUsername()
+                binding.tvDescription.text = "那些被时间温柔收录的声音"
+                binding.tvPlaylistTitle.text = "我的收藏"
+                if (result.isNullOrEmpty()) {
+                    return@observe ToastUtils.makeText("这番天地等着你来探索")
+                }
                 Glide.with(binding.playlistImg.context)
                     .load(result[0].coverUrl)
                     .into(binding.playlistImg)
-                binding.tvPlaylistAuthor.text = UsernameUtils.getUsername()
-                binding.tvDescription.text="那些被时间温柔收录的声音"
-                binding.tvPlaylistTitle.text = "我的收藏"
                 song = result.map { it.toSongGetPlay() }.map { it.tosongs() }
                 songListDetailAdapter.submitList(result.map { it.toSongGetPlay() })
 
@@ -138,7 +139,7 @@ class PlaylistActivity : BaseActivity<ActivityPlaylistBinding>() {
         if (this::playlists.isInitialized && !this::type.isInitialized) {
             initPlaylist()
         } else initMyselfPlaylist(type)
-        binding.tvBack.setOnClickListener{
+        binding.tvBack.setOnClickListener {
             finish()
         }
 
@@ -179,7 +180,7 @@ class PlaylistActivity : BaseActivity<ActivityPlaylistBinding>() {
         playlistViewModel.getRecentData()
     }
 
-    private fun initMyselfCollectPlaylist(){
+    private fun initMyselfCollectPlaylist() {
         playlistViewModel.getCollectData()
     }
 
@@ -190,12 +191,14 @@ class PlaylistActivity : BaseActivity<ActivityPlaylistBinding>() {
             img1v1Url = " "
         )
     }
+
     fun com.onerainbow.module.seek.data.Artist.toModelArtist(): Artist {
         return Artist(
             id = this.id,
             name = this.name
         )
     }
+
     fun CollectEntity.toSongGetPlay(): SongGetPlay {
         val artists: List<Artist> = Gson().fromJson(
             artistsJson,
@@ -212,6 +215,7 @@ class PlaylistActivity : BaseActivity<ActivityPlaylistBinding>() {
             )
         )
     }
+
     fun RecentPlayedEntity.toSongGetPlay(): SongGetPlay {
         val artists: List<Artist> = Gson().fromJson(
             artistsJson,
@@ -228,18 +232,16 @@ class PlaylistActivity : BaseActivity<ActivityPlaylistBinding>() {
             )
         )
     }
-    fun SongGetPlay.tosongs(): Song  {
+
+    fun SongGetPlay.tosongs(): Song {
         return Song(
             id = id,
             name = name,
             artists = ar.map { it.toModelArtist() }, // 直接用原来的 Artist 列表
-            coverUrl =al.picUrl // 从 al 取封面
+            coverUrl = al.picUrl // 从 al 取封面
         )
 
     }
-
-
-
 
 
 }
