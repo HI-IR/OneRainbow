@@ -197,7 +197,7 @@ class NewMusicService : Service() {
     }
 
 
-    // 通知栏相关方法（保持不变）
+    // 通知栏相关方法
     private fun createNotification(text: String): Notification {
         val pendingIntent = PendingIntent.getActivity(
             this, 0, Intent(this, MusicPlayerActivity::class.java),

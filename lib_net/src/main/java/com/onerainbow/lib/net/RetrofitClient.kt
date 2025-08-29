@@ -15,7 +15,7 @@ import java.util.concurrent.TimeUnit
  */
 object RetrofitClient {
 
-    private const val BASE_URL = "http://43.139.173.183:3000/"
+    private const val BASE_URL = "https://music.hi-ir.top/"
 
     private val okHttpClient = OkHttpClient.Builder()
         .callTimeout(300, TimeUnit.SECONDS)

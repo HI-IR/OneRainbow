@@ -28,10 +28,4 @@ fun View.scaleAnim(){
         false
     }
 
-    addOnAttachStateChangeListener(object : View.OnAttachStateChangeListener {
-        override fun onViewAttachedToWindow(v: View) = Unit
-        override fun onViewDetachedFromWindow(v: View) {
-            v.setOnTouchListener(null)
-        }
-    })
 }
