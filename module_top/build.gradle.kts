@@ -1,54 +1,13 @@
+import com.onerainbow.buildlogic.plugins.useTheRouter
+
 plugins {
-    alias(libs.plugins.android.library)
-    alias(libs.plugins.kotlin.android)
-    id("com.google.devtools.ksp")
-
+	alias(libs.plugins.onerainbow.library)
 }
-
-android {
-    namespace = "com.onerainbow.module.top"
-    compileSdk = 35
-
-    defaultConfig {
-        minSdk = 24
-
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        consumerProguardFiles("consumer-rules.pro")
-    }
-
-    buildTypes {
-        release {
-            isMinifyEnabled = false
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
-        }
-    }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
-    }
-    kotlinOptions {
-        jvmTarget = "1.8"
-    }
-    buildFeatures{
-        viewBinding =true
-    }
-}
-
+useTheRouter()
 dependencies {
-    implementation ("com.github.bumptech.glide:glide:4.12.0")
-    implementation(project(":lib_net"))
-    implementation(project(":lib_route"))
-    implementation(project(":module_seek"))
-    implementation(project(":lib_base"))
-    ksp("cn.therouter:apt:1.2.4")
-    implementation ("cn.therouter:router:1.2.4")
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.appcompat)
-    implementation(libs.material)
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
+	implementation(libs.glide)
+	implementation(projects.libNet)
+	implementation(projects.moduleSeek)
+	implementation(projects.libBase)
+	implementation(libs.bundles.projectBasic)
 }

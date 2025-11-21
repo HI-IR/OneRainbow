@@ -40,7 +40,7 @@ android {
 dependencies {
     //Glide
     implementation(project(":module_seek"))
-    implementation ("com.github.bumptech.glide:glide:4.12.0")
+    implementation (libs.glide)
     implementation(project(":module_share"))
     implementation(project(":lib_base"))
     implementation(project(":lib_net"))
@@ -55,4 +55,5 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+    implementation(libs.bundles.projectBasic)
 }
