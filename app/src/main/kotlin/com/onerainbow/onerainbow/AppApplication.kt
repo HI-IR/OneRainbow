@@ -2,7 +2,7 @@ package com.onerainbow.onerainbow
 
 import android.content.Context
 import com.onerainbow.lib.base.BaseApplication
-import com.onerainbow.module.musicplayer.service.MusicManager
+import com.onerainbow.page.musicplayer.service.MusicManager
 
 /**
  * description ： 主应用的Application

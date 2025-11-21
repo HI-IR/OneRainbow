@@ -2,9 +2,9 @@ plugins {
     alias(libs.plugins.onerainbow.application)
 }
 dependencies {
-    implementation(projects.moduleMusicplayer)
-    implementation(projects.moduleAccount)
-    implementation(projects.moduleHome)
+    implementation(projects.page.musicplayer)
+    implementation(projects.page.account)
+    implementation(projects.page.home)
     implementation(projects.libRoute)
     implementation(projects.libBase)
     implementation(libs.bundles.projectBasic)

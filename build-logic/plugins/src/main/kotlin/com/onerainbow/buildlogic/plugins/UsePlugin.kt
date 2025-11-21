@@ -50,3 +50,12 @@ fun Project.useRoom(){
 		}
 	}
 }
+
+//使用媒体框架media3
+fun Project.useMedia3(){
+	dependencies{
+		implementation(getLib("androidx-media3-session"))
+		implementation(getLib("androidx-media3-exoplayer"))
+		implementation(getLib("androidx-media3-ui"))
+	}
+}
