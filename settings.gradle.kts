@@ -1,4 +1,6 @@
+enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 pluginManagement {
+    includeBuild("build-logic")
     repositories {
         google {
             content {
@@ -22,15 +24,17 @@ dependencyResolutionManagement {
 
 rootProject.name = "OneRainbow"
 include(":app")
-include(":lib_base")
-include(":lib_net")
-include(":module_home")
-include(":module_account")
-include(":module_recommend")
-include(":module_top")
-include(":lib_route")
-include(":lib_database")
-include(":module_share")
-include(":module_seek")
-include(":module_musicplayer")
-include(":module_mv")
+include(":page")
+include(":page:mv")
+include(":page:recommend")
+include(":page:share")
+include(":page:search")
+include(":page:musicplayer")
+include(":page:top")
+include(":page:home")
+include(":page:account")
+include(":components")
+include(":components:base")
+include(":components:database")
+include(":components:net")
+include(":components:route")

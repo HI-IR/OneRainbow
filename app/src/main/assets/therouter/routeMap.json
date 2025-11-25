@@ -1,77 +1,77 @@
 [
   {
-    "path": "/main",
-    "className": "com.onerainbow.onerainbow.MainActivity",
-    "action": "",
-    "description": "",
-    "params": {}
-  },
-  {
     "path": "/seek/videos",
-    "className": "com.onerainbow.module.seek.VideosActivity",
+    "className": "com.onerainbow.page.search.VideosActivity",
     "action": "",
     "description": "",
     "params": {}
   },
   {
     "path": "/seek/singer",
-    "className": "com.onerainbow.module.seek.SingerActivity",
+    "className": "com.onerainbow.page.search.SingerActivity",
     "action": "",
     "description": "",
     "params": {}
   },
   {
     "path": "/seek",
-    "className": "com.onerainbow.module.seek.SeekActivity",
+    "className": "com.onerainbow.page.search.SeekActivity",
     "action": "",
     "description": "",
     "params": {}
   },
   {
     "path": "/seek/playlist",
-    "className": "com.onerainbow.module.seek.PlaylistActivity",
+    "className": "com.onerainbow.page.search.PlaylistActivity",
     "action": "",
     "description": "",
     "params": {}
   },
   {
     "path": "/seek/finish",
-    "className": "com.onerainbow.module.seek.FinishSeekActivity",
+    "className": "com.onerainbow.page.search.FinishSeekActivity",
     "action": "",
     "description": "",
     "params": {}
   },
   {
     "path": "/recommend/web",
-    "className": "com.onerainbow.module.recommend.ui.WebActivity",
+    "className": "com.onerainbow.page.recommend.ui.WebActivity",
     "action": "",
     "description": "",
     "params": {}
   },
   {
     "path": "/player/music",
-    "className": "com.onerainbow.module.musicplayer.ui.MusicPlayerActivity",
+    "className": "com.onerainbow.page.musicplayer.ui.MusicPlayerActivity",
     "action": "",
     "description": "",
     "params": {}
   },
   {
     "path": "/comments",
-    "className": "com.onerainbow.module.musicplayer.ui.CommentActivity",
+    "className": "com.onerainbow.page.musicplayer.ui.CommentActivity",
     "action": "",
     "description": "",
     "params": {}
   },
   {
     "path": "/home",
-    "className": "com.onerainbow.module.home.activity.HomeActivity",
+    "className": "com.onerainbow.page.home.activity.HomeActivity",
     "action": "",
     "description": "",
     "params": {}
   },
   {
     "path": "/account/login",
-    "className": "com.onerainbow.module.account.view.LoginActivity",
+    "className": "com.onerainbow.page.account.view.LoginActivity",
+    "action": "",
+    "description": "",
+    "params": {}
+  },
+  {
+    "path": "/main",
+    "className": "com.onerainbow.onerainbow.MainActivity",
     "action": "",
     "description": "",
     "params": {}
