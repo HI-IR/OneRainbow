@@ -15,6 +15,8 @@ activity = "1.10.1"
 constraintlayout = "2.2.1"
 roomCompiler = "2.6.1"
 roomKtx = "2.6.1"
+rxandroid = "3.0.0"
+rxjava = "3.0.13"
 securityCrypto = "1.1.0-alpha06"
 viewbinding = "8.11.1"
 roomRuntime = "2.6.1"
@@ -40,6 +42,7 @@ versionName = "1.0"
 # ==================================================================================================
 #                                           测试相关
 # ==================================================================================================
+
 
 
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -91,6 +94,12 @@ androidx-datastore-preferences = { module = "androidx.datastore:datastore-prefer
 
 # security
 androidx-security-crypto = { module = "androidx.security:security-crypto", version.ref = "securityCrypto" }
+
+# retrofit + rxjava
+adapter-rxjava3 = { module = "com.squareup.retrofit2:adapter-rxjava3", version.ref = "converterGson" }
+rxandroid = { module = "io.reactivex.rxjava3:rxandroid", version.ref = "rxandroid" }
+rxjava = { module = "io.reactivex.rxjava3:rxjava", version.ref = "rxjava" }
+retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "converterGson" }
 
 # ==================================================================================================
 #                                           构建工具相关库

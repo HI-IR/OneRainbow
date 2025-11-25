@@ -1,12 +1,13 @@
+import com.onerainbow.buildlogic.plugins.useNet
 import com.onerainbow.buildlogic.plugins.useTheRouter
 
 plugins {
 	alias(libs.plugins.onerainbow.library)
 }
 useTheRouter()
+useNet()
 dependencies {
-	implementation(projects.libNet)
 	implementation(projects.page.search)
-	implementation(projects.libBase)
+	implementation(projects.components.base)
 	implementation(libs.bundles.projectBasic)
 }

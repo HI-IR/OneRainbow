@@ -1,3 +1,4 @@
+import com.onerainbow.buildlogic.plugins.useNet
 import com.onerainbow.buildlogic.plugins.useRoom
 import com.onerainbow.buildlogic.plugins.useTheRouter
 
@@ -6,9 +7,8 @@ plugins {
 }
 useRoom()
 useTheRouter()
+useNet()
 dependencies {
-    implementation(projects.libRoute)
-    implementation(projects.libNet)
-    implementation(projects.libBase)
+    implementation(projects.components.base)
     implementation(libs.bundles.projectBasic)
 }

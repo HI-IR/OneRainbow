@@ -5,5 +5,5 @@ plugins {
 }
 useRoom()
 dependencies {
-    implementation(projects.libBase)
+    implementation(projects.components.base)
 }

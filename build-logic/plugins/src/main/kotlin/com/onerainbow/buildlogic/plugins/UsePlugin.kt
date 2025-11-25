@@ -15,7 +15,7 @@ import org.gradle.kotlin.dsl.project
  * date : 2025/11/21 16:05
  */
 
-// library使用TheRouter需要使用次依赖，application已经默认配置
+// library使用TheRouter需要使用次依赖，application已经默认配置，自动使用route
 fun Project.useTheRouter() {
 	with(pluginManager) {
 		id("com.google.devtools.ksp") //ksp
@@ -25,10 +25,10 @@ fun Project.useTheRouter() {
 		ksp(getLib("therouter-apt"))
 		implementation(getLib("therouter-router"))
 
-		//如果自己不是lib_route说明是业务模块，则添加依赖
-		if (name != "lib_route") {
-			//使用 project(":lib_route") 通过字符串获取本地模块实例
-			add("implementation", project(":lib_route"))
+		//如果自己不是route说明是业务模块，则添加依赖
+		if (name != "route") {
+			//使用 project(":components:route") 通过字符串获取本地模块实例
+			add("implementation", project(":components:route"))
 		}
 	}
 }
@@ -44,9 +44,9 @@ fun Project.useRoom(){
 		ksp(getLib("room-compiler"))
 		implementation(getLib("room.ktx"))
 
-		if (name != "lib_database") {
-			//使用 project(":lib_database") 通过字符串获取本地模块实例
-			add("implementation", project(":lib_database"))
+		if (name != "database") {
+			//使用 project(":components:database") 通过字符串获取本地模块实例
+			add("implementation", project(":components:database"))
 		}
 	}
 }
@@ -57,5 +57,23 @@ fun Project.useMedia3(){
 		implementation(getLib("androidx-media3-session"))
 		implementation(getLib("androidx-media3-exoplayer"))
 		implementation(getLib("androidx-media3-ui"))
+	}
+}
+
+
+//使用网络服务，自动接入components:net，默认使用Rxjava
+fun Project.useNet(){
+	dependencies{
+		implementation(getLib("adapter-rxjava3"))
+		implementation(getLib("rxandroid"))
+		implementation(getLib("rxjava"))
+		implementation(getLib("retrofit"))
+		implementation(getLib("converter-gson"))
+
+
+		if (name != "net") {
+			//使用 project(":components:net") 通过字符串获取本地模块实例
+			add("implementation", project(":components:net"))
+		}
 	}
 }
