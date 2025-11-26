@@ -15,6 +15,6 @@ dependencies {
     implementation(projects.page.recommend)
     implementation(projects.page.top)
     implementation(projects.page.search)
-    implementation(projects.page.musicplayer)
+    implementation(projects.page.musicplayer.api)
     implementation(projects.page.mv)
 }

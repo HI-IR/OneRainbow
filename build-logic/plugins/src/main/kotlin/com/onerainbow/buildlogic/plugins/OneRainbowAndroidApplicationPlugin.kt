@@ -28,6 +28,7 @@ class AndroidApplicationPlugin : Plugin<Project> {
 				id("org.jetbrains.kotlin.android") // 应用Kotlin Android插件
 				id("therouter") // therouter的插件
 				id("com.google.devtools.ksp") //ksp
+				id("org.jetbrains.kotlin.plugin.parcelize") //kotlin 序列化
 			}
 
 			extensions.configure<ApplicationExtension> {

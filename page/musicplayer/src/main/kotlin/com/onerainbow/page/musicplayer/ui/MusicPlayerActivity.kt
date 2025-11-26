@@ -20,13 +20,13 @@ import com.onerainbow.lib.base.BaseActivity
 import com.onerainbow.lib.base.utils.CopyUtils
 import com.onerainbow.lib.base.utils.ToastUtils
 import com.onerainbow.lib.route.RoutePath
+import com.onerainbow.page.musicplayer.R
+import com.onerainbow.page.musicplayer.api.bean.Song
+import com.onerainbow.page.musicplayer.databinding.ActivityMusicPlayerBinding
+import com.onerainbow.page.musicplayer.service.musicManager
+import com.onerainbow.page.musicplayer.viewmodel.MusicPlayerViewModel
 import com.onerainbow.page.share.CustomShare
 import com.onerainbow.page.share.utils.ShareUtils
-import com.onerainbow.page.musicplayer.R
-import com.onerainbow.page.musicplayer.databinding.ActivityMusicPlayerBinding
-import com.onerainbow.page.musicplayer.domain.Song
-import com.onerainbow.page.musicplayer.service.MusicManager
-import com.onerainbow.page.musicplayer.viewmodel.MusicPlayerViewModel
 import com.therouter.TheRouter
 import com.therouter.router.Route
 
@@ -42,8 +42,8 @@ class MusicPlayerActivity : BaseActivity<ActivityMusicPlayerBinding>() {
 	private val progressRunnable = object : Runnable {
 		override fun run() {
 			if (!isUserSeeking && viewModel.isPlaying.value!!) {
-				val position = MusicManager.getCurrentPosition()
-				val duration = MusicManager.getDuration()
+				val position = musicManager.getCurrentPosition()
+				val duration = musicManager.getDuration()
 				val progress = (position * 1000 / duration).toInt()
 				binding.musicplayerSeekbar.progress = progress
 				binding.musicplayerNow.text = formatTime(position)
@@ -285,7 +285,7 @@ class MusicPlayerActivity : BaseActivity<ActivityMusicPlayerBinding>() {
 				) {
 
 					if (fromUser) {
-						val duration = MusicManager.getDuration()
+						val duration = musicManager.getDuration()
 						val position = duration * progress / 1000
 						binding.musicplayerNow.text = formatTime(position)
 					}
@@ -296,10 +296,10 @@ class MusicPlayerActivity : BaseActivity<ActivityMusicPlayerBinding>() {
 				}
 
 				override fun onStopTrackingTouch(seekBar: SeekBar) {
-					val duration = MusicManager.getDuration()
+					val duration = musicManager.getDuration()
 					val seekBarProgress = seekBar.progress
 					val targetPosition = duration * seekBarProgress / 1000
-					MusicManager.seekTo(targetPosition)
+					musicManager.seekTo(targetPosition)
 					isUserSeeking = false
 				}
 

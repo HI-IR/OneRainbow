@@ -1,6 +1,4 @@
 package com.onerainbow.page.musicplayer.ui
-
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.Resources
 import android.os.Bundle
@@ -11,8 +9,9 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.onerainbow.page.musicplayer.R
 import com.onerainbow.page.musicplayer.databinding.DialogPlayerlListBinding
 import com.onerainbow.page.musicplayer.adapter.PlayerListAdapter
-import com.onerainbow.page.musicplayer.domain.Song
-import com.onerainbow.page.musicplayer.service.MusicManager
+import com.onerainbow.page.musicplayer.api.bean.Song
+
+import com.onerainbow.page.musicplayer.service.musicManager
 
 /**
  * description ： 播放列表的Dialog
@@ -50,7 +49,7 @@ class PlayerListDialog(
     private fun initClick() {
         binding.apply {
             playerlistClean.setOnClickListener {
-                MusicManager.cleanList()
+                musicManager.cleanList()
                 dismiss()
             }
         }
@@ -63,6 +62,19 @@ class PlayerListDialog(
             adapter = playerListAdapter
             isNestedScrollingEnabled = true
         }
+
+        //直接获取一遍播放列表
+        val currentPlaylist = musicManager.getPlaylist()
+        if (currentPlaylist.isNotEmpty()) {
+            playerListAdapter.submitList(currentPlaylist)
+        }
+
+        //  获取当前播放索引，高亮显示正在播放的歌曲
+        val currentIndex = musicManager.getCurrentIndex()
+        if (currentIndex != -1) {
+            playerListAdapter.selectionPosition = currentIndex
+        }
+
         // 配置 BottomSheet 行为
         val bottomSheet = findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
         bottomSheet?.let { sheet ->

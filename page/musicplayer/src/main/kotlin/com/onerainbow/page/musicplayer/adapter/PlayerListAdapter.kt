@@ -6,9 +6,10 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.onerainbow.page.musicplayer.api.IMusicplayerService
+import com.onerainbow.page.musicplayer.api.bean.Song
 import com.onerainbow.page.musicplayer.databinding.ItemPlayerlistSongBinding
-import com.onerainbow.page.musicplayer.domain.Song
-import com.onerainbow.page.musicplayer.service.MusicManager
+import com.therouter.TheRouter
 
 /**
  * description ： 歌曲播放列表的Adapter
@@ -63,7 +64,7 @@ class PlayerListAdapter(
 					onItemClick(layoutPosition) //回调点击事件
 				}
 				playerlistDelete.setOnClickListener {
-					MusicManager.removeSongAt(layoutPosition)
+					TheRouter.get(IMusicplayerService::class.java)?.removeSongAt(bindingAdapterPosition)
 				}
 			}
 		}

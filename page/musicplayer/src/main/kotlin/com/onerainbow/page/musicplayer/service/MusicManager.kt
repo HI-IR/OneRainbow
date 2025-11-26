@@ -5,8 +5,12 @@ import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.os.IBinder
-import com.onerainbow.page.musicplayer.domain.Song
+import com.onerainbow.page.musicplayer.api.IMusicplayerService
+import com.onerainbow.page.musicplayer.api.PlaybackStateListener
+import com.onerainbow.page.musicplayer.api.bean.Song
 import com.onerainbow.page.musicplayer.helper.RecentPlayHelper
+import com.therouter.TheRouter
+import com.therouter.inject.ServiceProvider
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -18,7 +22,16 @@ import kotlinx.coroutines.launch
  * email : qq2420226433@outlook.com
  * date : 2025/7/18 12:04
  */
-object MusicManager {
+@ServiceProvider(returnType = IMusicplayerService::class)
+class MusicManager : IMusicplayerService{
+    companion object{
+        internal val musicManager
+            get() = {
+                TheRouter.get(IMusicplayerService::class.java)
+            }
+    }
+
+
     private var musicBinder: NewMusicService.MusicBinder? = null
     private var isServiceConnected = false
     private val coroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
@@ -27,14 +40,14 @@ object MusicManager {
     private val listenerList = mutableListOf<PlaybackStateListener>()
 
     //设置播放状态监听器
-    fun addPlaybackStateListener(l: PlaybackStateListener) {
+    override fun addPlaybackStateListener(l: PlaybackStateListener) {
         if (!listenerList.contains(l)) {
             listenerList.add(l)
         }
     }
 
     //移除播放状态监听器
-    fun removePlaybackStateListener(l: PlaybackStateListener) {
+    override fun removePlaybackStateListener(l: PlaybackStateListener) {
         listenerList.remove(l)
     }
 
@@ -66,6 +79,15 @@ object MusicManager {
         override fun onServiceConnected(className: ComponentName, service: IBinder) {
             musicBinder = service as NewMusicService.MusicBinder
             isServiceConnected = true
+
+            musicBinder?.let { binder ->
+                // 同步播放列表
+                notifyPlayerList(binder.getSongPlaylist())
+                // 同步播放状态
+                notifyPlayState(binder.isPlaying())
+                // 同步当前播放索引
+                notifyPlayIndex(binder.getCurrentIndex())
+            }
         }
 
         override fun onServiceDisconnected(className: ComponentName) {
@@ -76,7 +98,7 @@ object MusicManager {
 
 
     // 初始化：绑定服务
-    fun bindService(context: Context) {
+    override fun bindService(context: Context) {
         if (!isServiceConnected) {
             val intent = Intent(context, NewMusicService::class.java)
             context.bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
@@ -91,17 +113,17 @@ object MusicManager {
         }
     }
     fun cleanList(){
-        MusicManager.musicBinder?.clearPlaylist()
+        musicBinder?.clearPlaylist()
     }
 
-    fun removeSongAt(position: Int){
-        MusicManager.musicBinder?.removeSongAt(position)
+    override fun removeSongAt(position: Int){
+        musicBinder?.removeSongAt(position)
     }
 
 
     //播放列表相关
     //使用这个
-    fun addToPlayerList(vararg song: Song):Boolean{
+    override fun addToPlayerList(vararg song: Song):Boolean{
 
         //添加到最近播放
         coroutineScope.launch {
@@ -114,12 +136,11 @@ object MusicManager {
     }
 
     //使用这个
-    fun addToPlayerList(songs: List<Song>):Boolean{
+    override fun addToPlayerList(songs: List<Song>):Boolean{
         //添加到最近播放
         coroutineScope.launch {
             RecentPlayHelper.addPlaylistToRecent(songs)
         }
-
         return if (isServiceConnected){
             musicBinder?.addToPlayerList(songs)
             true
@@ -206,7 +227,7 @@ object MusicManager {
 
     /** 切换播放/暂停
      */
-    fun togglePlayPause(): Boolean {
+    override fun togglePlayPause(): Boolean {
         return if (isServiceConnected) {
             musicBinder?.togglePlayPause()
             true
@@ -228,7 +249,7 @@ object MusicManager {
         }else false
     }
 
-    fun playAt(index: Int):Boolean{
+    override fun playAt(index: Int):Boolean{
         return if (isServiceConnected){
             musicBinder?.playAt(index)
             true
@@ -237,15 +258,15 @@ object MusicManager {
 
     //播放信息相关
     /** 获取当前歌单列表 */
-    fun getPlaylist(): List<Song> =
+    override fun getPlaylist(): List<Song> =
         musicBinder?.getSongPlaylist() ?: emptyList()
 
     //是否正在播放
-    fun isPlaying(): Boolean =
+    override fun isPlaying(): Boolean =
         musicBinder?.isPlaying() == true
 
     //获取当前播放索引
-    fun getCurrentIndex(): Int =
+    override fun getCurrentIndex(): Int =
         musicBinder?.getCurrentIndex() ?: -1
 
     //获取当前播放歌曲
@@ -263,13 +284,4 @@ object MusicManager {
 
         }
     }
-
-
-}
-//用来监听变化的接口
-interface PlaybackStateListener {
-    fun onPlayStateChanged(isPlaying: Boolean)
-    fun onPlayIndexChanged(index: Int)
-    fun onPlayError(error: Boolean)//出现错误时回调
-    fun onPlayerListChanged(playerList:List<Song>)//歌曲变化后的回调
 }

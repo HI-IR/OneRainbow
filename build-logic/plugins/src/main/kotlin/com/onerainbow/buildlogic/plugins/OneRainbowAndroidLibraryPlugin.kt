@@ -20,6 +20,8 @@ class AndroidLibraryPlugin: Plugin<Project>  {
 				id("org.jetbrains.kotlin.android") // 应用Kotlin Android插件
 				id("com.android.library") // 应用kotlin library
 				id("com.google.devtools.ksp") // ksp
+				id("org.jetbrains.kotlin.plugin.parcelize") //kotlin 序列化
+
 			}
 			extensions.configure<LibraryExtension> {
 				kotlinAndroid(this)

@@ -16,8 +16,8 @@ import androidx.media3.common.PlaybackException
 import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
 import com.onerainbow.page.musicplayer.R
-import com.onerainbow.page.musicplayer.domain.Song
-import com.onerainbow.page.musicplayer.domain.toMediaMetadata
+import com.onerainbow.page.musicplayer.api.bean.Song
+import com.onerainbow.page.musicplayer.function.toMediaMetadata
 import com.onerainbow.page.musicplayer.model.SongModel
 import com.onerainbow.page.musicplayer.ui.MusicPlayerActivity
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -73,8 +73,8 @@ class NewMusicService : Service() {
             // 处理播放错误（如URL无效、播放失败）
             override fun onPlayerError(error: PlaybackException) {
                 Log.e("MusicService", "播放错误: ${error.message}", error)
-                MusicManager.notifyPlayError(true)
-                MusicManager.notifyPlayState(false)
+                musicManager.notifyPlayError(true)
+                musicManager.notifyPlayState(false)
                 updateNotification("播放出错：${player.mediaMetadata.title}")
 
                 // 顺序播放模式下自动切换到下一首
@@ -103,7 +103,7 @@ class NewMusicService : Service() {
 
             PlayMode.SEQUENTIAL -> {
                 if (!mBinder.playNext()) {
-                    MusicManager.notifyPlayState(false)
+                    musicManager.notifyPlayState(false)
                     updateNotification("播放已结束")
                 }
             }
@@ -127,8 +127,8 @@ class NewMusicService : Service() {
 
         // 更新状态：正在获取资源
         updateNotification("正在获取歌曲资源：${song.name}")
-        MusicManager.notifyPlayState(false)
-        MusicManager.notifyPlayError(false)
+        musicManager.notifyPlayState(false)
+        musicManager.notifyPlayError(false)
 
         // 发起URL请求
         currentUrlRequest = SongModel.getSongById(song.id)
@@ -167,8 +167,8 @@ class NewMusicService : Service() {
 
             // 更新通知和UI状态
             updateNotification("正在播放：${song.name}")
-            MusicManager.notifyPlayState(true)
-            MusicManager.notifyPlayIndex(currentIndex)
+            musicManager.notifyPlayState(true)
+            musicManager.notifyPlayIndex(currentIndex)
         } catch (e: Exception) {
             handleUrlError(song, "播放器初始化失败：${e.message}")
         }
@@ -178,8 +178,8 @@ class NewMusicService : Service() {
     private fun handleUrlError(song: Song, errorMsg: String) {
         Log.e("MusicService", "歌曲${song.name}URL获取失败：$errorMsg")
         updateNotification("获取资源失败：${song.name}")
-        MusicManager.notifyPlayError(true)
-        MusicManager.notifyPlayState(false)
+        musicManager.notifyPlayError(true)
+        musicManager.notifyPlayState(false)
         player.clearMediaItems()  // 清理当前媒体项
         // 顺序播放模式下自动切换到下一首
         if (playMode == PlayMode.SEQUENTIAL) {
@@ -245,7 +245,7 @@ class NewMusicService : Service() {
             playlist.clear()
             playlist.add(song)
             currentIndex = 0 // 重置索引为 0
-            MusicManager.notifyPlayerList(playlist)
+            musicManager.notifyPlayerList(playlist)
             playWithFreshUrl(song)  // 强制请求URL后播放
         }
 
@@ -258,7 +258,7 @@ class NewMusicService : Service() {
             val newSongs = songs.filterNot { playlist.contains(it) }
             if (newSongs.isNotEmpty()) {
                 playlist.addAll(newSongs)
-                MusicManager.notifyPlayerList(playlist)
+                musicManager.notifyPlayerList(playlist)
             }
 
             // 如果之前是空列表，则自动播放第一首
@@ -279,7 +279,7 @@ class NewMusicService : Service() {
             val newSongs = songs.filterNot { playlist.contains(it) }
             if (newSongs.isNotEmpty()) {
                 playlist.addAll(newSongs)
-                MusicManager.notifyPlayerList(playlist)
+                musicManager.notifyPlayerList(playlist)
                 if (startIndex in songs.indices) {
                     playAt(startIndex)
                 }
@@ -319,7 +319,7 @@ class NewMusicService : Service() {
         fun pause() {
             player.pause()
             updateNotification("暂停播放：${player.mediaMetadata.title}")
-            MusicManager.notifyPlayState(false)
+            musicManager.notifyPlayState(false)
         }
 
         // 继续播放
@@ -330,7 +330,7 @@ class NewMusicService : Service() {
             }
             player.play()
             updateNotification("继续播放：${player.mediaMetadata.title}")
-            MusicManager.notifyPlayState(true)
+            musicManager.notifyPlayState(true)
         }
 
         // 切换播放/暂停
@@ -351,8 +351,8 @@ class NewMusicService : Service() {
             if (!playlist.contains(song)) {
                 playlist.add(song)
 
-                MusicManager.notifyPlayerList(playlist)
-                MusicManager.notifyPlayIndex(currentIndex)
+                musicManager.notifyPlayerList(playlist)
+                musicManager.notifyPlayIndex(currentIndex)
             }
         }
 
@@ -375,8 +375,8 @@ class NewMusicService : Service() {
                         playAt(currentIndex) // 播放调整后的当前歌曲
                     }
                 }
-                MusicManager.notifyPlayIndex(currentIndex) // 通知UI更新
-                MusicManager.notifyPlayerList(playlist)
+                musicManager.notifyPlayIndex(currentIndex) // 通知UI更新
+                musicManager.notifyPlayerList(playlist)
 
             }
         }
@@ -386,9 +386,9 @@ class NewMusicService : Service() {
             player.stop()
             player.clearMediaItems()
             currentIndex = -1 // 重置索引为-1，表示无当前歌曲
-            MusicManager.notifyPlayIndex(currentIndex) // 通知UI更新
-            MusicManager.notifyPlayerList(playlist)
-            MusicManager.notifyPlayState(false)
+            musicManager.notifyPlayIndex(currentIndex) // 通知UI更新
+            musicManager.notifyPlayerList(playlist)
+            musicManager.notifyPlayState(false)
         }
 
         fun getSongPlaylist(): List<Song> = playlist.toList()  // 返回不可变列表
@@ -415,7 +415,7 @@ class NewMusicService : Service() {
 
         fun seekTo(position: Long) {
             player.seekTo(position)
-            MusicManager.notifyPlayState(true)
+            musicManager.notifyPlayState(true)
         }
     }
 

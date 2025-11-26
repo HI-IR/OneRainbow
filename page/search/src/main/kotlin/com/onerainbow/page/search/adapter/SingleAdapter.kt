@@ -7,13 +7,14 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.onerainbow.lib.base.utils.ToastUtils
+import com.onerainbow.page.musicplayer.api.IMusicplayerService
+import com.onerainbow.page.musicplayer.api.bean.Artist
+import com.onerainbow.page.musicplayer.api.bean.Song
 import com.onerainbow.page.search.R
 import com.onerainbow.page.search.data.Songi
 import com.onerainbow.page.search.databinding.ItemSingleBinding
 import com.onerainbow.page.search.interfaces.GetImgUrl
-import com.onerainbow.page.musicplayer.domain.Artist
-import com.onerainbow.page.musicplayer.domain.Song
-import com.onerainbow.page.musicplayer.service.MusicManager
+import com.therouter.TheRouter
 
 /**
  * description ： 单曲列表适配器
@@ -57,8 +58,12 @@ class SingleAdapter(private val getImgUrl: GetImgUrl) :
                             artists = convertedArtists,
                             coverUrl = imgUrl
                         )
-                        Log.d("SingleAdapter", "Song added: $song")
-                        if (MusicManager.addToPlayerList(song)) {
+                        val isSuccess = TheRouter
+                            .get(IMusicplayerService::class.java)
+                            ?.addToPlayerList(song)
+                            ?: false
+
+                        if (isSuccess) {
                             ToastUtils.makeText("添加成功")
                         } else {
                             ToastUtils.makeText("添加失败")

@@ -10,10 +10,13 @@ import com.onerainbow.lib.base.utils.UsernameUtils
 import com.onerainbow.lib.database.OneRainbowDatabase
 import com.onerainbow.lib.database.entity.CollectEntity
 import com.onerainbow.lib.database.entity.RecentPlayedEntity
+import com.onerainbow.page.musicplayer.api.IMusicplayerService
+import com.onerainbow.page.musicplayer.api.bean.Song
 import com.onerainbow.page.search.data.GetPlaylistData
 import com.onerainbow.page.search.data.SongersData
 import com.onerainbow.page.search.data.SongsData
 import com.onerainbow.page.search.repository.PlaylistRepository
+import com.therouter.TheRouter
 import io.reactivex.rxjava3.core.Observer
 import io.reactivex.rxjava3.disposables.Disposable
 import kotlinx.coroutines.Dispatchers
@@ -34,6 +37,10 @@ class PlaylistViewModel : ViewModel() {
     }
     private val userDao by lazy {
         OneRainbowDatabase.getDatabase().userDao()
+    }
+
+    private val musicManager by lazy{
+        TheRouter.get(IMusicplayerService::class.java) ?: throw IllegalStateException("无法初始化IMusicplayerService")
     }
 
 
@@ -59,6 +66,11 @@ class PlaylistViewModel : ViewModel() {
 
     private val _avatarData = MutableLiveData<ByteArray?>()
     val avatarData: LiveData<ByteArray?>  = _avatarData
+
+    fun addMusicList(list:List<Song>):Boolean{
+        return musicManager.addToPlayerList(list)
+    }
+
 
     fun getUserImg(){
         val username = UsernameUtils.getUsername()

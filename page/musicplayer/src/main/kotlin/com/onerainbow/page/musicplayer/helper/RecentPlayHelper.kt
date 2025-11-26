@@ -4,9 +4,9 @@ import com.google.gson.Gson
 import com.onerainbow.lib.base.utils.UsernameUtils
 import com.onerainbow.lib.database.OneRainbowDatabase
 import com.onerainbow.lib.database.entity.RecentPlayedEntity
-import com.onerainbow.page.musicplayer.domain.Song
-import com.onerainbow.page.musicplayer.domain.toArtistLite
-import com.onerainbow.page.musicplayer.domain.toSong
+import com.onerainbow.page.musicplayer.api.bean.Song
+import com.onerainbow.page.musicplayer.function.toArtistLite
+import com.onerainbow.page.musicplayer.function.toSong
 
 
 /**

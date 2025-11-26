@@ -12,15 +12,15 @@ import com.onerainbow.lib.base.utils.UsernameUtils
 import com.onerainbow.lib.database.entity.CollectEntity
 import com.onerainbow.lib.database.entity.RecentPlayedEntity
 import com.onerainbow.lib.route.RoutePath
+import com.onerainbow.page.musicplayer.api.IMusicplayerService
+import com.onerainbow.page.musicplayer.api.bean.Artist
+import com.onerainbow.page.musicplayer.api.bean.Song
 import com.onerainbow.page.search.adapter.SongListDetailAdapter
 import com.onerainbow.page.search.data.Al
 import com.onerainbow.page.search.data.Playlists
 import com.onerainbow.page.search.data.SongGetPlay
 import com.onerainbow.page.search.databinding.ActivityPlaylistBinding
 import com.onerainbow.page.search.viewmodel.PlaylistViewModel
-import com.onerainbow.page.musicplayer.domain.Artist
-import com.onerainbow.page.musicplayer.domain.Song
-import com.onerainbow.page.musicplayer.service.MusicManager
 import com.therouter.TheRouter
 import com.therouter.router.Autowired
 import com.therouter.router.Route
@@ -75,7 +75,7 @@ class PlaylistActivity : BaseActivity<ActivityPlaylistBinding>() {
 		playlistViewModel.playListLiveData.observe(this) { result ->
 			songListDetailAdapter.submitList(result.songs)
 
-			song = result.songs.map { it.tosongs() }
+			song = result.songs.map { it.toSongs() }
 
 		}
 		playlistViewModel.apply {
@@ -95,7 +95,7 @@ class PlaylistActivity : BaseActivity<ActivityPlaylistBinding>() {
 				Glide.with(binding.playlistImg.context)
 					.load(result.get(0).coverUrl)
 					.into(binding.playlistImg)
-				song = result.map { it.toSongGetPlay() }.map { it.tosongs() }
+				song = result.map { it.toSongGetPlay() }.map { it.toSongs() }
 				songListDetailAdapter.submitList(result.map { it.toSongGetPlay() })
 
 			}
@@ -109,7 +109,7 @@ class PlaylistActivity : BaseActivity<ActivityPlaylistBinding>() {
 				Glide.with(binding.playlistImg.context)
 					.load(result[0].coverUrl)
 					.into(binding.playlistImg)
-				song = result.map { it.toSongGetPlay() }.map { it.tosongs() }
+				song = result.map { it.toSongGetPlay() }.map { it.toSongs() }
 				songListDetailAdapter.submitList(result.map { it.toSongGetPlay() })
 
 			}
@@ -123,15 +123,13 @@ class PlaylistActivity : BaseActivity<ActivityPlaylistBinding>() {
 			it.animate().scaleX(0.95f).scaleY(0.95f).setDuration(100).withEndAction {
 				it.animate().scaleX(1f).scaleY(1f).setDuration(100).start()
 			}.start()
-			if (song != null) {
-				if (MusicManager.addToPlayerList(song!!)) {
+			song?.let {
+				if (playlistViewModel.addMusicList(it)) {
 					ToastUtils.makeText("添加成功")
 				} else {
 					ToastUtils.makeText("添加失败")
 				}
-
 			}
-
 		}
 		if (this::playlists.isInitialized && !this::type.isInitialized) {
 			initPlaylist()
@@ -230,7 +228,7 @@ class PlaylistActivity : BaseActivity<ActivityPlaylistBinding>() {
 		)
 	}
 
-	fun SongGetPlay.tosongs(): Song {
+	fun SongGetPlay.toSongs(): Song {
 		return Song(
 			id = id,
 			name = name,

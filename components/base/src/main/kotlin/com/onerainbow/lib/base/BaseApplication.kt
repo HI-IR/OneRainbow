@@ -1,6 +1,7 @@
 package com.onerainbow.lib.base
 
 import android.app.Application
+import com.therouter.TheRouter
 
 /**
  * description ： 应用级别的上下文
@@ -17,6 +18,10 @@ open class BaseApplication: Application(){
     override fun onCreate() {
         super.onCreate()
         context = this
+
+        TheRouter.isDebug = true
+        //注入一下
+        TheRouter.init(this)
 
     }
 }

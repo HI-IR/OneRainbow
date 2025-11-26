@@ -15,7 +15,6 @@ import com.bumptech.glide.request.RequestOptions
 import com.onerainbow.lib.base.BaseActivity
 import com.onerainbow.lib.base.utils.ToastUtils
 import com.onerainbow.lib.route.RoutePath
-import com.onerainbow.page.musicplayer.ui.PlayerListDialog
 import com.onerainbow.page.mv.fragment.MvFragment
 import com.onerainbow.page.recommend.ui.RecommendFragment
 import com.onerainbow.page.search.PlaylistActivity
@@ -25,6 +24,7 @@ import com.onerainbow.page.home.databinding.ActivityHomeBinding
 import com.onerainbow.page.home.databinding.LayoutDrawerBinding
 import com.onerainbow.page.home.adapter.HomeVpAdapter
 import com.onerainbow.page.home.viewmodel.HomeViewModel
+import com.onerainbow.page.musicplayer.api.IMusicUIService
 import com.therouter.TheRouter
 import com.therouter.router.Route
 
@@ -34,6 +34,11 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>() {
     override fun getViewBinding(): ActivityHomeBinding = ActivityHomeBinding.inflate(layoutInflater)
     private val drawerBinding: LayoutDrawerBinding by lazy {
         binding.includeDrawer
+    }
+
+    private val musicUiService: IMusicUIService by lazy {
+        TheRouter.get(IMusicUIService::class.java)
+            ?: throw IllegalStateException("musicUiService not found! Make sure @ServiceProvider is working.")
     }
 
     private val fragments by lazy {
@@ -51,15 +56,9 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>() {
 
     //图片加载配置
     val requestOptions: RequestOptions =
-        RequestOptions().placeholder(com.onerainbow.page.musicplayer.R.drawable.loading)
-            .fallback(com.onerainbow.page.musicplayer.R.drawable.loading)
+        RequestOptions().placeholder(R.drawable.loading)
+            .fallback(R.drawable.loading)
 
-    private val playerList by lazy {
-        //初始化对话框,设置点击事件
-        PlayerListDialog(this@HomeActivity) {
-            viewModel.playAt(it)
-        }
-    }
 
     /**
      * CD旋转
@@ -150,8 +149,8 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>() {
                 }
             }
 
-            currentIndex.observe(this@HomeActivity) {
-                if (viewModel.playlist.value == null) return@observe
+            currentIndex.observe(this@HomeActivity) { it ->
+							if (viewModel.playlist.value == null) return@observe
                 if (it in viewModel.playlist.value!!.indices) {
                     val currentSong = viewModel.playlist.value!![it]
                     Glide.with(this@HomeActivity).load(currentSong.coverUrl).apply(requestOptions)
@@ -160,8 +159,7 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>() {
                         tvTitle.text = currentSong.name
                         tvCreator.text = currentSong.artists.joinToString("/") { it.name }
                     }
-                    playerList.setSelectedPosition(it)
-
+                    musicUiService.setSelectedPosition(it)
                 }
             }
 
@@ -169,7 +167,7 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>() {
             playlist.observe(this@HomeActivity) {
                 if (it.isNullOrEmpty()) {
                     binding.playBar.visibility = View.GONE
-                    playerList.setSongs(emptyList())
+                    musicUiService.setSongs(emptyList())
                     binding.vp2Home.setPadding(0, 0, 0, 0)
                     return@observe
                 }
@@ -177,7 +175,7 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>() {
                 binding.vp2Home.setPadding(0, 0, 0, dpToPx(40))
                 binding.vp2Home.clipToPadding = false
                 binding.playBar.visibility = View.VISIBLE
-                playerList.setSongs(it)
+                musicUiService.setSongs(it)
             }
 
             avatarData.observe(this@HomeActivity) {
@@ -240,7 +238,9 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>() {
             }
 
             btnPlaylist.setOnClickListener {
-                playerList.show()
+                musicUiService.openPlayerListDialog(this@HomeActivity){
+                    viewModel.playAt(it)
+                }
             }
 
             playBar.setOnClickListener {

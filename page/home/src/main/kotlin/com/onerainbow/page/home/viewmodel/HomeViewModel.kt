@@ -1,5 +1,6 @@
 package com.onerainbow.page.home.viewmodel
 
+import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
@@ -13,10 +14,12 @@ import com.onerainbow.lib.base.utils.UsernameUtils
 import com.onerainbow.lib.database.OneRainbowDatabase
 import com.onerainbow.lib.database.entity.CollectEntity
 import com.onerainbow.lib.database.entity.RecentPlayedEntity
-import com.onerainbow.page.musicplayer.service.MusicManager
-import com.onerainbow.page.musicplayer.service.PlaybackStateListener
 import com.onerainbow.page.home.model.HomeModel
-import com.onerainbow.page.musicplayer.domain.Song
+import com.onerainbow.page.musicplayer.api.IMusicUIService
+import com.onerainbow.page.musicplayer.api.IMusicplayerService
+import com.onerainbow.page.musicplayer.api.PlaybackStateListener
+import com.onerainbow.page.musicplayer.api.bean.Song
+import com.therouter.TheRouter
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.supervisorScope
@@ -33,6 +36,10 @@ class HomeViewModel : ViewModel() {
 
 	private val model by lazy {
 		HomeModel()
+	}
+	private val musicManager by lazy {
+		TheRouter.get(IMusicplayerService::class.java)
+			?: throw IllegalStateException("MusicManager not found! Make sure @ServiceProvider is working.")
 	}
 
 	//最近播放的一首歌的数据
@@ -114,12 +121,12 @@ class HomeViewModel : ViewModel() {
 	//初始化同步数据
 	init {
 		//注册监听器
-		MusicManager.addPlaybackStateListener(playbackListener)
+		musicManager.addPlaybackStateListener(playbackListener)
 
 		// 尝试从 Manager 拉取初始状态
-		_playlist.value = MusicManager.getPlaylist()
-		_currentIndex.value = MusicManager.getCurrentIndex()
-		_isPlaying.value = MusicManager.isPlaying()
+		_playlist.value = musicManager.getPlaylist()
+		_currentIndex.value = musicManager.getCurrentIndex()
+		_isPlaying.value = musicManager.isPlaying()
 	}
 
 
@@ -128,17 +135,17 @@ class HomeViewModel : ViewModel() {
 		if (error.value!!) {
 			return
 		}
-		MusicManager.togglePlayPause()
+		musicManager.togglePlayPause()
 	}
 
 	fun playAt(index: Int) {
-		MusicManager.playAt(index)
+		musicManager.playAt(index)
 	}
 
 
 	//移除监听器，避免内存泄露，状态污染
 	override fun onCleared() {
-		MusicManager.removePlaybackStateListener(playbackListener)//取消监听器
+		musicManager.removePlaybackStateListener(playbackListener)//取消监听器
 		super.onCleared()
 	}
 
