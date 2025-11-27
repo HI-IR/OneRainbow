@@ -10,7 +10,6 @@ import com.onerainbow.page.musicplayer.R
 import com.onerainbow.page.musicplayer.databinding.DialogPlayerlListBinding
 import com.onerainbow.page.musicplayer.adapter.PlayerListAdapter
 import com.onerainbow.page.musicplayer.api.bean.Song
-
 import com.onerainbow.page.musicplayer.service.musicManager
 
 /**
@@ -29,9 +28,11 @@ class PlayerListDialog(
     }
 
     private val playerListAdapter by lazy {
-        PlayerListAdapter {
-            onSongSelected(it)//将点击事件传入
-            dismiss()//关闭BottomSheetDialog
+        PlayerListAdapter().apply {
+            setOnItemClickListener {
+                onSongSelected(it) //将点击事件传入
+                dismiss()//关闭BottomSheetDialog
+            }
         }
     }
 
@@ -41,7 +42,6 @@ class PlayerListDialog(
         window?.setBackgroundDrawableResource(android.R.color.transparent)
         // 设置点击外部区域关闭 Dialog
         setCanceledOnTouchOutside(true)
-
         initView()
         initClick()
     }
@@ -101,8 +101,8 @@ class PlayerListDialog(
 
 
 		fun setSelectedPosition(position: Int) {
-        playerListAdapter.selectionPosition = position
-        playerListAdapter.notifyDataSetChanged()
+        playerListAdapter.updateSelection(position)
+
     }
 
 }
