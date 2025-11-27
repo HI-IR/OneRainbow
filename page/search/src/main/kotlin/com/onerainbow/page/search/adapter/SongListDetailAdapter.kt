@@ -1,6 +1,5 @@
 package com.onerainbow.page.search.adapter
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -9,11 +8,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.onerainbow.lib.base.utils.ToastUtils
-import com.onerainbow.page.musicplayer.domain.Artist
-import com.onerainbow.page.musicplayer.domain.Song
-import com.onerainbow.page.musicplayer.service.MusicManager
+import com.onerainbow.page.musicplayer.api.IMusicplayerService
+import com.onerainbow.page.musicplayer.api.bean.Artist
+import com.onerainbow.page.musicplayer.api.bean.Song
 import com.onerainbow.page.search.data.SongGetPlay
 import com.onerainbow.page.search.databinding.ItemPlaylistSongBinding
+import com.therouter.TheRouter
 
 /**
  * description ： TODO:类的作用
@@ -50,8 +50,12 @@ class SongListDetailAdapter :
                     notifyItemChanged(previousPosition)
                     notifyItemChanged(selectedPosition)
 
-                    Log.d("SongDetail", song.toString())
-                    if (MusicManager.addToPlayerList(song)) {
+                    val isSuccess = TheRouter
+                        .get(IMusicplayerService::class.java)
+                        ?.addToPlayerList(song)
+                        ?: false
+
+                    if (isSuccess) {
                         ToastUtils.makeText("添加成功")
                     } else {
                         ToastUtils.makeText("添加失败")

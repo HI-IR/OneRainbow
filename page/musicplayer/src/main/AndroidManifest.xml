@@ -10,6 +10,14 @@
             android:name="com.onerainbow.page.musicplayer.ui.MusicPlayerActivity"
             android:exported="false"
             android:launchMode="singleTask" />
+
+        <service
+            android:name="com.onerainbow.page.musicplayer.service.NewMusicService"
+            android:exported="false"
+            android:foregroundServiceType="mediaPlayback"
+            />
     </application>
+
+
 
 </manifest>

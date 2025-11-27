@@ -13,7 +13,7 @@ useTheRouter()
 useMedia3()
 useNet()
 dependencies {
-    implementation(projects.page.musicplayer)
+    implementation(projects.page.musicplayer.api)
     implementation(projects.page.share)
     implementation(projects.components.base)
     implementation(libs.androidx.paging.runtime)

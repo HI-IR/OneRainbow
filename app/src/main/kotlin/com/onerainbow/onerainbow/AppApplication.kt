@@ -2,7 +2,8 @@ package com.onerainbow.onerainbow
 
 import android.content.Context
 import com.onerainbow.lib.base.BaseApplication
-import com.onerainbow.page.musicplayer.service.MusicManager
+import com.onerainbow.page.musicplayer.api.IMusicplayerService
+import com.therouter.TheRouter
 
 /**
  * description ： 主应用的Application
@@ -14,7 +15,10 @@ class AppApplication: BaseApplication() {
     override fun onCreate() {
         super.onCreate()
         // 绑定音乐服务，启动时即保持 Service 连接
-        MusicManager.bindService(this)
+        val musicplayerService = TheRouter.get(IMusicplayerService::class.java)
+            ?: throw IllegalStateException("无法初始化IMusicplayerService")
+
+        musicplayerService.bindService(this)
     }
 
     override fun attachBaseContext(base: Context) {

@@ -80,9 +80,11 @@ androidx-media3-ui = { group = "androidx.media3", name = "media3-ui", version.re
 androidx-paging-runtime = { module = "androidx.paging:paging-runtime", version.ref = "pagingRuntime" }
 androidx-paging-common-android = { group = "androidx.paging", name = "paging-common-android", version.ref = "pagingCommonAndroid" }
 
-# therouter
+# room
 room-compiler = { module = "androidx.room:room-compiler", version.ref = "roomCompiler" }
 room-ktx = { module = "androidx.room:room-ktx", version.ref = "roomKtx" }
+
+# therouter
 therouter-apt = { group = "cn.therouter", name = "apt", version.ref = "therouter" }
 therouter-router = { group = "cn.therouter", name = "router", version.ref = "therouter" }
 
@@ -115,12 +117,11 @@ kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 android-library = { id = "com.android.library", version.ref = "agp" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 therouter-agp = { id = "cn.therouter.agp8", version.ref = "therouter" }
-
+kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
 
 # 约定插件
-# 版本是用来符合语法占位的
-onerainbow-application = { id = "com.onerainbow.android.application", version = "1.0.0" }
-onerainbow-library = { id = "com.onerainbow.android.library", version = "1.0.0" }
+onerainbow-application = { id = "com.onerainbow.android.application", version = "unspecified" }
+onerainbow-library = { id = "com.onerainbow.android.library",version = "unspecified" }
 
 
 [bundles]

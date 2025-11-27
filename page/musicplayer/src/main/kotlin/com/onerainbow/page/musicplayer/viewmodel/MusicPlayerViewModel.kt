@@ -11,10 +11,10 @@ import com.onerainbow.lib.base.utils.ToastUtils
 import com.onerainbow.lib.base.utils.UsernameUtils
 import com.onerainbow.lib.database.OneRainbowDatabase
 import com.onerainbow.lib.database.entity.CollectEntity
-import com.onerainbow.page.musicplayer.domain.Song
-import com.onerainbow.page.musicplayer.domain.toArtistLite
-import com.onerainbow.page.musicplayer.service.MusicManager
-import com.onerainbow.page.musicplayer.service.PlaybackStateListener
+import com.onerainbow.page.musicplayer.api.PlaybackStateListener
+import com.onerainbow.page.musicplayer.api.bean.Song
+import com.onerainbow.page.musicplayer.function.toArtistLite
+import com.onerainbow.page.musicplayer.service.musicManager
 import kotlinx.coroutines.launch
 
 /**
@@ -85,12 +85,12 @@ class MusicPlayerViewModel() : ViewModel() {
 
     //初始化数据
     init {
-        MusicManager.addPlaybackStateListener(playbackListener)
+        musicManager.addPlaybackStateListener(playbackListener)
 
         // 尝试从 Manager 拉取初始状态
-        _playlist.value = MusicManager.getPlaylist()
-        _currentIndex.value = MusicManager.getCurrentIndex()
-        _isPlaying.value = MusicManager.isPlaying()
+        _playlist.value = musicManager.getPlaylist()
+        _currentIndex.value = musicManager.getCurrentIndex()
+        _isPlaying.value = musicManager.isPlaying()
         _isPlayInSingle.postValue(
             StoreUtils.getBoolean(
                 StoreUtils.PLAYER_DATA,
@@ -101,19 +101,19 @@ class MusicPlayerViewModel() : ViewModel() {
         username = UsernameUtils.getUsername()
     }
 
-    fun getCurrentUrl(): String = MusicManager.getCurrentUrl()
+    fun getCurrentUrl(): String = musicManager.getCurrentUrl()
 
 
     // 播放下一首
     fun playNext() {
-        if (!MusicManager.playNext()) {
+        if (!musicManager.playNext()) {
             ToastUtils.makeText("已经是最后一首了")
         }
     }
 
     // 播放上一首
     fun playPrev() {
-        if (!MusicManager.playPrev()) {
+        if (!musicManager.playPrev()) {
             ToastUtils.makeText("已经是第一首了")
         }
 
@@ -124,7 +124,7 @@ class MusicPlayerViewModel() : ViewModel() {
         if (error.value!!) {
             return
         }
-        MusicManager.togglePlayPause()
+        musicManager.togglePlayPause()
     }
 
 
@@ -141,24 +141,24 @@ class MusicPlayerViewModel() : ViewModel() {
 
     fun togglePlayMode() {
         val current = _isPlayInSingle.value ?: false
-        if (current) MusicManager.setOrderMode() else MusicManager.setSingleMode()
+        if (current) musicManager.setOrderMode() else musicManager.setSingleMode()
         _isPlayInSingle.value = !current
     }
 
     fun playAt(index: Int) {
-        MusicManager.playAt(index)
+        musicManager.playAt(index)
     }
 
     //跳转位置
     fun playSeekTo(position: Long) {
-        MusicManager.seekTo(position)
+        musicManager.seekTo(position)
     }
 
     /**
      * 收藏
      */
     fun collectSong() {
-        val currentSong = MusicManager.getCurrentSong()
+        val currentSong = musicManager.getCurrentSong()
         if (currentSong == null || username == null) {
             if (currentSong == null) _errorCollect.postValue("当前无歌曲")
             if (username == null) _errorCollect.postValue("还没有登录哟")
@@ -188,7 +188,7 @@ class MusicPlayerViewModel() : ViewModel() {
      * 取消收藏
      */
     fun uncollectSong(){
-        val currentSong = MusicManager.getCurrentSong()
+        val currentSong = musicManager.getCurrentSong()
         if (currentSong == null || username == null) {
             if (currentSong == null) _errorCollect.postValue("当前无歌曲")
             if (username == null) _errorCollect.postValue("还没有登录哟")
@@ -220,7 +220,7 @@ class MusicPlayerViewModel() : ViewModel() {
      * 检查是否收藏
      */
     fun checkCollect(){
-        val currentSong = MusicManager.getCurrentSong()
+        val currentSong = musicManager.getCurrentSong()
         if (currentSong == null || username == null) {
             return
         }
@@ -236,7 +236,7 @@ class MusicPlayerViewModel() : ViewModel() {
 
 
     override fun onCleared() {
-        MusicManager.removePlaybackStateListener(playbackListener)//移除设置的监听器，防止内存泄露
+        musicManager.removePlaybackStateListener(playbackListener)//移除设置的监听器，防止内存泄露
         super.onCleared()
     }
 

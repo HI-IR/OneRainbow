@@ -100,8 +100,8 @@ class UserFragment : BaseFragment<FragmentUserBinding>() {
 
     //图片加载配置
     val requestOptions: RequestOptions =
-        RequestOptions().placeholder(com.onerainbow.page.musicplayer.R.drawable.loading)
-            .fallback(com.onerainbow.page.musicplayer.R.drawable.loading)
+        RequestOptions().placeholder(R.drawable.loading)
+            .fallback(R.drawable.loading)
 
     override fun observeData() {
         viewModel.apply {
@@ -140,14 +140,14 @@ class UserFragment : BaseFragment<FragmentUserBinding>() {
                 it?.let {
                     Glide.with(requireActivity()).load(it.coverUrl).apply(requestOptions)
                     .into(binding.imgUserRecentplayed)
-                }?:binding.imgUserRecentplayed.setImageResource(com.onerainbow.page.musicplayer.R.drawable.loading)
+                }?:binding.imgUserRecentplayed.setImageResource(R.drawable.loading)
             }
 
                 collect.observe(this@UserFragment) {
                     it?.let {
                         Glide.with(requireActivity()).load(it.coverUrl).apply(requestOptions)
                             .into(binding.imgUserCollect)
-                    }?:binding.imgUserCollect.setImageResource(com.onerainbow.page.musicplayer.R.drawable.loading)
+                    }?:binding.imgUserCollect.setImageResource(R.drawable.loading)
                 }
 
             collectCount.observe(this@UserFragment) {
