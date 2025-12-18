@@ -1,8 +1,8 @@
 package com.onerainbow.buildlogic.plugins
 
 import com.android.build.gradle.LibraryExtension
-import com.onerainbow.buildlogic.plugins.config.id
 import com.onerainbow.buildlogic.plugins.config.kotlinAndroid
+import com.onerainbow.buildlogic.plugins.dsl.id
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure

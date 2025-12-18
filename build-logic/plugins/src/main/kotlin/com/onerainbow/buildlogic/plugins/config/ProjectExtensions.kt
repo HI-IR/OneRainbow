@@ -27,32 +27,3 @@ fun Project.getLib(alias: String) = versionLibs.findLibrary(alias).get()
 //简化获取版本
 fun Project.getVersion(alias: String) = versionLibs.findVersion(alias).get().toString().toInt()
 
-
-fun DependencyHandlerScope.implementation(lib: Provider<MinimalExternalModuleDependency>) {
-	add("implementation", lib)
-}
-
-fun DependencyHandlerScope.ksp(lib: Provider<MinimalExternalModuleDependency>) {
-	add("ksp", lib)
-}
-
-fun DependencyHandlerScope.coreLibraryDesugaring(alias: String) {
-	add("coreLibraryDesugaring", alias)
-}
-
-fun DependencyHandlerScope.testImplementation(lib: Provider<MinimalExternalModuleDependency>) {
-	add("testImplementation", lib)
-}
-
-fun DependencyHandlerScope.androidTestImplementation(lib: Provider<MinimalExternalModuleDependency>) {
-	add("androidTestImplementation", lib)
-}
-
-
-fun DependencyHandlerScope.debugImplementation(lib: Provider<MinimalExternalModuleDependency>) {
-	add("debugImplementation", lib)
-}
-
-fun PluginManager.id(alias: String) {
-	apply(alias)
-}

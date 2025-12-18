@@ -1,6 +1,9 @@
 package com.onerainbow.buildlogic.plugins.config
 
 import com.android.build.api.dsl.CommonExtension
+import com.onerainbow.buildlogic.plugins.dsl.androidTestImplementation
+import com.onerainbow.buildlogic.plugins.dsl.coreLibraryDesugaring
+import com.onerainbow.buildlogic.plugins.dsl.testImplementation
 import org.gradle.api.JavaVersion
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.dependencies
@@ -60,9 +63,9 @@ internal fun Project.kotlinAndroid(
 		}
 		dependencies {
 			// 单元测试
-			testImplementation(getLib("junit"))
-			androidTestImplementation(getLib("androidx-junit"))
-			androidTestImplementation(getLib("androidx-espresso-core"))
+			testImplementation("junit")
+			androidTestImplementation("junit")
+			androidTestImplementation("junit")
 
 			//兼容低版本的依赖
 			coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.3")
