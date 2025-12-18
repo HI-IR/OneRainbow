@@ -1,14 +1,14 @@
 package com.onerainbow.buildlogic.plugins
 
 import com.android.build.api.dsl.ApplicationExtension
-import com.onerainbow.buildlogic.plugins.config.debugImplementation
 import com.onerainbow.buildlogic.plugins.config.getLib
 import com.onerainbow.buildlogic.plugins.config.getVersion
-import com.onerainbow.buildlogic.plugins.config.id
-import com.onerainbow.buildlogic.plugins.config.implementation
 import com.onerainbow.buildlogic.plugins.config.kotlinAndroid
-import com.onerainbow.buildlogic.plugins.config.ksp
 import com.onerainbow.buildlogic.plugins.config.versionLibs
+import com.onerainbow.buildlogic.plugins.dsl.debugImplementation
+import com.onerainbow.buildlogic.plugins.dsl.id
+import com.onerainbow.buildlogic.plugins.dsl.implementation
+import com.onerainbow.buildlogic.plugins.dsl.ksp
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
@@ -45,12 +45,12 @@ class AndroidApplicationPlugin : Plugin<Project> {
 
 			dependencies{
 				//内存泄露检测
-				debugImplementation(getLib("leakcanary"))
+				debugImplementation("leakcanary")
 
 
 				//application默认携带therouter能力
-				ksp(getLib("therouter-apt"))
-				implementation(getLib("therouter-router"))
+				ksp("therouter-apt")
+				implementation("therouter-router")
 			}
 		}
 	}
